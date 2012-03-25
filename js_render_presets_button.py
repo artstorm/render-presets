@@ -72,9 +72,12 @@ class render_presets_button(lwsdk.IGeneric):
 # Register the Plugin
 # ------------------------------------------------------------------------------
 ServerTagInfo = [
-                    ( 'js Render Presets', lwsdk.SRVTAG_USERNAME | lwsdk.LANGID_USENGLISH ),
-                    ( 'Render Presets', lwsdk.SRVTAG_BUTTONNAME | lwsdk.LANGID_USENGLISH ),
-                    ( 'Utilities/Python', lwsdk.SRVTAG_MENU | lwsdk.LANGID_USENGLISH )
-                ]
+    ('js Render Presets', lwsdk.SRVTAG_USERNAME | lwsdk.LANGID_USENGLISH),
+    ('Render Presets', lwsdk.SRVTAG_BUTTONNAME | lwsdk.LANGID_USENGLISH),
+    ('Utilities/Python', lwsdk.SRVTAG_MENU | lwsdk.LANGID_USENGLISH)
+]
 
-ServerRecord = { lwsdk.GenericFactory('js_Render_Presets_Btn', render_presets_button) : ServerTagInfo }
+ServerRecord = {
+    lwsdk.GenericFactory('js_Render_Presets_Btn', render_presets_button)
+    : ServerTagInfo
+}
