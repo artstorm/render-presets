@@ -18,10 +18,11 @@ __lwver__       = '11'
 # Import Modules
 # ------------------------------------------------------------------------------
 import os
+import sys
 import json
 import lwsdk
+import collections
 
-import pprint
 
 # ------------------------------------------------------------------------------
 # Constants
@@ -75,9 +76,8 @@ class render_presets_master(lwsdk.IMaster):
             self._panel.seth(420)
             self._panel.set_close_callback(self.panel_close_callback)
 
-            self.create_controls()
-
-            self._panel.open(lwsdk.PANF_NOBUTT)
+            if self.create_controls():
+                self._panel.open(lwsdk.PANF_NOBUTT)
 
         return lwsdk.AFUNC_OK
 
@@ -112,6 +112,8 @@ class render_presets_master(lwsdk.IMaster):
 
         Loads a file containing all definitions needed to populate the interface
         and associated commands.
+
+        @return boolean False if definitions file failed to load, otherwise True
         """
 
         # Get the path to the definitions file
@@ -120,12 +122,17 @@ class render_presets_master(lwsdk.IMaster):
         def_file = os.path.join(dir_path, DEFINITIONS_FILE)
 
 
-        # Need error handling here
-        json_data=open(def_file)
-        data = json.load(json_data)
-        json_data.close()
+        # Load the JSON data into an OrderedDict
+        try:
+            json_data = open(def_file)
+            data = json.load(json_data, object_pairs_hook=collections.OrderedDict)
+        except:
+            print >>sys.stderr, 'The file %s was not found.' % DEFINITIONS_FILE
+            return False
+        else:
+            json_data.close()
 
-        pprint.pprint(data)
+
 
         # Get rid of Unicode character (u')
   #      print data['tabs']
@@ -133,7 +140,8 @@ class render_presets_master(lwsdk.IMaster):
         # tabs = [s.encode('utf-8') for s in data['tabs']]
         tabs = data['tabs']
 #        print tabs
-        
+
+
         tab_names = []
         for key, val in tabs.iteritems():
             tab_names.append(key.encode('utf-8'))
@@ -180,6 +188,7 @@ class render_presets_master(lwsdk.IMaster):
         # multiple line test
 #        print('flag: afsasssssssssssssssssssssssssssssfasfafasfasfa' \
 #              + str(self.tab1_c1.flags()) )
+        return True
 
 
 
