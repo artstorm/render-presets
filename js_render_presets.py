@@ -201,13 +201,19 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         # Optimize: Consolidate below into one loop
         tmp = tabs[tab_names[0]]
-        for s in tmp:
-            # print s
-            for t in tmp[s]:
-                # print t
+        y = 40
+        for s, v in tmp.iteritems():
+            v['ctl'] = self._panel.bool_ctl('enable')
+            v['ctl'].set_w(200)
+            v['ctl'].move(200,y)
+            y += 40
+
+            # for t in tmp[s]:
+            for t in v['controls']:
                 t['control'] = self._panel.bool_ctl(t['label'])
                 t['control'].set_w(200)
-                t['control'].move(200,40)
+                t['control'].move(200,y)
+                y += 40
 
         # for s in tmp:
         #     # print s['label']
@@ -216,29 +222,57 @@ class RenderPresetsMaster(lwsdk.IMaster):
         #     s['control'].set_w(200)
         #     s['control'].move(200,40)
 
+        y = 40
         tmp = tabs[tab_names[1]]
-        for s in tmp:
+        for s, v in tmp.iteritems():
         #     s['control'] = self._panel.bool_ctl(s['label'])
         #     s['control'].erase()
         #     s['control'].move(200,40)
-            for t in tmp[s]:
-                # print t
+            v['ctl'] = self._panel.bool_ctl('enable')
+            v['ctl'].set_w(200)
+            v['ctl'].move(200,y)
+            y += 40
+
+            for t in v['controls']:
                 t['control'] = self._panel.bool_ctl(t['label'])
                 t['control'].set_w(200)
-                t['control'].move(200,40)
+                t['control'].move(200,y)
+                y += 40
                 t['control'].erase()
 
-        # tmp = tabs[tab_names[2]]
-        # for s in tmp:
+        y = 40
+        tmp = tabs[tab_names[2]]
+        for s, v in tmp.iteritems():
+            v['ctl'] = self._panel.bool_ctl('enable')
+            v['ctl'].set_w(200)
+            v['ctl'].move(200,y)
+            y += 40
         #     s['control'] = self._panel.bool_ctl(s['label'])
         #     s['control'].erase()
         #     s['control'].move(200,40)
+            for t in v['controls']:
+                t['control'] = self._panel.bool_ctl(t['label'])
+                t['control'].set_w(200)
+                t['control'].move(200,y)
+                y += 40
+                t['control'].erase()
 
-        # tmp = tabs[tab_names[3]]
-        # for s in tmp:
+        y = 40
+        tmp = tabs[tab_names[3]]
+        for s, v in tmp.iteritems():
+            v['ctl'] = self._panel.bool_ctl('enable')
+            v['ctl'].set_w(200)
+            v['ctl'].move(200,y)
+            y += 40
         #     s['control'] = self._panel.bool_ctl(s['label'])
         #     s['control'].erase()
         #     s['control'].move(200,40)
+            for t in v['controls']:
+                t['control'] = self._panel.bool_ctl(t['label'])
+                t['control'].set_w(200)
+                t['control'].move(200,y)
+                y += 40
+                t['control'].erase()
 
 
 
@@ -263,29 +297,34 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # Optimize below: erase in one loop. Don't erase the tab that's clicked.
         # Erase controllers on all tabs
         tmp_pan = tabs[tab_names[0]]
-        for s in tmp_pan:
-            for t in tmp_pan[s]:
+        for s, v in tmp_pan.iteritems():
+            v['ctl'].erase()
+            for t in v['controls']:
                 t['control'].erase()
 
         tmp_pan = tabs[tab_names[1]]
-        for s in tmp_pan:
-            for t in tmp_pan[s]:
+        for s, v in tmp_pan.iteritems():
+            v['ctl'].erase()
+            for t in v['controls']:
                 t['control'].erase()
 
-        # tmp_pan = tabs[tab_names[2]]
-        # for s in tmp_pan:
-        #     for t in tmp_pan[s]:
-        #         t['control'].erase()
+        tmp_pan = tabs[tab_names[2]]
+        for s, v in tmp_pan.iteritems():
+            v['ctl'].erase()
+            for t in v['controls']:
+                t['control'].erase()
 
-        # tmp_pan = tabs[tab_names[3]]
-        # for s in tmp_pan:
-        #     for t in tmp_pan[s]:
-        #         t['control'].erase()
+        tmp_pan = tabs[tab_names[3]]
+        for s, v in tmp_pan.iteritems():
+            v['ctl'].erase()
+            for t in v['controls']:
+                t['control'].erase()
 
         # Render the controls on the clicked tab
         tmp_pan = tabs[tab_names[tmp]]
-        for s in tmp_pan:
-            for t in tmp_pan[s]:
+        for s, v in tmp_pan.iteritems():
+            v['ctl'].render()
+            for t in v['controls']:
                 t['control'].render()
 
 

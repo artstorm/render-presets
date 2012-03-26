@@ -4,114 +4,140 @@
 	{
 		"Render":
 		{
-			"section": [
-			{
-				"type": "button",
-				"label": "Enable Radiosity",
-				"command": "GlobalIllumination 1"
+			"test": {
+				"id": "hej",
+				"controls": [
+				{
+					"type": "button",
+					"label": "Enable Radiosity",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"type": "button",
+					"label": "Interpolated",
+					"command": "GlobalIllumination 1"
+				}
+				]
 			},
-			{
-				"type": "button",
-				"label": "Interpolated",
-				"command": "GlobalIllumination 1"
+			"test2": {
+				"id": "hej",
+				"controls": [
+				{
+					"type": "button",
+					"label": "Enable Radiosity",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"type": "button",
+					"label": "Interpolated",
+					"command": "GlobalIllumination 1"
+				}
+				]
 			}
-			],
-			"section": [
-			{
-				"type": "button",
-				"label": "Enable Radiosity",
-				"command": "GlobalIllumination 1"
-			},
-			{
-				"type": "button",
-				"label": "Interpolated",
-				"command": "GlobalIllumination 1"
-			}
-			]
 		},
+
+
 
 		"Global Illum":
 		{
-			"section": [
-			{
-				"type": "button",
-				"label": "Muppet Enable Radiosity",
-				"command": "GlobalIllumination 1"
+			"test": {
+				"id": "hej",
+				"controls": [
+				{
+					"type": "button",
+					"label": "GI Enable Radiosity",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"type": "button",
+					"label": "GI Interpolated",
+					"command": "GlobalIllumination 1"
+				}
+				]
 			},
-			{
-				"type": "button",
-				"label": "Muppet Interpolated",
-				"command": "GlobalIllumination 1"
+			"test2": {
+				"id": "hej",
+				"controls": [
+				{
+					"type": "button",
+					"label": "GI Enable Radiosity",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"type": "button",
+					"label": "GI Interpolated",
+					"command": "GlobalIllumination 1"
+				}
+				]
 			}
-			],
-			"section": [
-			{
-				"type": "button",
-				"label": "Muppet Enable Radiosity",
-				"command": "GlobalIllumination 1"
-			},
-			{
-				"type": "button",
-				"label": "Muppet Interpolated",
-				"command": "GlobalIllumination 1"
-			}
-			]
 		},
 
 		"Camera":
 		{
-			"section": [
-			{
-				"type": "button",
-				"label": "Enable Radiosity",
-				"command": "GlobalIllumination 1"
+			"test": {
+				"id": "hej",
+				"controls": [
+				{
+					"type": "button",
+					"label": "CAM Enable Radiosity",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"type": "button",
+					"label": "CAM Interpolated",
+					"command": "GlobalIllumination 1"
+				}
+				]
 			},
-			{
-				"type": "button",
-				"label": "Interpolated",
-				"command": "GlobalIllumination 1"
+			"test2": {
+				"id": "hej",
+				"controls": [
+				{
+					"type": "button",
+					"label": "CAM Enable Radiosity",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"type": "button",
+					"label": "CAM Interpolated",
+					"command": "GlobalIllumination 1"
+				}
+				]
 			}
-			],
-			"section": [
-			{
-				"type": "button",
-				"label": "Enable Radiosity",
-				"command": "GlobalIllumination 1"
-			},
-			{
-				"type": "button",
-				"label": "Interpolated",
-				"command": "GlobalIllumination 1"
-			}
-			]
 		},
 
 		"Effects":
 		{
-			"section": [
-			{
-				"type": "button",
-				"label": "Enable Radiosity",
-				"command": "GlobalIllumination 1"
+			"test": {
+				"id": "hej",
+				"controls": [
+				{
+					"type": "button",
+					"label": "FX Enable Radiosity",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"type": "button",
+					"label": "FX Interpolated",
+					"command": "GlobalIllumination 1"
+				}
+				]
 			},
-			{
-				"type": "button",
-				"label": "Interpolated",
-				"command": "GlobalIllumination 1"
+			"test2": {
+				"id": "hej",
+				"controls": [
+				{
+					"type": "button",
+					"label": "FX Enable Radiosity",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"type": "button",
+					"label": "FX Interpolated",
+					"command": "GlobalIllumination 1"
+				}
+				]
 			}
-			],
-			"section": [
-			{
-				"type": "button",
-				"label": "Enable Radiosity",
-				"command": "GlobalIllumination 1"
-			},
-			{
-				"type": "button",
-				"label": "Interpolated",
-				"command": "GlobalIllumination 1"
-			}
-			]
 		}
 	}
 }
