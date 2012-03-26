@@ -42,6 +42,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # Init Panel variables
         self._ui = lwsdk.LWPanels()
         self._panel = None
+        self._controls = None
 
 
     def __del__(self):
@@ -104,6 +105,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # actual index in the Master Plugins list.
         lwsdk.command('RemoveServer MasterHandler 1')
 
+    def button_callback(self, id, user_data):
+        """ Handle clicks on on main buttons in the Panel.
+        """
+        # user_data contains the dictionary key of the pressed button.
+        self._controls[user_data]['fn']()
+
 
     # --------------------------------------------------------------------------
     # Custom Methods
@@ -140,12 +147,33 @@ class RenderPresetsMaster(lwsdk.IMaster):
         for key, val in tabs.iteritems():
             tab_names.append(key.encode('utf-8'))
 
+
+
+
+
         # TMP GUI Setup
         c1 = self._panel.listbox_ctl('Listbox', 200, 10, self.name_1d, self.count_1d)
         c1.set_select(self.single_select_event_func)
 
         self._c2 = self._panel.tabchoice_ctl('Tabs', tab_names)
         self._c2.set_event(self.tabs_callback)
+
+        self._controls = {
+            0: {'ctl': None, 'label': 'New',       'fn': self.new, 'x': 0},
+            1: {'ctl': None, 'label': 'Save',      'fn': self.save, 'x': 0},
+            2: {'ctl': None, 'label': 'Rename',    'fn': self.rename, 'x': 0},
+            3: {'ctl': None, 'label': 'Delete',    'fn': self.delete, 'x': 0},
+            4: {'ctl': None, 'label': 'Up',        'fn': self.up, 'x': 0},
+            5: {'ctl': None, 'label': 'Down',      'fn': self.down, 'x': 0},
+            6: {'ctl': None, 'label': 'Duplicate', 'fn': self.duplicate, 'x': 0},
+            7: {'ctl': None, 'label': 'About',     'fn': self.about, 'x': 0},
+            8: {'ctl': None, 'label': 'Apply',     'fn': self.apply, 'x': 0}
+        }
+
+        for key, val in self._controls.iteritems():
+            val['ctl'] = self._panel.button_ctl(val['label'])
+            val['ctl'].set_event(self.button_callback, key)
+
 
         # print tab_names
         # print tab_names[0]
@@ -214,6 +242,37 @@ class RenderPresetsMaster(lwsdk.IMaster):
             s['control'].render()
 
 
+    # --------------------------------------------------------------------------
+    # Button Methods
+    # --------------------------------------------------------------------------
+    def new(self):
+        print 'new'
+
+    def save(self):
+        print 'save'
+
+    def rename(self):
+        print 'rename'
+
+    def delete(self):
+        print 'delete'
+
+    def up(self):
+        print 'up'
+
+    def down(self):
+        print 'down'
+
+    def duplicate(self):
+        print 'duplicate'
+
+    def about(self):
+        print 'about'
+
+    def apply(self):
+        print 'apply'
+
+
 
 
     # Callbacks --------------------------------------
@@ -235,6 +294,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
 
 
+
+
 temp_list = ['hey', 'ho', 'lets', 'go']
 
 
@@ -242,10 +303,10 @@ temp_list = ['hey', 'ho', 'lets', 'go']
 # Config Class
 # ------------------------------------------------------------------------------
 class Config:
-    """ Handle load and save of presets.
+    """ Handles storage, loading and saving of presets.
     """
-
-    cfg = None
+    # Static variables
+    presets = None
 
     @staticmethod
     def load():
@@ -255,7 +316,6 @@ class Config:
     @staticmethod
     def save():
         print 'save'
-
 
 
 # ------------------------------------------------------------------------------
