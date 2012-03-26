@@ -148,7 +148,7 @@ class render_presets_master(lwsdk.IMaster):
         # |      tabchoice_ctl(self, char title, char items) -> Control
         # self._c2 = panel.tabchoice_ctl('Tabbs', single_text)
         self._c2 = self._panel.tabchoice_ctl('Tabs', tabs)
-        self._c2.set_event(self.clicked)
+        self._c2.set_event(self.tabs_callback)
 #        self._c2.move(200,0)
         # self._c2.setw(300)
 #        self._cmupp = self._panel.border_ctl('sf', 100,1)
@@ -170,12 +170,20 @@ class render_presets_master(lwsdk.IMaster):
         print data['tab1']
         tmp = data['tab1']
         for s in tmp:
-            print s['label']
-            t = self._panel.button_ctl(s['label'])
+            # print s['label']
+            s['control'] = self._panel.button_ctl(s['label'])
+
+        print data['tab1']
 
 
+        tmp = data['tab2']
+        for s in tmp:
+            # print s['label']
+            s['control'] = self._panel.button_ctl(s['label'])
+            s['control'].erase()
 
 
+        self._tmp_def = data 
 
 
 
@@ -198,6 +206,35 @@ class render_presets_master(lwsdk.IMaster):
         # multiple line test
 #        print('flag: afsasssssssssssssssssssssssssssssfasfafasfasfa' \
 #              + str(self.tab1_c1.flags()) )
+
+
+
+    def tabs_callback(self, id, user_data):
+        print 'You selected: %s' % temp_list[self._c2.get_int()]
+        print self._c2.get_int()
+        tmp = self._c2.get_int()
+
+        data = self._tmp_def
+
+        if tmp == 0:
+            tmp = data['tab1']
+            for s in tmp:
+                s['control'].render()
+
+            tmp = data['tab2']
+            for s in tmp:
+                s['control'].erase()
+
+        if tmp == 1:
+
+            tmp = data['tab1']
+            for s in tmp:
+                s['control'].erase()
+
+            tmp = data['tab2']
+            for s in tmp:
+                s['control'].render()
+
 
 
 
