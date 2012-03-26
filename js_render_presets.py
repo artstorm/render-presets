@@ -42,8 +42,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # Init Panel variables
         self._ui = lwsdk.LWPanels()
         self._panel = None
-        # print CONFIG_FILE
-        # print Config.load()
 
 
     def __del__(self):
@@ -247,12 +245,16 @@ class Config:
     """ Handle load and save of presets.
     """
 
-    def load(self):
-        print 'load'
-        pass
+    cfg = None
 
-    def save(self):
-        pass
+    @staticmethod
+    def load():
+        print 'load'
+        Config.cfg = 'Muppet!'
+
+    @staticmethod
+    def save():
+        print 'save'
 
 
 
