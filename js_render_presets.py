@@ -21,6 +21,7 @@ import os
 import json
 import lwsdk
 
+import pprint
 
 # ------------------------------------------------------------------------------
 # Constants
@@ -74,24 +75,15 @@ class render_presets_master(lwsdk.IMaster):
             self._panel.seth(420)
             self._panel.set_close_callback(self.panel_close_callback)
 
-
-
-            self._c2 = self._panel.tabchoice_ctl('Tabs', temp_list)
-            # self._c2.set_event(self.clicked)
-            # self._c2.move(200,0)
-
             self.create_controls()
-
 
             self._panel.open(lwsdk.PANF_NOBUTT)
 
         return lwsdk.AFUNC_OK
 
 
-
-
     # --------------------------------------------------------------------------
-    # Custom Methods
+    # Callbacks
     # --------------------------------------------------------------------------
     def panel_close_callback(self, panel, data):
         """ If the panel is closed by the user, let's destroy all Panel assets
@@ -105,13 +97,16 @@ class render_presets_master(lwsdk.IMaster):
         self._ui = None
         self._controls = None
 
-        # Perhaps it would be better to removed the plugin completely when 
+        # Perhaps it would be better to remove the plugin completely when 
         # closing the window? I keep that line here, commented out, during dev
         # until I've decided. If I keep it, I need to add a method to find the
         # actual index in the Master Plugins list.
         lwsdk.command('RemoveServer MasterHandler 1')
 
 
+    # --------------------------------------------------------------------------
+    # Custom Methods
+    # --------------------------------------------------------------------------
     def create_controls(self):
         """ Creates the controls in the panel.
 
@@ -130,78 +125,57 @@ class render_presets_master(lwsdk.IMaster):
         data = json.load(json_data)
         json_data.close()
 
-        # Get rid of Unicode character (u')
-        print data['tabs']
-        print temp_list
-        tabs = [s.encode('utf-8') for s in data['tabs']]
-        print tabs
+        pprint.pprint(data)
 
+        # Get rid of Unicode character (u')
+  #      print data['tabs']
+ #       print temp_list
+        # tabs = [s.encode('utf-8') for s in data['tabs']]
+        tabs = data['tabs']
+#        print tabs
+        
+        tab_names = []
+        for key, val in tabs.iteritems():
+            tab_names.append(key.encode('utf-8'))
 
         # TMP GUI Setup
 
+        c1 = self._panel.listbox_ctl('Listbox', 200, 10, self.name_1d, self.count_1d)
+        c1.set_select(self.single_select_event_func)
 
-        # c1 = panel.listbox_ctl('Listbox', 200, 10, self.name_1d, self.count_1d)
-        # c1.set_select(self.single_select_event_func)
-
-
-        # |  tabchoice_ctl(self, *args)
-        # |      tabchoice_ctl(self, char title, char items) -> Control
-        # self._c2 = panel.tabchoice_ctl('Tabbs', single_text)
-        self._c2 = self._panel.tabchoice_ctl('Tabs', tabs)
+        self._c2 = self._panel.tabchoice_ctl('Tabs', tab_names)
         self._c2.set_event(self.tabs_callback)
-#        self._c2.move(200,0)
-        # self._c2.setw(300)
-#        self._cmupp = self._panel.border_ctl('sf', 100,1)
-#        self._cmupp.move(200,40)
 
-        # Dyn buttons tmp
-#        btns = [s.encode('utf-8') for s in data['Tab 1']]
-#        print btns
-#        ctr = 0
-#        cool = []
-#        for btn in btns:
-#            cool.append(self._panel.button_ctl(btn))
-#            cool[-1].move(200, 80)
+        # print tab_names
+        # print tab_names[0]
+        # print tabs[tab_names[0]]
 
-#        self._panel.align_controls_vertical(cool)
-
- 
-        # Loop the dictionary and try to draw the buttons found
-        print data['tab1']
-        tmp = data['tab1']
+        # Optimize: Consolidate below into one loop
+        tmp = tabs[tab_names[0]]
         for s in tmp:
             # print s['label']
-            s['control'] = self._panel.button_ctl(s['label'])
+            # s['control'] = self._panel.bool_ctl(s['label'])
+            s['control'] = self._panel.bool_ctl(s['label'])
+            s['control'].set_w(200)
 
-        print data['tab1']
-
-
-        tmp = data['tab2']
+        tmp = tabs[tab_names[1]]
         for s in tmp:
-            # print s['label']
-            s['control'] = self._panel.button_ctl(s['label'])
+            s['control'] = self._panel.bool_ctl(s['label'])
+            s['control'].erase()
+
+        tmp = tabs[tab_names[2]]
+        for s in tmp:
+            s['control'] = self._panel.bool_ctl(s['label'])
+            s['control'].erase()
+
+        tmp = tabs[tab_names[3]]
+        for s in tmp:
+            s['control'] = self._panel.bool_ctl(s['label'])
             s['control'].erase()
 
 
-        self._tmp_def = data 
-
-
-
-
-        # First Tab
-#        self.tab1_c1 = self._panel.button_ctl('button 1')
-
-        # Second Tab
-#        self.tab2_c1 = self._panel.button_ctl('button 2')
-
-        # Third Tab
-
-#        print('flag: ' + str(self.tab1_c1.flags()) )
-#        self.tab1_c1.erase()
-#        print('flag: ' + str(self.tab1_c1.flags()) ) # CTLF_INVISIBLE  is set for erased
-#        self.tab1_c1.render()
-#        print('flag: ' + str(self.tab1_c1.flags()) )
-
+        self._tmp_tabs = tabs
+        self._tmp_tab_names = tab_names
 
         # multiple line test
 #        print('flag: afsasssssssssssssssssssssssssssssfasfafasfasfa' \
@@ -210,54 +184,34 @@ class render_presets_master(lwsdk.IMaster):
 
 
     def tabs_callback(self, id, user_data):
-        print 'You selected: %s' % temp_list[self._c2.get_int()]
-        print self._c2.get_int()
+#        print 'You selected: %s' % temp_list[self._c2.get_int()]
+#        print self._c2.get_int()
         tmp = self._c2.get_int()
 
-        data = self._tmp_def
+        tabs = self._tmp_tabs
+        tab_names = self._tmp_tab_names
 
-        if tmp == 0:
-            tmp = data['tab1']
-            for s in tmp:
-                s['control'].render()
+        # Optimize below: erase in one loop. Don't erase the tab that's clicked.
+        # Erase controllers on all tabs
+        tmp_pan = tabs[tab_names[0]]
+        for s in tmp_pan:
+            s['control'].erase()
+        tmp_pan = tabs[tab_names[1]]
+        for s in tmp_pan:
+            s['control'].erase()
+        tmp_pan = tabs[tab_names[2]]
+        for s in tmp_pan:
+            s['control'].erase()
+        tmp_pan = tabs[tab_names[3]]
+        for s in tmp_pan:
+            s['control'].erase()
 
-            tmp = data['tab2']
-            for s in tmp:
-                s['control'].erase()
-
-        if tmp == 1:
-
-            tmp = data['tab1']
-            for s in tmp:
-                s['control'].erase()
-
-            tmp = data['tab2']
-            for s in tmp:
-                s['control'].render()
+        # Render the controls on the clicked tab
+        tmp_pan = tabs[tab_names[tmp]]
+        for s in tmp_pan:
+            s['control'].render()
 
 
-
-
-    def clicked(self, id, user_data):
-        # Tab handler at the moment!
-        # print "click"
-        # print id
-        # print user_data
-        print 'You selected: %s' % temp_list[self._c2.get_int()]
-
-        tmp = self._c2.get_int()
-
-        # first tab
-#        if tmp==0:
-#            self.tab1_c1.erase()
-        # second tab
-#        if tmp==1:
-#            self.tab1_c1.erase()
-        # third tab
-#        if tmp==2:
-#            self.tab1_c1.erase()
-
-        # Hide Controls. Or Redraw Controls?
 
 
     # Callbacks --------------------------------------
@@ -279,7 +233,7 @@ class render_presets_master(lwsdk.IMaster):
 
 
 
-temp_list = [ 'first text', 'second text', 'third text', 'yey' ]
+temp_list = ['hey', 'ho', 'lets', 'go']
 
 # ------------------------------------------------------------------------------
 # Register the Plugin
