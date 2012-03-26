@@ -72,20 +72,28 @@ class render_presets_master(lwsdk.IMaster):
             self._panel = self._ui.create('Render Presets v'+__version__)
             self._panel.setw(510)
             self._panel.seth(420)
-            self._panel.set_close_callback(self.panel_close)
+            self._panel.set_close_callback(self.panel_close_callback)
 
-            # TMP Code
-            # self.temp_create_gui()
+
+
             self._c2 = self._panel.tabchoice_ctl('Tabs', temp_list)
-            self._c2.set_event(self.clicked)
+            # self._c2.set_event(self.clicked)
             # self._c2.move(200,0)
+
+            self.create_controls()
+
 
             self._panel.open(lwsdk.PANF_NOBUTT)
 
         return lwsdk.AFUNC_OK
 
 
-    def panel_close(self, panel, data):
+
+
+    # --------------------------------------------------------------------------
+    # Custom Methods
+    # --------------------------------------------------------------------------
+    def panel_close_callback(self, panel, data):
         """ If the panel is closed by the user, let's destroy all Panel assets
         so we have a clean slate to recreate all assets in the inter_ui() method
         if the user chooses to open this plugin instance again.
@@ -101,13 +109,15 @@ class render_presets_master(lwsdk.IMaster):
         # closing the window? I keep that line here, commented out, during dev
         # until I've decided. If I keep it, I need to add a method to find the
         # actual index in the Master Plugins list.
-        # lwsdk.command('RemoveServer MasterHandler 1')
+        lwsdk.command('RemoveServer MasterHandler 1')
 
 
-    # --------------------------------------------------------------------------
-    # Temporary Methods
-    # --------------------------------------------------------------------------
-    def temp_create_gui(self):
+    def create_controls(self):
+        """ Creates the controls in the panel.
+
+        Loads a file containing all definitions needed to populate the interface
+        and associated commands.
+        """
 
         # Get the path to the definitions file
         script_file = os.path.realpath(__file__)
@@ -122,7 +132,7 @@ class render_presets_master(lwsdk.IMaster):
 
         # Get rid of Unicode character (u')
         print data['tabs']
-        print single_text
+        print temp_list
         tabs = [s.encode('utf-8') for s in data['tabs']]
         print tabs
 
@@ -154,6 +164,16 @@ class render_presets_master(lwsdk.IMaster):
 #            cool[-1].move(200, 80)
 
 #        self._panel.align_controls_vertical(cool)
+
+ 
+        # Loop the dictionary and try to draw the buttons found
+        print data['tab1']
+        tmp = data['tab1']
+        for s in tmp:
+            print s['label']
+            t = self._panel.button_ctl(s['label'])
+
+
 
 
 

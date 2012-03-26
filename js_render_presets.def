@@ -1,0 +1,36 @@
+{
+   "_comment" : "Defining controllers and commands for the presets panel",
+   	"tabs":
+	[
+		"Global Illum",
+		"Render",
+		"Effects",
+		"Camera"
+	],
+	"tab1":
+	[
+		{
+			"type": "button",
+			"label": "Enable Radiosity",
+			"command": "GlobalIllumination 1"
+		},
+		{
+			"type": "button",
+			"label": "Interpolated",
+			"command": "GlobalIllumination 1"
+		}
+	],
+	"tab2":
+	[
+		{
+			"type": "button",
+			"label": "Button 1",
+			"command": "GlobalIllumination 1"
+		},
+		{
+			"type": "button",
+			"label": "Button 1",
+			"command": "GlobalIllumination 1"
+		}
+	]
+}
