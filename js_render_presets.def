@@ -2,34 +2,6 @@
 	"_comment" : "Defining controllers and commands for the presets panel",
 	"tabs":
 	{
-		"Global Illum":
-		{
-			"section": [
-			{
-				"type": "button",
-				"label": "Enable Radiosity",
-				"command": "GlobalIllumination 1"
-			},
-			{
-				"type": "button",
-				"label": "Interpolated",
-				"command": "GlobalIllumination 1"
-			}
-			],
-			"section": [
-			{
-				"type": "button",
-				"label": "Enable Radiosity",
-				"command": "GlobalIllumination 1"
-			},
-			{
-				"type": "button",
-				"label": "Interpolated",
-				"command": "GlobalIllumination 1"
-			}
-			]
-		},
-
 		"Render":
 		{
 			"section": [
@@ -58,7 +30,35 @@
 			]
 		},
 
-		"Effects":
+		"Global Illum":
+		{
+			"section": [
+			{
+				"type": "button",
+				"label": "Muppet Enable Radiosity",
+				"command": "GlobalIllumination 1"
+			},
+			{
+				"type": "button",
+				"label": "Muppet Interpolated",
+				"command": "GlobalIllumination 1"
+			}
+			],
+			"section": [
+			{
+				"type": "button",
+				"label": "Muppet Enable Radiosity",
+				"command": "GlobalIllumination 1"
+			},
+			{
+				"type": "button",
+				"label": "Muppet Interpolated",
+				"command": "GlobalIllumination 1"
+			}
+			]
+		},
+
+		"Camera":
 		{
 			"section": [
 			{
@@ -86,7 +86,7 @@
 			]
 		},
 
-		"Camera":
+		"Effects":
 		{
 			"section": [
 			{
