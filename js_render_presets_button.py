@@ -25,12 +25,12 @@ import lwsdk
 # ------------------------------------------------------------------------------
 # Generic Plugin Class
 # ------------------------------------------------------------------------------
-class render_presets_button(lwsdk.IGeneric):
+class RenderPresetsButton(lwsdk.IGeneric):
     # Constants
     SSERVER = 'js_Render_Presets'
 
     def __init__(self, context):
-        super(render_presets_button, self).__init__()
+        super(RenderPresetsButton, self).__init__()
 
     def process(self, ga):
         item_info = lwsdk.LWItemInfo()
@@ -78,6 +78,6 @@ ServerTagInfo = [
 ]
 
 ServerRecord = {
-    lwsdk.GenericFactory('js_Render_Presets_Btn', render_presets_button)
+    lwsdk.GenericFactory('js_Render_Presets_Btn', RenderPresetsButton)
     : ServerTagInfo
 }

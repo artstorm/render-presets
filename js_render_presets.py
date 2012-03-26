@@ -28,19 +28,22 @@ import collections
 # Constants
 # ------------------------------------------------------------------------------
 DEFINITIONS_FILE = 'js_render_presets.def'
+CONFIG_FILE      = 'js_render_presets.cfg'
 
 
 # ------------------------------------------------------------------------------
 # Master Plugin Class
 # ------------------------------------------------------------------------------
-class render_presets_master(lwsdk.IMaster):
+class RenderPresetsMaster(lwsdk.IMaster):
 
     def __init__(self, context):
-        super(render_presets_master, self).__init__()
+        super(RenderPresetsMaster, self).__init__()
 
         # Init Panel variables
         self._ui = lwsdk.LWPanels()
         self._panel = None
+        # print CONFIG_FILE
+        # print Config.load()
 
 
     def __del__(self):
@@ -121,33 +124,25 @@ class render_presets_master(lwsdk.IMaster):
         dir_path = os.path.dirname(script_file)
         def_file = os.path.join(dir_path, DEFINITIONS_FILE)
 
-
         # Load the JSON data into an OrderedDict
         try:
-            json_data = open(def_file)
-            data = json.load(json_data, object_pairs_hook=collections.OrderedDict)
+            f = open(def_file)
+            data = json.load(f, object_pairs_hook=collections.OrderedDict)
         except:
             print >>sys.stderr, 'The file %s was not found.' % DEFINITIONS_FILE
             return False
         else:
-            json_data.close()
-
-
+            f.close()
 
         # Get rid of Unicode character (u')
-  #      print data['tabs']
- #       print temp_list
-        # tabs = [s.encode('utf-8') for s in data['tabs']]
         tabs = data['tabs']
-#        print tabs
-
+        # tabs = [s.encode('utf-8') for s in data['tabs']]
 
         tab_names = []
         for key, val in tabs.iteritems():
             tab_names.append(key.encode('utf-8'))
 
         # TMP GUI Setup
-
         c1 = self._panel.listbox_ctl('Listbox', 200, 10, self.name_1d, self.count_1d)
         c1.set_select(self.single_select_event_func)
 
@@ -244,6 +239,23 @@ class render_presets_master(lwsdk.IMaster):
 
 temp_list = ['hey', 'ho', 'lets', 'go']
 
+
+# ------------------------------------------------------------------------------
+# Config Class
+# ------------------------------------------------------------------------------
+class Config:
+    """ Handle load and save of presets.
+    """
+
+    def load(self):
+        print 'load'
+        pass
+
+    def save(self):
+        pass
+
+
+
 # ------------------------------------------------------------------------------
 # Register the Plugin
 # ------------------------------------------------------------------------------
@@ -252,6 +264,6 @@ ServerTagInfo = [
 ]
 
 ServerRecord = { 
-    lwsdk.MasterFactory('js_Render_Presets', render_presets_master) 
+    lwsdk.MasterFactory('js_Render_Presets', RenderPresetsMaster) 
     : ServerTagInfo
 }
