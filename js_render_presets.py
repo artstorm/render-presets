@@ -76,6 +76,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
             self._panel = self._ui.create('Render Presets v'+__version__)
             self._panel.setw(510)
             self._panel.seth(420)
+            self._panel.setmaxh(420)
             self._panel.set_close_callback(self.panel_close_callback)
 
             if self.create_controls():
@@ -149,27 +150,49 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
 
         # TMP GUI Setup
-        self.c1 = self._panel.listbox_ctl('Listbox', 200, 10, self.name_1d, self.count_1d)
+        self.c1 = self._panel.listbox_ctl('Presets', 150, 18, self.name_1d, self.count_1d)
         self.c1.set_select(self.single_select_event_func)
+
+
+        self._controls = {
+            0: {'ctl': None, 'lbl': 'New',       'x': 4,    'w': None, 'col': 'l', 'fn': self.new},
+            1: {'ctl': None, 'lbl': 'Save',      'x': 82,   'w': None, 'col': 'r', 'fn': self.save},
+            2: {'ctl': None, 'lbl': 'Rename',    'x': None, 'w': None, 'col': 'l', 'fn': self.rename},
+            3: {'ctl': None, 'lbl': 'Delete',    'x': None, 'w': None, 'col': 'r', 'fn': self.delete},
+            4: {'ctl': None, 'lbl': 'Up',        'x': None, 'w': None, 'col': 'l', 'fn': self.up},
+            5: {'ctl': None, 'lbl': 'Down',      'x': None, 'w': None, 'col': 'r', 'fn': self.down},
+            6: {'ctl': None, 'lbl': 'Duplicate', 'x': None, 'w': None, 'col': 'l', 'fn': self.duplicate},
+            7: {'ctl': None, 'lbl': 'About',     'x': None, 'w': None, 'col': 'r', 'fn': self.about},
+            8: {'ctl': None, 'lbl': 'Apply',     'x': None, 'w': 150,  'col': 'l', 'fn': self.apply}
+        }
+
+        left_column = []
+        right_column = []
+
+        for key, val in self._controls.iteritems():
+            w = 72 if val['w'] is None else val['w']
+
+            val['ctl'] = self._panel.wbutton_ctl(val['lbl'], w)
+            val['ctl'].set_event(self.button_callback, key)
+
+
+            x = 0 if val['x'] is None else val['x']
+            val['ctl'].move(x, 282)
+
+            if val['col'] == 'l':
+                left_column.append(val['ctl'])
+            else:
+                right_column.append(val['ctl'])
+
+        self._panel.align_controls_vertical(left_column)
+        self._panel.align_controls_vertical(right_column)
+
+
+
 
         self._c2 = self._panel.tabchoice_ctl('Tabs', tab_names)
         self._c2.set_event(self.tabs_callback)
-
-        self._controls = {
-            0: {'ctl': None, 'label': 'New',       'fn': self.new, 'x': 0},
-            1: {'ctl': None, 'label': 'Save',      'fn': self.save, 'x': 0},
-            2: {'ctl': None, 'label': 'Rename',    'fn': self.rename, 'x': 0},
-            3: {'ctl': None, 'label': 'Delete',    'fn': self.delete, 'x': 0},
-            4: {'ctl': None, 'label': 'Up',        'fn': self.up, 'x': 0},
-            5: {'ctl': None, 'label': 'Down',      'fn': self.down, 'x': 0},
-            6: {'ctl': None, 'label': 'Duplicate', 'fn': self.duplicate, 'x': 0},
-            7: {'ctl': None, 'label': 'About',     'fn': self.about, 'x': 0},
-            8: {'ctl': None, 'label': 'Apply',     'fn': self.apply, 'x': 0}
-        }
-
-        for key, val in self._controls.iteritems():
-            val['ctl'] = self._panel.button_ctl(val['label'])
-            val['ctl'].set_event(self.button_callback, key)
+        self._c2.move(200,0)
 
 
         # print tab_names
@@ -183,21 +206,25 @@ class RenderPresetsMaster(lwsdk.IMaster):
             # s['control'] = self._panel.bool_ctl(s['label'])
             s['control'] = self._panel.bool_ctl(s['label'])
             s['control'].set_w(200)
+            s['control'].move(200,40)
 
         tmp = tabs[tab_names[1]]
         for s in tmp:
             s['control'] = self._panel.bool_ctl(s['label'])
             s['control'].erase()
+            s['control'].move(200,40)
 
         tmp = tabs[tab_names[2]]
         for s in tmp:
             s['control'] = self._panel.bool_ctl(s['label'])
             s['control'].erase()
+            s['control'].move(200,40)
 
         tmp = tabs[tab_names[3]]
         for s in tmp:
             s['control'] = self._panel.bool_ctl(s['label'])
             s['control'].erase()
+            s['control'].move(200,40)
 
 
         self._tmp_tabs = tabs
