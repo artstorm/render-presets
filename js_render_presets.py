@@ -124,7 +124,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         @return boolean False if definitions file failed to load, otherwise True
         """
 
-        # Get the path to the definitions file
+        # Get the path to the definitions file. The same location as the script.
         script_file = os.path.realpath(__file__)
         dir_path = os.path.dirname(script_file)
         def_file = os.path.join(dir_path, DEFINITIONS_FILE)
@@ -148,12 +148,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
             tab_names.append(key.encode('utf-8'))
 
 
-
-
-
         # TMP GUI Setup
-        c1 = self._panel.listbox_ctl('Listbox', 200, 10, self.name_1d, self.count_1d)
-        c1.set_select(self.single_select_event_func)
+        self.c1 = self._panel.listbox_ctl('Listbox', 200, 10, self.name_1d, self.count_1d)
+        self.c1.set_select(self.single_select_event_func)
 
         self._c2 = self._panel.tabchoice_ctl('Tabs', tab_names)
         self._c2.set_event(self.tabs_callback)
@@ -247,6 +244,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
     # --------------------------------------------------------------------------
     def new(self):
         print 'new'
+        temp_list.append('new preset')
+        self.c1.redraw()
 
     def save(self):
         print 'save'
@@ -256,12 +255,32 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def delete(self):
         print 'delete'
+        temp_list.remove('new preset')
+        self.c1.redraw()
 
     def up(self):
         print 'up'
+        # get the current index
+        old_index = temp_list.index('new preset')
+        # move it up
+        new_index = old_index - 1
+
+        # delete old, and insert it on the new index
+        temp_list.insert(new_index, temp_list.pop(old_index))
+
+        self.c1.redraw()
 
     def down(self):
         print 'down'
+        # get the current index
+        old_index = temp_list.index('new preset')
+        # move it down
+        new_index = old_index + 1
+
+        # delete old, and insert it on the new index
+        temp_list.insert(new_index, temp_list.pop(old_index))
+
+        self.c1.redraw()
 
     def duplicate(self):
         print 'duplicate'
@@ -271,8 +290,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def apply(self):
         print 'apply'
-
-
 
 
     # Callbacks --------------------------------------
@@ -300,9 +317,9 @@ temp_list = ['hey', 'ho', 'lets', 'go']
 
 
 # ------------------------------------------------------------------------------
-# Config Class
+# Presets Class
 # ------------------------------------------------------------------------------
-class Config:
+class Presets:
     """ Handles storage, loading and saving of presets.
     """
     # Static variables
@@ -311,7 +328,7 @@ class Config:
     @staticmethod
     def load():
         print 'load'
-        Config.cfg = 'Muppet!'
+        Presets.cfg = 'Muppet!'
 
     @staticmethod
     def save():
