@@ -2,7 +2,9 @@
 	"_comment" : "Defining controllers and commands for the presets panel",
 	"tabs":
 	{
-		"Global Illum": [
+		"Global Illum":
+		{
+			"section": [
 			{
 				"type": "button",
 				"label": "Enable Radiosity",
@@ -13,45 +15,103 @@
 				"label": "Interpolated",
 				"command": "GlobalIllumination 1"
 			}
-		],
-
-		"Render": [
+			],
+			"section": [
 			{
 				"type": "button",
-				"label": "Mupp",
+				"label": "Enable Radiosity",
 				"command": "GlobalIllumination 1"
 			},
 			{
 				"type": "button",
-				"label": "Muppet",
+				"label": "Interpolated",
 				"command": "GlobalIllumination 1"
 			}
-		],
+			]
+		},
 
-		"Effects": [
+		"Render":
+		{
+			"section": [
 			{
 				"type": "button",
-				"label": "Effects Mupp",
+				"label": "Enable Radiosity",
 				"command": "GlobalIllumination 1"
 			},
 			{
 				"type": "button",
-				"label": "Effects Muppet",
+				"label": "Interpolated",
 				"command": "GlobalIllumination 1"
 			}
-		],
-
-		"Camera": [
+			],
+			"section": [
 			{
 				"type": "button",
-				"label": "CAM Mupp",
+				"label": "Enable Radiosity",
 				"command": "GlobalIllumination 1"
 			},
 			{
 				"type": "button",
-				"label": "CAM Muppet",
+				"label": "Interpolated",
 				"command": "GlobalIllumination 1"
 			}
-		]
+			]
+		},
+
+		"Effects":
+		{
+			"section": [
+			{
+				"type": "button",
+				"label": "Enable Radiosity",
+				"command": "GlobalIllumination 1"
+			},
+			{
+				"type": "button",
+				"label": "Interpolated",
+				"command": "GlobalIllumination 1"
+			}
+			],
+			"section": [
+			{
+				"type": "button",
+				"label": "Enable Radiosity",
+				"command": "GlobalIllumination 1"
+			},
+			{
+				"type": "button",
+				"label": "Interpolated",
+				"command": "GlobalIllumination 1"
+			}
+			]
+		},
+
+		"Camera":
+		{
+			"section": [
+			{
+				"type": "button",
+				"label": "Enable Radiosity",
+				"command": "GlobalIllumination 1"
+			},
+			{
+				"type": "button",
+				"label": "Interpolated",
+				"command": "GlobalIllumination 1"
+			}
+			],
+			"section": [
+			{
+				"type": "button",
+				"label": "Enable Radiosity",
+				"command": "GlobalIllumination 1"
+			},
+			{
+				"type": "button",
+				"label": "Interpolated",
+				"command": "GlobalIllumination 1"
+			}
+			]
+		}
 	}
 }

@@ -202,29 +202,36 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # Optimize: Consolidate below into one loop
         tmp = tabs[tab_names[0]]
         for s in tmp:
-            # print s['label']
-            # s['control'] = self._panel.bool_ctl(s['label'])
-            s['control'] = self._panel.bool_ctl(s['label'])
-            s['control'].set_w(200)
-            s['control'].move(200,40)
+            print s
+            for t in tmp[s]:
+                print t
+                t['control'] = self._panel.bool_ctl(t['label'])
+                t['control'].set_w(200)
+                t['control'].move(200,40)
+        # for s in tmp:
+        #     # print s['label']
+        #     # s['control'] = self._panel.bool_ctl(s['label'])
+        #     s['control'] = self._panel.bool_ctl(s['label'])
+        #     s['control'].set_w(200)
+        #     s['control'].move(200,40)
 
-        tmp = tabs[tab_names[1]]
-        for s in tmp:
-            s['control'] = self._panel.bool_ctl(s['label'])
-            s['control'].erase()
-            s['control'].move(200,40)
+        # tmp = tabs[tab_names[1]]
+        # for s in tmp:
+        #     s['control'] = self._panel.bool_ctl(s['label'])
+        #     s['control'].erase()
+        #     s['control'].move(200,40)
 
-        tmp = tabs[tab_names[2]]
-        for s in tmp:
-            s['control'] = self._panel.bool_ctl(s['label'])
-            s['control'].erase()
-            s['control'].move(200,40)
+        # tmp = tabs[tab_names[2]]
+        # for s in tmp:
+        #     s['control'] = self._panel.bool_ctl(s['label'])
+        #     s['control'].erase()
+        #     s['control'].move(200,40)
 
-        tmp = tabs[tab_names[3]]
-        for s in tmp:
-            s['control'] = self._panel.bool_ctl(s['label'])
-            s['control'].erase()
-            s['control'].move(200,40)
+        # tmp = tabs[tab_names[3]]
+        # for s in tmp:
+        #     s['control'] = self._panel.bool_ctl(s['label'])
+        #     s['control'].erase()
+        #     s['control'].move(200,40)
 
 
         self._tmp_tabs = tabs
