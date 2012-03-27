@@ -28,7 +28,7 @@ import collections
 # Constants
 # ------------------------------------------------------------------------------
 DEFINITIONS_FILE = 'js_render_presets.def'
-CONFIG_FILE      = 'js_render_presets.cfg'
+PRESETS_FILE     = 'js_render_presets.cfg'
 
 
 # ------------------------------------------------------------------------------
@@ -43,6 +43,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._ui = lwsdk.LWPanels()
         self._panel = None
         self._controls = None
+        Presets.load()
+        Presets.save()
 
 
     def __del__(self):
@@ -107,10 +109,16 @@ class RenderPresetsMaster(lwsdk.IMaster):
         lwsdk.command('RemoveServer MasterHandler 1')
 
     def button_callback(self, id, user_data):
-        """ Handle clicks on on main buttons in the Panel.
-        """
+        """ Handle clicks on on main buttons in the Panel. """
         # user_data contains the dictionary key of the pressed button.
         self._controls[user_data]['fn']()
+
+    def enable_in_preset_callback(self, id, user_data):
+        # print 'enable'
+        # print id.get_int()
+        for t in self.lookup:
+            t['control'].unghost()
+
 
 
     # --------------------------------------------------------------------------
@@ -132,13 +140,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         # Load the JSON data into an OrderedDict
         try:
-            f = open(def_file)
+            f = open(def_file, 'r')
             data = json.load(f, object_pairs_hook=collections.OrderedDict)
+            f.close()
         except:
             print >>sys.stderr, 'The file %s was not found.' % DEFINITIONS_FILE
             return False
-        else:
-            f.close()
 
         # Get rid of Unicode character (u')
         tabs = data['tabs']
@@ -188,8 +195,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._panel.align_controls_vertical(right_column)
 
 
-
-
         self._c2 = self._panel.tabchoice_ctl('Tabs', tab_names)
         self._c2.set_event(self.tabs_callback)
         self._c2.move(200,0)
@@ -203,9 +208,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
         tmp = tabs[tab_names[0]]
         y = 40
         for s, v in tmp.iteritems():
+            # print 'HERE!'
             v['ctl'] = self._panel.bool_ctl('enable')
             v['ctl'].set_w(200)
             v['ctl'].move(200,y)
+            v['ctl'].set_event(self.enable_in_preset_callback, 0)
+            self.lookup = v['controls']
             y += 40
 
             # for t in tmp[s]:
@@ -213,6 +221,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 t['control'] = self._panel.bool_ctl(t['label'])
                 t['control'].set_w(200)
                 t['control'].move(200,y)
+                t['control'].ghost()
                 y += 40
 
         # for s in tmp:
@@ -231,6 +240,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
             v['ctl'] = self._panel.bool_ctl('enable')
             v['ctl'].set_w(200)
             v['ctl'].move(200,y)
+            v['ctl'].erase()
             y += 40
 
             for t in v['controls']:
@@ -246,6 +256,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
             v['ctl'] = self._panel.bool_ctl('enable')
             v['ctl'].set_w(200)
             v['ctl'].move(200,y)
+            v['ctl'].erase()
             y += 40
         #     s['control'] = self._panel.bool_ctl(s['label'])
         #     s['control'].erase()
@@ -263,6 +274,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
             v['ctl'] = self._panel.bool_ctl('enable')
             v['ctl'].set_w(200)
             v['ctl'].move(200,y)
+            v['ctl'].erase()
             y += 40
         #     s['control'] = self._panel.bool_ctl(s['label'])
         #     s['control'].erase()
@@ -404,24 +416,42 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
 temp_list = ['hey', 'ho', 'lets', 'go']
 
+temp_data = [ { 'a':'A', 'b':(2, 4), 'c':3.0 } ]
 
 # ------------------------------------------------------------------------------
 # Presets Class
 # ------------------------------------------------------------------------------
 class Presets:
-    """ Handles storage, loading and saving of presets.
-    """
+    """ Handles storage, loading and saving of user defined presets. """
     # Static variables
     presets = None
 
     @staticmethod
     def load():
-        print 'load'
-        Presets.cfg = 'Muppet!'
+        """ Loads the presets into the class static variable """
+        # Load the JSON data into an OrderedDict
+        try:
+            f = open(Presets.file_path(), 'r')
+            Presets.presets = json.load( \
+                f, object_pairs_hook = collections.OrderedDict)
+            f.close()
+        except:
+            Presets.presets = None
 
     @staticmethod
     def save():
-        print 'save'
+        """ Saves the presets to a json formatted file """
+        f = open(Presets.file_path(), 'w')
+        json.dump(temp_data, f, indent=4)
+        f.close()
+
+    @staticmethod
+    def file_path():
+        """ @return Absolute path to the presets file """
+        # Get path to LightWave's config folder, and join with the filename
+        folder = lwsdk.LWDirInfoFunc(lwsdk.LWFTYPE_SETTING)
+        file_path = os.path.join(folder, PRESETS_FILE)
+        return file_path
 
 
 # ------------------------------------------------------------------------------
