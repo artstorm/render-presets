@@ -43,6 +43,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._ui = lwsdk.LWPanels()
         self._panel = None
         self._controls = None
+
         Presets.load()
 
     def __del__(self):
@@ -114,12 +115,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # user_data contains the dictionary key of the pressed button.
         self._controls[user_data]['fn']()
 
+
     def enable_in_preset_callback(self, id, user_data):
         # print 'enable'
         # print id.get_int()
         for t in self.lookup:
             t['control'].unghost()
-
 
 
     # --------------------------------------------------------------------------
@@ -142,18 +143,26 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # Load the JSON data into an OrderedDict
         try:
             f = open(def_file, 'r')
-            data = json.load(f, object_pairs_hook=collections.OrderedDict)
+            Presets.definitions = json.load( \
+                f, object_pairs_hook = collections.OrderedDict)
             f.close()
         except:
             print >>sys.stderr, 'The file %s was not found.' % DEFINITIONS_FILE
             return False
 
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+
+
+
+
+
         # Get rid of Unicode character (u')
-        tabs = data['tabs']
         # tabs = [s.encode('utf-8') for s in data['tabs']]
 
         tab_names = []
-        for key, val in tabs.iteritems():
+        # for key, val in tabs.iteritems():
+        for key in tabs:
             tab_names.append(key.encode('utf-8'))
 
 
@@ -201,9 +210,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._c2.move(200,0)
 
 
-        # print tab_names
-        # print tab_names[0]
-        # print tabs[tab_names[0]]
 
         # Optimize: Consolidate below into one loop
         tmp = tabs[tab_names[0]]
@@ -220,10 +226,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
             # for t in tmp[s]:
             for t in v['controls']:
                 t['control'] = self._panel.bool_ctl(t['label'])
+                if t['type'] == 'button':
+                    t['control'].set_int(t['default'])
                 t['control'].set_w(200)
                 t['control'].move(200,y)
                 t['control'].ghost()
-                y += 40
+                y += 20
 
         # for s in tmp:
         #     # print s['label']
@@ -288,15 +296,10 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 t['control'].erase()
 
 
-
         self._tmp_tabs = tabs
         self._tmp_tab_names = tab_names
 
-        # multiple line test
-#        print('flag: afsasssssssssssssssssssssssssssssfasfafasfasfa' \
-#              + str(self.tab1_c1.flags()) )
         return True
-
 
 
     def tabs_callback(self, id, user_data):
@@ -441,10 +444,19 @@ class RenderPresetsMaster(lwsdk.IMaster):
 # ------------------------------------------------------------------------------
 class Presets:
     """ Handles storage, loading and saving of user defined presets. """
+    # --------------------------------------------------------------------------
     # Static variables
+    # --------------------------------------------------------------------------
+    definitions = None
+
+
     defs = None
     names = None
 
+
+    # --------------------------------------------------------------------------
+    # Methods
+    # --------------------------------------------------------------------------
     @staticmethod
     def load():
         """ Loads the presets into the class static variable """
@@ -479,6 +491,7 @@ class Presets:
         json.dump(Presets.defs, f, indent=4)
         f.close()
 
+
     @staticmethod
     def file_path():
         """ @return Absolute path to the presets file """
@@ -486,6 +499,7 @@ class Presets:
         folder = lwsdk.LWDirInfoFunc(lwsdk.LWFTYPE_SETTING)
         file_path = os.path.join(folder, PRESETS_FILE)
         return file_path
+
 
     @staticmethod
     def add(name):
@@ -502,27 +516,28 @@ class Presets:
         Presets.names.append(name)
         Presets.defs['presets'][name] = {}
 
-        # TODO:
-        # Set default values
+        # reference part of the definitions dictionary
+        defaults = Presets.definitions['tabs']
 
-        # Presets.defs['presets']['New Preset '+str(Presets.ctr)]['GIPanelEnabled'] = 1
-        # Presets.defs['presets']['New Preset '+str(Presets.ctr)]['RenderPanel'] = 1
+        # Set the default values for the new preset
+        for tab in defaults:
+            for section in defaults[tab]:
+                # Set default value for section bool ctl to false
+                section_id = defaults[tab][section]['id']
+                Presets.defs['presets'][name][section_id] = 0
 
-        # // Populate it with default values
-        # pDataPos = arrPresetOptions.indexOf("GIPanelEnabled");
-        # arrPresetData[pDataID][pDataPos] = false;
-        # pDataPos = arrPresetOptions.indexOf("RenderPanelEnabled");
-        # arrPresetData[pDataID][pDataPos] = false;
-        # pDataPos = arrPresetOptions.indexOf("BackdropPanelEnabled");
-        # arrPresetData[pDataID][pDataPos] = false;
-        # pDataPos = arrPresetOptions.indexOf("ProcessingPanelEnabled");
-        # arrPresetData[pDataID][pDataPos] = false;
-        # pDataPos = arrPresetOptions.indexOf("CameraPanelEnabled");
-        # arrPresetData[pDataID][pDataPos] = false;
-        # // Update the preset data panels
-        # refreshPDataPanels(arrPresetList.count());
+                for control in defaults[tab][section]['controls']:
+                    # Set the default values from definitions for the controls
+                    cmd = control['command']
+                    Presets.defs['presets'][name][cmd] = control['default']
 
         Presets.save()
+
+
+    @staticmethod
+    def delete(name):
+        pass
+
 
 
 
