@@ -8,28 +8,63 @@
 				"id": "hej",
 				"controls": [
 				{
+					"label": "Raytrace Shadows",
 					"type": "button",
-					"label": "Enable Radiosity",
 					"command": "GlobalIllumination 1"
 				},
 				{
+					"label": "Raytrace Reflection",
 					"type": "button",
-					"label": "Interpolated",
-					"command": "GlobalIllumination 1"
-				}
-				]
-			},
-			"test2": {
-				"id": "hej",
-				"controls": [
-				{
-					"type": "button",
-					"label": "Enable Radiosity",
 					"command": "GlobalIllumination 1"
 				},
 				{
+					"label": "Raytrace Transparency",
 					"type": "button",
-					"label": "Interpolated",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"label": "Raytrace Refraction",
+					"type": "button",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"label": "Raytrace Occlusion",
+					"type": "button",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"label": "Depth Buffer AA",
+					"type": "button",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"label": "Render Lines",
+					"type": "button",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"label": "Ray Recursion Limit",
+					"type": "button",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"label": "Ray Precision",
+					"type": "button",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"label": "Ray Cutoff",
+					"type": "button",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"label": "Shading Samples",
+					"type": "button",
+					"command": "GlobalIllumination 1"
+				},
+				{
+					"label": "Light Samples",
+					"type": "button",
 					"command": "GlobalIllumination 1"
 				}
 				]
@@ -37,25 +72,9 @@
 		},
 
 
-
 		"Global Illum":
 		{
 			"test": {
-				"id": "hej",
-				"controls": [
-				{
-					"type": "button",
-					"label": "GI Enable Radiosity",
-					"command": "GlobalIllumination 1"
-				},
-				{
-					"type": "button",
-					"label": "GI Interpolated",
-					"command": "GlobalIllumination 1"
-				}
-				]
-			},
-			"test2": {
 				"id": "hej",
 				"controls": [
 				{
