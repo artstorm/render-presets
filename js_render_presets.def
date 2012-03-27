@@ -4,68 +4,80 @@
 	{
 		"Render":
 		{
-			"test": {
+			"test1": {
 				"id": "hej",
 				"controls": [
 				{
 					"label": "Raytrace Shadows",
 					"type": "button",
-					"command": "RayTraceShadows"
+					"command": "RayTraceShadows",
+					"default": 1
 				},
 				{
 					"label": "Raytrace Reflection",
 					"type": "button",
-					"command": "RayTraceReflection"
+					"command": "RayTraceReflection",
+					"default": 1
 				},
 				{
 					"label": "Raytrace Transparency",
 					"type": "button",
-					"command": "RayTraceTransparency"
+					"command": "RayTraceTransparency",
+					"default": 1
 				},
 				{
 					"label": "Raytrace Refraction",
 					"type": "button",
-					"command": "RayTraceRefraction"
+					"command": "RayTraceRefraction",
+					"default": 1
 				},
 				{
 					"label": "Raytrace Occlusion",
 					"type": "button",
-					"command": "RayTraceOcclusion"
+					"command": "RayTraceOcclusion",
+					"default": 0
 				},
 				{
 					"label": "Depth Buffer AA",
 					"type": "button",
-					"command": "DepthBufferAA"
+					"command": "DepthBufferAA",
+					"default": 0
 				},
 				{
 					"label": "Render Lines",
 					"type": "button",
-					"command": "RenderLines"
+					"command": "RenderLines",
+					"default": 1
 				},
 				{
 					"label": "Ray Recursion Limit",
 					"type": "button",
-					"command": "RayRecursionLimit"
+					"command": "RayRecursionLimit",
+					"default": 6
 				},
 				{
 					"label": "Ray Precision",
 					"type": "button",
-					"command": "RayPrecision"
+					"command": "RayPrecision",
+					"default": 6.0
 				},
 				{
 					"label": "Ray Cutoff",
 					"type": "button",
-					"command": "RayCutoff"
+					"command": "RayCutoff",
+					"default": 0.01
 				},
 				{
 					"label": "Shading Samples",
 					"type": "button",
-					"command": "ShadingSamples"
+					"command": "ShadingSamples",
+					"default": 8
 				},
 				{
 					"label": "Light Samples",
 					"type": "button",
-					"command": "LightSamples"
+					"command": "LightSamples",
+					"default": 8
 				}
 				]
 			}
@@ -74,18 +86,20 @@
 
 		"Global Illum":
 		{
-			"test": {
+			"test2": {
 				"id": "hej",
 				"controls": [
 				{
 					"type": "button",
 					"label": "GI Enable Radiosity",
-					"command": "GlobalIllumination 1"
+					"command": "GlobalIllumination 1",
+					"default": ""
 				},
 				{
 					"type": "button",
 					"label": "GI Interpolated",
-					"command": "GlobalIllumination 1"
+					"command": "GlobalIllumination 1",
+					"default": ""
 				}
 				]
 			}
@@ -93,33 +107,37 @@
 
 		"Camera":
 		{
-			"test": {
+			"test3": {
 				"id": "hej",
 				"controls": [
 				{
 					"type": "button",
 					"label": "CAM Enable Radiosity",
-					"command": "GlobalIllumination 1"
+					"command": "GlobalIllumination 1",
+					"default": ""
 				},
 				{
 					"type": "button",
 					"label": "CAM Interpolated",
-					"command": "GlobalIllumination 1"
+					"command": "GlobalIllumination 1",
+					"default": ""
 				}
 				]
 			},
-			"test2": {
+			"test4": {
 				"id": "hej",
 				"controls": [
 				{
 					"type": "button",
 					"label": "CAM Enable Radiosity",
-					"command": "GlobalIllumination 1"
+					"command": "GlobalIllumination 1",
+					"default": ""
 				},
 				{
 					"type": "button",
 					"label": "CAM Interpolated",
-					"command": "GlobalIllumination 1"
+					"command": "GlobalIllumination 1",
+					"default": ""
 				}
 				]
 			}
@@ -127,33 +145,37 @@
 
 		"Effects":
 		{
-			"test": {
+			"test5": {
 				"id": "hej",
 				"controls": [
 				{
 					"type": "button",
 					"label": "FX Enable Radiosity",
-					"command": "GlobalIllumination 1"
+					"command": "GlobalIllumination 1",
+					"default": ""
 				},
 				{
 					"type": "button",
 					"label": "FX Interpolated",
-					"command": "GlobalIllumination 1"
+					"command": "GlobalIllumination 1",
+					"default": ""
 				}
 				]
 			},
-			"test2": {
+			"test6": {
 				"id": "hej",
 				"controls": [
 				{
 					"type": "button",
 					"label": "FX Enable Radiosity",
-					"command": "GlobalIllumination 1"
+					"command": "GlobalIllumination 1",
+					"default": ""
 				},
 				{
 					"type": "button",
 					"label": "FX Interpolated",
-					"command": "GlobalIllumination 1"
+					"command": "GlobalIllumination 1",
+					"default": ""
 				}
 				]
 			}
