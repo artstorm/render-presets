@@ -4,8 +4,8 @@
 	{
 		"Render":
 		{
-			"test1": {
-				"id": "hej",
+			"RenderSection": {
+				"id": "RenderSection",
 				"controls": [
 				{
 					"label": "Raytrace Shadows",
@@ -51,31 +51,31 @@
 				},
 				{
 					"label": "Ray Recursion Limit",
-					"type": "button",
+					"type": "none",
 					"command": "RayRecursionLimit",
 					"default": 6
 				},
 				{
 					"label": "Ray Precision",
-					"type": "button",
+					"type": "none",
 					"command": "RayPrecision",
 					"default": 6.0
 				},
 				{
 					"label": "Ray Cutoff",
-					"type": "button",
+					"type": "none",
 					"command": "RayCutoff",
 					"default": 0.01
 				},
 				{
 					"label": "Shading Samples",
-					"type": "button",
+					"type": "none",
 					"command": "ShadingSamples",
 					"default": 8
 				},
 				{
 					"label": "Light Samples",
-					"type": "button",
+					"type": "none",
 					"command": "LightSamples",
 					"default": 8
 				}
@@ -86,8 +86,8 @@
 
 		"Global Illum":
 		{
-			"test2": {
-				"id": "hej",
+			"GISection": {
+				"id": "GISection",
 				"controls": [
 				{
 					"type": "button",
@@ -107,8 +107,8 @@
 
 		"Camera":
 		{
-			"test3": {
-				"id": "hej",
+			"CameraSection": {
+				"id": "CameraSection",
 				"controls": [
 				{
 					"type": "button",
@@ -124,8 +124,8 @@
 				}
 				]
 			},
-			"test4": {
-				"id": "hej",
+			"ResolutionSection": {
+				"id": "ResolutionSection",
 				"controls": [
 				{
 					"type": "button",
@@ -145,8 +145,8 @@
 
 		"Effects":
 		{
-			"test5": {
-				"id": "hej",
+			"BackdropSection": {
+				"id": "BackdropSection",
 				"controls": [
 				{
 					"type": "button",
@@ -162,8 +162,8 @@
 				}
 				]
 			},
-			"test6": {
-				"id": "hej",
+			"ProcessingSection": {
+				"id": "ProcessingSection",
 				"controls": [
 				{
 					"type": "button",
