@@ -46,7 +46,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Presets.load()
         Presets.save()
 
-
     def __del__(self):
         """ Destructor
 
@@ -64,7 +63,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # we just keep a pass here and hope that this will be fixed in a future
         # LightWave version.
         pass
-
 
     def inter_ui(self):
         # Only create the window and controllers if it does not already exist,
@@ -345,41 +343,46 @@ class RenderPresetsMaster(lwsdk.IMaster):
     # --------------------------------------------------------------------------
     def new(self):
         print 'new'
-        temp_list.append('new preset')
+        # temp_list.append('new preset')
+        # Presets.presets["presets"].append('new preset')
+        Presets.add()
+
         self.c1.redraw()
+        # Presets.save()
 
     def save(self):
         print 'save'
+        Presets.save()
 
     def rename(self):
         print 'rename'
 
     def delete(self):
         print 'delete'
-        temp_list.remove('new preset')
+        Presets.names.remove('new preset')
         self.c1.redraw()
 
     def up(self):
         print 'up'
         # get the current index
-        old_index = temp_list.index('new preset')
+        old_index = Presets.names.index('new preset')
         # move it up
         new_index = old_index - 1
 
         # delete old, and insert it on the new index
-        temp_list.insert(new_index, temp_list.pop(old_index))
+        Presets.names.insert(new_index, Presets.names.pop(old_index))
 
         self.c1.redraw()
 
     def down(self):
         print 'down'
         # get the current index
-        old_index = temp_list.index('new preset')
+        old_index = Presets.names.index('new preset')
         # move it down
         new_index = old_index + 1
 
         # delete old, and insert it on the new index
-        temp_list.insert(new_index, temp_list.pop(old_index))
+        Presets.names.insert(new_index, Presets.names.pop(old_index))
 
         self.c1.redraw()
 
@@ -395,10 +398,10 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     # Callbacks --------------------------------------
     def name_1d(self, control, userdata, row):
-        return temp_list[row]
+        return Presets.names[row]
 
     def count_1d(self, control, userdata):
-        return len(temp_list)
+        return len(Presets.names)
 
     def single_select_event_func(self, control, user_data, row, selecting):
         if row < 0:
@@ -408,15 +411,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
         if selecting:
             action = action[2:]
 
-        print 'You %s: %s' % (action, temp_list[row])
+        print 'You %s: %s' % (action, Presets.names[row])
 
-
-
-
-
-temp_list = ['hey', 'ho', 'lets', 'go']
-
-temp_data = [ { 'a':'A', 'b':(2, 4), 'c':3.0 } ]
 
 # ------------------------------------------------------------------------------
 # Presets Class
@@ -424,25 +420,42 @@ temp_data = [ { 'a':'A', 'b':(2, 4), 'c':3.0 } ]
 class Presets:
     """ Handles storage, loading and saving of user defined presets. """
     # Static variables
-    presets = None
+    defs = None
+    names = None
 
     @staticmethod
     def load():
         """ Loads the presets into the class static variable """
         # Load the JSON data into an OrderedDict
         try:
+            # f = open(Presets.file_path()+'ad', 'r')
             f = open(Presets.file_path(), 'r')
-            Presets.presets = json.load( \
+            Presets.defs = json.load( \
                 f, object_pairs_hook = collections.OrderedDict)
             f.close()
         except:
-            Presets.presets = None
+            Presets.defs = {
+            'version': __version__,
+            'presets': {}
+            }
+            Presets.names = []
+
+        Presets.names = []
+
+        for s, v in Presets.defs['presets'].iteritems():
+            print s
+            Presets.names.append(s.encode('utf-8'))
+
+        print Presets.defs
+        print Presets.names
+        Presets.ctr = 1
+
 
     @staticmethod
     def save():
         """ Saves the presets to a json formatted file """
         f = open(Presets.file_path(), 'w')
-        json.dump(temp_data, f, indent=4)
+        json.dump(Presets.defs, f, indent=4)
         f.close()
 
     @staticmethod
@@ -452,6 +465,17 @@ class Presets:
         folder = lwsdk.LWDirInfoFunc(lwsdk.LWFTYPE_SETTING)
         file_path = os.path.join(folder, PRESETS_FILE)
         return file_path
+
+    @staticmethod
+    def add():
+        Presets.names.append('New Preset '+str(Presets.ctr))
+        Presets.defs['presets']['New Preset '+str(Presets.ctr)] = {}
+
+        Presets.ctr = Presets.ctr + 1
+
+
+        Presets.save()
+
 
 
 # ------------------------------------------------------------------------------
