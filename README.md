@@ -51,22 +51,27 @@
  script's trunk or tag to download if you don't want to get them all.
  
 --------------------------------------------------------------------------------
- Changelog
 
- * v1.3 - 28 Jun 2011
-   * Fixed Issue 1: Line 430, attempt to access undeclared array selectedPreset.
-     when running under LightWave 10.0 and 10.1.
-   * Implemted Issue 2: Duplicate presets button.
-   * Minor fixes for running the script uncompiled.
- * v1.2 - 1 Jun 2010:
-   * Added a [Grab] button on the Global Illum Panel to copy the current GI
-     settings from the scene.
- * v1.1 - 27 May 2010:
-   * Fixed a bug that could cause a preset to be cleared when closing/opening
-     the window.
-   * Added a preset option for Camera Resolution Multiplier.
- * v1.0 - 7 Mar 2010:
-   * Release of version 1.0, first public release.
+## Changelog
+
+- v2.0 - xx XXX 2012
+  - Rewrote the plugin in Python and deprecated the LScript version.
+  - Added new settings introduced with LightWave 3D 11.0.
+    - Render: Shading Samples, Light Samples.
+- v1.3 - 28 Jun 2011
+  - Fixed Issue 1: Line 430, attempt to access undeclared array selectedPreset.
+    when running under LightWave 10.0 and 10.1.
+  - Implemted Issue 2: Duplicate presets button.
+  - Minor fixes for running the script uncompiled.
+- v1.2 - 1 Jun 2010:
+  - Added a [Grab] button on the Global Illum Panel to copy the current GI
+    settings from the scene.
+- v1.1 - 27 May 2010:
+  - Fixed a bug that could cause a preset to be cleared when closing/opening
+    the window.
+  - Added a preset option for Camera Resolution Multiplier.
+- v1.0 - 7 Mar 2010:
+  - Release of version 1.0, first public release.
 
 --------------------------------------------------------------------------------
  Credits
