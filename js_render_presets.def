@@ -10,62 +10,62 @@
 				{
 					"label": "Raytrace Shadows",
 					"type": "button",
-					"command": "GlobalIllumination 1"
+					"command": "RayTraceShadows"
 				},
 				{
 					"label": "Raytrace Reflection",
 					"type": "button",
-					"command": "GlobalIllumination 1"
+					"command": "RayTraceReflection"
 				},
 				{
 					"label": "Raytrace Transparency",
 					"type": "button",
-					"command": "GlobalIllumination 1"
+					"command": "RayTraceTransparency"
 				},
 				{
 					"label": "Raytrace Refraction",
 					"type": "button",
-					"command": "GlobalIllumination 1"
+					"command": "RayTraceRefraction"
 				},
 				{
 					"label": "Raytrace Occlusion",
 					"type": "button",
-					"command": "GlobalIllumination 1"
+					"command": "RayTraceOcclusion"
 				},
 				{
 					"label": "Depth Buffer AA",
 					"type": "button",
-					"command": "GlobalIllumination 1"
+					"command": "DepthBufferAA"
 				},
 				{
 					"label": "Render Lines",
 					"type": "button",
-					"command": "GlobalIllumination 1"
+					"command": "RenderLines"
 				},
 				{
 					"label": "Ray Recursion Limit",
 					"type": "button",
-					"command": "GlobalIllumination 1"
+					"command": "RayRecursionLimit"
 				},
 				{
 					"label": "Ray Precision",
 					"type": "button",
-					"command": "GlobalIllumination 1"
+					"command": "RayPrecision"
 				},
 				{
 					"label": "Ray Cutoff",
 					"type": "button",
-					"command": "GlobalIllumination 1"
+					"command": "RayCutoff"
 				},
 				{
 					"label": "Shading Samples",
 					"type": "button",
-					"command": "GlobalIllumination 1"
+					"command": "ShadingSamples"
 				},
 				{
 					"label": "Light Samples",
 					"type": "button",
-					"command": "GlobalIllumination 1"
+					"command": "LightSamples"
 				}
 				]
 			}
