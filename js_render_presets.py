@@ -44,7 +44,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._panel = None
         self._controls = None
         Presets.load()
-        Presets.save()
 
     def __del__(self):
         """ Destructor
@@ -93,6 +92,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
         so we have a clean slate to recreate all assets in the inter_ui() method
         if the user chooses to open this plugin instance again.
         """
+        # We better make sure the presets are saved
+        Presets.save()
+
         # Calling destroy() here, crashes LightWave (v11.0), so I have it 
         # commented out, and relies on only setting the variables to None.
         # self._ui.destroy(self._panel)
@@ -105,6 +107,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # until I've decided. If I keep it, I need to add a method to find the
         # actual index in the Master Plugins list.
         lwsdk.command('RemoveServer MasterHandler 1')
+
 
     def button_callback(self, id, user_data):
         """ Handle clicks on on main buttons in the Panel. """
@@ -342,12 +345,31 @@ class RenderPresetsMaster(lwsdk.IMaster):
     # Button Methods
     # --------------------------------------------------------------------------
     def new(self):
-        print 'new'
+
+        # TODO:
+        # // Update the previous selected preset's settings in the array
+        # if (selPreset != nil)
+        #     savePresetToArray(selPreset);        
         # temp_list.append('new preset')
         # Presets.presets["presets"].append('new preset')
-        Presets.add()
+
+        # Create a unique new name
+        ctr = 1
+        name = 'Preset %s' % ctr
+        while name in Presets.names:
+            ctr += 1
+            name = 'Preset %s' % ctr
+
+        Presets.add(name)
+
+        # TODO:
+        # // Select the new preset
+        # setvalue(ctlPresetList,arrPresetList.count());
+        # selPreset = newName;
+
 
         self.c1.redraw()
+
         # Presets.save()
 
     def save(self):
@@ -448,7 +470,6 @@ class Presets:
 
         print Presets.defs
         print Presets.names
-        Presets.ctr = 1
 
 
     @staticmethod
@@ -467,12 +488,39 @@ class Presets:
         return file_path
 
     @staticmethod
-    def add():
-        Presets.names.append('New Preset '+str(Presets.ctr))
-        Presets.defs['presets']['New Preset '+str(Presets.ctr)] = {}
+    def add(name):
+        """ Adds a new preset.
 
-        Presets.ctr = Presets.ctr + 1
+        @param   string  name  The name of the preset to add.
+        @return  True on success, else False
+        """
+        # Check so we got a unique name
+        if name in Presets.names:
+            return False
 
+        # Add the new preset to list of names and to definitions
+        Presets.names.append(name)
+        Presets.defs['presets'][name] = {}
+
+        # TODO:
+        # Set default values
+
+        # Presets.defs['presets']['New Preset '+str(Presets.ctr)]['GIPanelEnabled'] = 1
+        # Presets.defs['presets']['New Preset '+str(Presets.ctr)]['RenderPanel'] = 1
+
+        # // Populate it with default values
+        # pDataPos = arrPresetOptions.indexOf("GIPanelEnabled");
+        # arrPresetData[pDataID][pDataPos] = false;
+        # pDataPos = arrPresetOptions.indexOf("RenderPanelEnabled");
+        # arrPresetData[pDataID][pDataPos] = false;
+        # pDataPos = arrPresetOptions.indexOf("BackdropPanelEnabled");
+        # arrPresetData[pDataID][pDataPos] = false;
+        # pDataPos = arrPresetOptions.indexOf("ProcessingPanelEnabled");
+        # arrPresetData[pDataID][pDataPos] = false;
+        # pDataPos = arrPresetOptions.indexOf("CameraPanelEnabled");
+        # arrPresetData[pDataID][pDataPos] = false;
+        # // Update the preset data panels
+        # refreshPDataPanels(arrPresetList.count());
 
         Presets.save()
 
