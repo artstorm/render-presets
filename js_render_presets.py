@@ -234,9 +234,19 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
             # for t in tmp[s]:
             for t in v['controls']:
-                t['control'] = self._panel.bool_ctl(t['label'])
-                if t['type'] == 'button':
+                # t['control'] = self._panel.bool_ctl(t['label'])
+                ctl = getattr(self._panel, t['type']+'_ctl')
+                t['control'] = ctl(t['label'])
+
+
+                # Consolidate this with the one in refresh_controls into a function
+                if t['type'] in ['bool', 'int']:
                     t['control'].set_int(t['default'])
+
+                if t['type'] in ['float']:
+                    t['control'].set_float(t['default'])
+
+
                 t['control'].set_w(200)
                 t['control'].move(200,y)
                 t['control'].ghost()
@@ -412,8 +422,17 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 # t['control'].ghost()
                 # y += 20
                 # t['control'].set_int(1)
+
+                # Consolidate this with the one in create_controls into a function
                 if t['type'] == 'button':
                     t['control'].set_int(settings[t['command']])
+
+                if t['type'] in ['bool', 'int']:
+                    t['control'].set_int(settings[t['command']])
+
+                if t['type'] in ['float']:
+                    t['control'].set_float(settings[t['command']])
+
 
 
     # --------------------------------------------------------------------------

@@ -9,73 +9,73 @@
 				"controls": [
 				{
 					"label": "Raytrace Shadows",
-					"type": "button",
+					"type": "bool",
 					"command": "RayTraceShadows",
 					"default": 1
 				},
 				{
 					"label": "Raytrace Reflection",
-					"type": "button",
+					"type": "bool",
 					"command": "RayTraceReflection",
 					"default": 1
 				},
 				{
 					"label": "Raytrace Transparency",
-					"type": "button",
+					"type": "bool",
 					"command": "RayTraceTransparency",
 					"default": 1
 				},
 				{
 					"label": "Raytrace Refraction",
-					"type": "button",
+					"type": "bool",
 					"command": "RayTraceRefraction",
 					"default": 1
 				},
 				{
 					"label": "Raytrace Occlusion",
-					"type": "button",
+					"type": "bool",
 					"command": "RayTraceOcclusion",
 					"default": 0
 				},
 				{
 					"label": "Depth Buffer AA",
-					"type": "button",
+					"type": "bool",
 					"command": "DepthBufferAA",
 					"default": 0
 				},
 				{
 					"label": "Render Lines",
-					"type": "button",
+					"type": "bool",
 					"command": "RenderLines",
 					"default": 1
 				},
 				{
 					"label": "Ray Recursion Limit",
-					"type": "none",
+					"type": "int",
 					"command": "RayRecursionLimit",
 					"default": 6
 				},
 				{
 					"label": "Ray Precision",
-					"type": "none",
+					"type": "float",
 					"command": "RayPrecision",
 					"default": 6.0
 				},
 				{
 					"label": "Ray Cutoff",
-					"type": "none",
+					"type": "float",
 					"command": "RayCutoff",
 					"default": 0.01
 				},
 				{
 					"label": "Shading Samples",
-					"type": "none",
+					"type": "int",
 					"command": "ShadingSamples",
 					"default": 8
 				},
 				{
 					"label": "Light Samples",
-					"type": "none",
+					"type": "int",
 					"command": "LightSamples",
 					"default": 8
 				}
