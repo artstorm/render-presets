@@ -132,7 +132,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Loads a file containing all definitions needed to populate the interface
         and associated commands.
 
-        @return boolean False if definitions file failed to load, otherwise True
+        @return  False if definitions file failed to load
         """
 
         # Get the path to the definitions file. The same location as the script.
@@ -166,27 +166,36 @@ class RenderPresetsMaster(lwsdk.IMaster):
             tab_names.append(key.encode('utf-8'))
 
 
-        # TMP GUI Setup
-        self.c1 = self._panel.listbox_ctl('Presets', 150, 18, self.name_1d, self.count_1d)
-        self.c1.set_select(self.single_select_event_func)
-
 
         self._controls = {
-            0: {'ctl': None, 'lbl': 'New',       'x': 4,    'w': None, 'col': 'l', 'fn': self.new},
-            1: {'ctl': None, 'lbl': 'Save',      'x': 82,   'w': None, 'col': 'r', 'fn': self.save},
-            2: {'ctl': None, 'lbl': 'Rename',    'x': None, 'w': None, 'col': 'l', 'fn': self.rename},
-            3: {'ctl': None, 'lbl': 'Delete',    'x': None, 'w': None, 'col': 'r', 'fn': self.delete},
-            4: {'ctl': None, 'lbl': 'Up',        'x': None, 'w': None, 'col': 'l', 'fn': self.up},
-            5: {'ctl': None, 'lbl': 'Down',      'x': None, 'w': None, 'col': 'r', 'fn': self.down},
-            6: {'ctl': None, 'lbl': 'Duplicate', 'x': None, 'w': None, 'col': 'l', 'fn': self.duplicate},
-            7: {'ctl': None, 'lbl': 'About',     'x': None, 'w': None, 'col': 'r', 'fn': self.about},
-            8: {'ctl': None, 'lbl': 'Apply',     'x': None, 'w': 150,  'col': 'l', 'fn': self.apply}
+            0: {'ctl': None},
+            1: {'ctl': None},
+            2: {'ctl': None, 'lbl': 'New',       'x': 4,    'w': None, 'col': 'l', 'fn': self.new},
+            3: {'ctl': None, 'lbl': 'Save',      'x': 82,   'w': None, 'col': 'r', 'fn': self.save},
+            4: {'ctl': None, 'lbl': 'Rename',    'x': None, 'w': None, 'col': 'l', 'fn': self.rename},
+            5: {'ctl': None, 'lbl': 'Delete',    'x': None, 'w': None, 'col': 'r', 'fn': self.delete},
+            6: {'ctl': None, 'lbl': 'Up',        'x': None, 'w': None, 'col': 'l', 'fn': self.up},
+            7: {'ctl': None, 'lbl': 'Down',      'x': None, 'w': None, 'col': 'r', 'fn': self.down},
+            8: {'ctl': None, 'lbl': 'Duplicate', 'x': None, 'w': None, 'col': 'l', 'fn': self.duplicate},
+            9: {'ctl': None, 'lbl': 'About',     'x': None, 'w': None, 'col': 'r', 'fn': self.about},
+           10: {'ctl': None, 'lbl': 'Apply',     'x': None, 'w': 150,  'col': 'l', 'fn': self.apply}
         }
+
+
+        # TMP GUI Setup
+        self._controls[0] = self._panel.listbox_ctl('Presets', 150, 18, self.name_1d, self.count_1d)
+        self._controls[0].set_select(self.single_select_event_func)
+
+
 
         left_column = []
         right_column = []
 
         for key, val in self._controls.iteritems():
+            if key < 2:
+                continue
+
+            print key
             w = 72 if val['w'] is None else val['w']
 
             val['ctl'] = self._panel.wbutton_ctl(val['lbl'], w)
@@ -302,6 +311,28 @@ class RenderPresetsMaster(lwsdk.IMaster):
         return True
 
 
+    # Callbacks --------------------------------------
+    def name_1d(self, control, userdata, row):
+        return Presets.names[row]
+
+    def count_1d(self, control, userdata):
+        return len(Presets.names)
+
+    def single_select_event_func(self, control, user_data, row, selecting):
+#        if row < 0:
+#            return  # list selections are being cleared
+        print row
+
+        action = 'deselected'
+        if selecting:
+            action = action[2:]
+
+        print 'You %s: %s' % (action, Presets.names[row])
+
+        # TMP
+        self.refresh_controls()
+
+
     def tabs_callback(self, id, user_data):
 #        print 'You selected: %s' % temp_list[self._c2.get_int()]
 #        print self._c2.get_int()
@@ -344,6 +375,47 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 t['control'].render()
 
 
+    def refresh_controls(self):
+
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+
+        # TODO: no preset selected and this is called?
+
+        # Get selected preset index
+        index = self._controls[0].get_int()
+
+        #Tmp
+        tab_names = self._tmp_tab_names
+
+        # Get the selected presets settings
+        settings = Presets.user['presets'][Presets.names[index]]
+
+
+        tmp = tabs[tab_names[0]]
+        for k, v in tmp.iteritems():
+            # v['ctl'] = self._panel.bool_ctl('enable')
+            # v['ctl'].set_w(200)
+            # v['ctl'].move(200,y)
+            # v['ctl'].set_event(self.enable_in_preset_callback, 0)
+            # self.lookup = v['controls']
+            # y += 40
+            v['ctl'].set_int(settings[k])
+
+            # for t in tmp[s]:
+            for t in v['controls']:
+                # t['control'] = self._panel.bool_ctl(t['label'])
+                # if t['type'] == 'button':
+                #     t['control'].set_int(t['default'])
+                # t['control'].set_w(200)
+                # t['control'].move(200,y)
+                # t['control'].ghost()
+                # y += 20
+                # t['control'].set_int(1)
+                if t['type'] == 'button':
+                    t['control'].set_int(settings[t['command']])
+
+
     # --------------------------------------------------------------------------
     # Button Methods
     # --------------------------------------------------------------------------
@@ -371,7 +443,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # selPreset = newName;
 
 
-        self.c1.redraw()
+
+        # self.c1.redraw()
+        self._controls[0].redraw()
 
         # Presets.save()
 
@@ -418,25 +492,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
         print 'about'
 
     def apply(self):
-        print 'apply'
+        print 'Apply selected: ' + str(self._controls[0].get_int())
 
 
-    # Callbacks --------------------------------------
-    def name_1d(self, control, userdata, row):
-        return Presets.names[row]
-
-    def count_1d(self, control, userdata):
-        return len(Presets.names)
-
-    def single_select_event_func(self, control, user_data, row, selecting):
-        if row < 0:
-            return  # list selections are being cleared
-
-        action = 'deselected'
-        if selecting:
-            action = action[2:]
-
-        print 'You %s: %s' % (action, Presets.names[row])
 
 
 # ------------------------------------------------------------------------------
@@ -447,10 +505,11 @@ class Presets:
     # --------------------------------------------------------------------------
     # Static variables
     # --------------------------------------------------------------------------
+    # Predefined definitions, and control references
     definitions = None
-
-
-    defs = None
+    # User defined Presets
+    user = None
+    # User defined Preset Names
     names = None
 
 
@@ -459,16 +518,16 @@ class Presets:
     # --------------------------------------------------------------------------
     @staticmethod
     def load():
-        """ Loads the presets into the class static variable """
+        """ Loads the user presets into the class static variable """
         # Load the JSON data into an OrderedDict
         try:
             # f = open(Presets.file_path()+'ad', 'r')
             f = open(Presets.file_path(), 'r')
-            Presets.defs = json.load( \
+            Presets.user = json.load( \
                 f, object_pairs_hook = collections.OrderedDict)
             f.close()
         except:
-            Presets.defs = {
+            Presets.user = {
             'version': __version__,
             'presets': {}
             }
@@ -476,19 +535,19 @@ class Presets:
 
         Presets.names = []
 
-        for s, v in Presets.defs['presets'].iteritems():
+        for s, v in Presets.user['presets'].iteritems():
             print s
             Presets.names.append(s.encode('utf-8'))
 
-        print Presets.defs
+        print Presets.user
         print Presets.names
 
 
     @staticmethod
     def save():
-        """ Saves the presets to a json formatted file """
+        """ Saves the user presets to a json formatted file """
         f = open(Presets.file_path(), 'w')
-        json.dump(Presets.defs, f, indent=4)
+        json.dump(Presets.user, f, indent=4)
         f.close()
 
 
@@ -506,7 +565,7 @@ class Presets:
         """ Adds a new preset.
 
         @param   string  name  The name of the preset to add.
-        @return  True on success, else False
+        @return  False if failed to add
         """
         # Check so we got a unique name
         if name in Presets.names:
@@ -514,7 +573,7 @@ class Presets:
 
         # Add the new preset to list of names and to definitions
         Presets.names.append(name)
-        Presets.defs['presets'][name] = {}
+        Presets.user['presets'][name] = {}
 
         # reference part of the definitions dictionary
         defaults = Presets.definitions['tabs']
@@ -524,12 +583,13 @@ class Presets:
             for section in defaults[tab]:
                 # Set default value for section bool ctl to false
                 section_id = defaults[tab][section]['id']
-                Presets.defs['presets'][name][section_id] = 0
+                Presets.user['presets'][name][section_id] = 0
 
                 for control in defaults[tab][section]['controls']:
-                    # Set the default values from definitions for the controls
+                    # Set the default values from definitions for the controls.
+                    # We treat the command as an ID for the controls.
                     cmd = control['command']
-                    Presets.defs['presets'][name][cmd] = control['default']
+                    Presets.user['presets'][name][cmd] = control['default']
 
         Presets.save()
 
