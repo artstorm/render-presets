@@ -220,99 +220,37 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
 
 
-        # Optimize: Consolidate below into one loop
-        tmp = tabs[tab_names[0]]
-        y = 40
-        for s, v in tmp.iteritems():
-            # print 'HERE!'
-            v['ctl'] = self._panel.bool_ctl('enable')
-            v['ctl'].set_w(200)
-            v['ctl'].move(200,y)
-            v['ctl'].set_event(self.enable_in_preset_callback, 0)
-            self.lookup = v['controls']
-            y += 40
+        for tab in tabs:
+            print tab
+            y = 40
 
-            # for t in tmp[s]:
-            for t in v['controls']:
-                # t['control'] = self._panel.bool_ctl(t['label'])
-                ctl = getattr(self._panel, t['type']+'_ctl')
-                t['control'] = ctl(t['label'])
-
-
-                # Consolidate this with the one in refresh_controls into a function
-                if t['type'] in ['bool', 'int']:
-                    t['control'].set_int(t['default'])
-
-                if t['type'] in ['float']:
-                    t['control'].set_float(t['default'])
-
-
-                t['control'].set_w(200)
-                t['control'].move(200,y)
-                t['control'].ghost()
-                y += 20
-
-        # for s in tmp:
-        #     # print s['label']
-        #     # s['control'] = self._panel.bool_ctl(s['label'])
-        #     s['control'] = self._panel.bool_ctl(s['label'])
-        #     s['control'].set_w(200)
-        #     s['control'].move(200,40)
-
-        y = 40
-        tmp = tabs[tab_names[1]]
-        for s, v in tmp.iteritems():
-        #     s['control'] = self._panel.bool_ctl(s['label'])
-        #     s['control'].erase()
-        #     s['control'].move(200,40)
-            v['ctl'] = self._panel.bool_ctl('enable')
-            v['ctl'].set_w(200)
-            v['ctl'].move(200,y)
-            v['ctl'].erase()
-            y += 40
-
-            for t in v['controls']:
-                t['control'] = self._panel.bool_ctl(t['label'])
-                t['control'].set_w(200)
-                t['control'].move(200,y)
+            for k, v in tabs[tab].iteritems():
+                print k
+                v['ctl'] = self._panel.bool_ctl('enable')
+                v['ctl'].set_w(200)
+                v['ctl'].move(200,y)
+                v['ctl'].set_event(self.enable_in_preset_callback, 0)
+                self.lookup = v['controls']
                 y += 40
-                t['control'].erase()
 
-        y = 40
-        tmp = tabs[tab_names[2]]
-        for s, v in tmp.iteritems():
-            v['ctl'] = self._panel.bool_ctl('enable')
-            v['ctl'].set_w(200)
-            v['ctl'].move(200,y)
-            v['ctl'].erase()
-            y += 40
-        #     s['control'] = self._panel.bool_ctl(s['label'])
-        #     s['control'].erase()
-        #     s['control'].move(200,40)
-            for t in v['controls']:
-                t['control'] = self._panel.bool_ctl(t['label'])
-                t['control'].set_w(200)
-                t['control'].move(200,y)
-                y += 40
-                t['control'].erase()
+                for ctl in v['controls']:
 
-        y = 40
-        tmp = tabs[tab_names[3]]
-        for s, v in tmp.iteritems():
-            v['ctl'] = self._panel.bool_ctl('enable')
-            v['ctl'].set_w(200)
-            v['ctl'].move(200,y)
-            v['ctl'].erase()
-            y += 40
-        #     s['control'] = self._panel.bool_ctl(s['label'])
-        #     s['control'].erase()
-        #     s['control'].move(200,40)
-            for t in v['controls']:
-                t['control'] = self._panel.bool_ctl(t['label'])
-                t['control'].set_w(200)
-                t['control'].move(200,y)
-                y += 40
-                t['control'].erase()
+                    ctl2 = getattr(self._panel, ctl['type']+'_ctl')
+                    ctl['control'] = ctl2(ctl['label'])
+
+
+                    # Consolidate this with the one in refresh_controls into a function
+                    if ctl['type'] in ['bool', 'int']:
+                        ctl['control'].set_int(ctl['default'])
+
+                    if ctl['type'] in ['float']:
+                        ctl['control'].set_float(ctl['default'])
+
+
+                    ctl['control'].set_w(200)
+                    ctl['control'].move(200,y)
+                    ctl['control'].ghost()
+                    y += 20
 
 
         self._tmp_tabs = tabs
