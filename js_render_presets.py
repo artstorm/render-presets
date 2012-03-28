@@ -120,7 +120,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # print 'enable'
         # print id.get_int()
         for t in self.lookup:
-            t['control'].unghost()
+            t['ctl'].unghost()
 
 
     # --------------------------------------------------------------------------
@@ -221,36 +221,46 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
 
         for tab in tabs:
-            print tab
             y = 40
 
             for k, v in tabs[tab].iteritems():
-                print k
                 v['ctl'] = self._panel.bool_ctl('enable')
                 v['ctl'].set_w(200)
                 v['ctl'].move(200,y)
                 v['ctl'].set_event(self.enable_in_preset_callback, 0)
-                self.lookup = v['controls']
+                self.lookup = v['ctl']
                 y += 40
+
+                if tab != 'Render':
+                    v['ctl'].erase()
 
                 for ctl in v['controls']:
 
                     ctl2 = getattr(self._panel, ctl['type']+'_ctl')
-                    ctl['control'] = ctl2(ctl['label'])
+                    if ctl['type'] in ['bool', 'int', 'float']:
+                        ctl['ctl'] = ctl2(ctl['label'])
+                        ctl['ctl'].set_w(200)
+
+                    if ctl['type'] in ['wpopup']:
+                        # Get rid of Unicode character (u')
+                        items = [s.encode('utf-8') for s in ctl['items']]
+                        ctl['ctl'] = ctl2(ctl['label'], items, 200)
 
 
                     # Consolidate this with the one in refresh_controls into a function
-                    if ctl['type'] in ['bool', 'int']:
-                        ctl['control'].set_int(ctl['default'])
+                    if ctl['type'] in ['bool', 'int', 'wpopup']:
+                        ctl['ctl'].set_int(ctl['default'])
 
                     if ctl['type'] in ['float']:
-                        ctl['control'].set_float(ctl['default'])
+                        ctl['ctl'].set_float(ctl['default'])
 
 
-                    ctl['control'].set_w(200)
-                    ctl['control'].move(200,y)
-                    ctl['control'].ghost()
+                    ctl['ctl'].move(200,y)
+                    ctl['ctl'].ghost()
                     y += 20
+
+                    if tab != 'Render':
+                        ctl['ctl'].erase()
 
 
         self._tmp_tabs = tabs
@@ -295,32 +305,32 @@ class RenderPresetsMaster(lwsdk.IMaster):
         for s, v in tmp_pan.iteritems():
             v['ctl'].erase()
             for t in v['controls']:
-                t['control'].erase()
+                t['ctl'].erase()
 
         tmp_pan = tabs[tab_names[1]]
         for s, v in tmp_pan.iteritems():
             v['ctl'].erase()
             for t in v['controls']:
-                t['control'].erase()
+                t['ctl'].erase()
 
         tmp_pan = tabs[tab_names[2]]
         for s, v in tmp_pan.iteritems():
             v['ctl'].erase()
             for t in v['controls']:
-                t['control'].erase()
+                t['ctl'].erase()
 
         tmp_pan = tabs[tab_names[3]]
         for s, v in tmp_pan.iteritems():
             v['ctl'].erase()
             for t in v['controls']:
-                t['control'].erase()
+                t['ctl'].erase()
 
         # Render the controls on the clicked tab
         tmp_pan = tabs[tab_names[tmp]]
         for s, v in tmp_pan.iteritems():
             v['ctl'].render()
             for t in v['controls']:
-                t['control'].render()
+                t['ctl'].render()
 
 
     def refresh_controls(self):
@@ -363,13 +373,13 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                 # Consolidate this with the one in create_controls into a function
                 if t['type'] == 'button':
-                    t['control'].set_int(settings[t['command']])
+                    t['ctl'].set_int(settings[t['command']])
 
                 if t['type'] in ['bool', 'int']:
-                    t['control'].set_int(settings[t['command']])
+                    t['ctl'].set_int(settings[t['command']])
 
                 if t['type'] in ['float']:
-                    t['control'].set_float(settings[t['command']])
+                    t['ctl'].set_float(settings[t['command']])
 
 
 

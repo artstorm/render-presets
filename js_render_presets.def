@@ -90,16 +90,71 @@
 				"id": "GISection",
 				"controls": [
 				{
-					"type": "button",
-					"label": "GI Enable Radiosity",
-					"command": "GlobalIllumination 1",
-					"default": ""
+					"label": "Enable Radiosity",
+					"type": "bool",
+					"command": "RayTraceOcclusion",
+					"default": 0
 				},
 				{
-					"type": "button",
-					"label": "GI Interpolated",
-					"command": "GlobalIllumination 1",
-					"default": ""
+					"label": "Type",
+					"type": "wpopup",
+					"items": ["Backdrop Only", "Monte Carlo", "Final Gather"],
+					"command": "RayTraceOcclusion",
+					"default": 1
+				},
+				{
+					"label": "Interpolated",
+					"type": "bool",
+					"command": "RayTraceOcclusion",
+					"default": 0
+				},
+				{
+					"label": "Blur Background",
+					"type": "bool",
+					"command": "RayTraceOcclusion",
+					"default": 0
+				},
+				{
+					"label": "Use Transparency",
+					"type": "bool",
+					"command": "RayTraceOcclusion",
+					"default": 0
+				},
+				{
+					"label": "Volumetric Radiosity",
+					"type": "bool",
+					"command": "RayTraceOcclusion",
+					"default": 0
+				},
+				{
+					"label": "Ambient Occlusion",
+					"type": "bool",
+					"command": "RayTraceOcclusion",
+					"default": 0
+				},
+				{
+					"label": "Directional Rays",
+					"type": "bool",
+					"command": "RayTraceOcclusion",
+					"default": 0
+				},
+				{
+					"label": "Use Gradients",
+					"type": "bool",
+					"command": "RayTraceOcclusion",
+					"default": 0
+				},
+				{
+					"label": "Use Behind Test",
+					"type": "bool",
+					"command": "RayTraceOcclusion",
+					"default": 0
+				},
+				{
+					"label": "Use Bumps",
+					"type": "bool",
+					"command": "RayTraceOcclusion",
+					"default": 0
 				}
 				]
 			}
@@ -111,16 +166,16 @@
 				"id": "CameraSection",
 				"controls": [
 				{
-					"type": "button",
+					"type": "bool",
 					"label": "CAM Enable Radiosity",
 					"command": "GlobalIllumination 1",
-					"default": ""
+					"default": 0
 				},
 				{
-					"type": "button",
+					"type": "bool",
 					"label": "CAM Interpolated",
 					"command": "GlobalIllumination 1",
-					"default": ""
+					"default": 0
 				}
 				]
 			},
@@ -128,16 +183,16 @@
 				"id": "ResolutionSection",
 				"controls": [
 				{
-					"type": "button",
+					"type": "bool",
 					"label": "CAM Enable Radiosity",
 					"command": "GlobalIllumination 1",
-					"default": ""
+					"default": 0
 				},
 				{
-					"type": "button",
+					"type": "bool",
 					"label": "CAM Interpolated",
 					"command": "GlobalIllumination 1",
-					"default": ""
+					"default": 0
 				}
 				]
 			}
@@ -149,16 +204,16 @@
 				"id": "BackdropSection",
 				"controls": [
 				{
-					"type": "button",
+					"type": "bool",
 					"label": "FX Enable Radiosity",
 					"command": "GlobalIllumination 1",
-					"default": ""
+					"default": 0
 				},
 				{
-					"type": "button",
+					"type": "bool",
 					"label": "FX Interpolated",
 					"command": "GlobalIllumination 1",
-					"default": ""
+					"default": 0
 				}
 				]
 			},
@@ -166,16 +221,16 @@
 				"id": "ProcessingSection",
 				"controls": [
 				{
-					"type": "button",
+					"type": "bool",
 					"label": "FX Enable Radiosity",
 					"command": "GlobalIllumination 1",
-					"default": ""
+					"default": 0
 				},
 				{
-					"type": "button",
+					"type": "bool",
 					"label": "FX Interpolated",
 					"command": "GlobalIllumination 1",
-					"default": ""
+					"default": 0
 				}
 				]
 			}
