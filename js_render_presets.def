@@ -92,69 +92,117 @@
 				{
 					"label": "Enable Radiosity",
 					"type": "bool",
-					"command": "RayTraceOcclusion",
+					"command": "EnableRadiosity",
 					"default": 0
 				},
 				{
 					"label": "Type",
 					"type": "wpopup",
 					"items": ["Backdrop Only", "Monte Carlo", "Final Gather"],
-					"command": "RayTraceOcclusion",
+					"command": "RadiosityType",
 					"default": 1
 				},
 				{
 					"label": "Interpolated",
 					"type": "bool",
-					"command": "RayTraceOcclusion",
-					"default": 0
+					"command": "RadiosityInterpolation",
+					"default": 1
 				},
 				{
 					"label": "Blur Background",
 					"type": "bool",
-					"command": "RayTraceOcclusion",
-					"default": 0
+					"command": "BlurBackgroundRadiosity",
+					"default": 1
 				},
 				{
 					"label": "Use Transparency",
 					"type": "bool",
-					"command": "RayTraceOcclusion",
+					"command": "RadiosityTransparency",
 					"default": 0
 				},
 				{
 					"label": "Volumetric Radiosity",
 					"type": "bool",
-					"command": "RayTraceOcclusion",
+					"command": "VolumetricRadiosity",
 					"default": 0
 				},
 				{
 					"label": "Ambient Occlusion",
 					"type": "bool",
-					"command": "RayTraceOcclusion",
+					"command": "RadiosityUseAmbient",
 					"default": 0
 				},
 				{
 					"label": "Directional Rays",
 					"type": "bool",
-					"command": "RayTraceOcclusion",
+					"command": "RadiosityDirectionalRays",
 					"default": 0
 				},
 				{
 					"label": "Use Gradients",
 					"type": "bool",
-					"command": "RayTraceOcclusion",
+					"command": "RadiosityUseGradients",
 					"default": 0
 				},
 				{
 					"label": "Use Behind Test",
 					"type": "bool",
-					"command": "RayTraceOcclusion",
-					"default": 0
+					"command": "RadiosityUseBehindTest",
+					"default": 1
 				},
 				{
 					"label": "Use Bumps",
 					"type": "bool",
-					"command": "RayTraceOcclusion",
+					"command": "RadiosityUseBumps",
 					"default": 0
+				},
+				{
+					"label": "Intensity",
+					"type": "percent",
+					"command": "RadiosityIntensity",
+					"default": 1.0
+				},
+				{
+					"label": "Indirect Bounces",
+					"type": "int",
+					"command": "IndirectBounces",
+					"default": 1
+				},
+				{
+					"label": "Rays Per Evaluation",
+					"type": "int",
+					"command": "RaysPerEvaluation",
+					"default": 100
+				},
+				{
+					"label": "Secondary Bounce Rays",
+					"type": "int",
+					"command": "RaysPerEvaluation2",
+					"default": 50
+				},
+				{
+					"label": "Angular Tolerance",
+					"type": "angle",
+					"command": "RadiosityTolerance",
+					"default": 45.0
+				},
+				{
+					"label": "Minimum Pixel Spacing",
+					"type": "float",
+					"command": "RadiosityMinPixelSpacing",
+					"default": 3.0
+				},
+				{
+					"label": "Maximum Pixel Spacing",
+					"type": "float",
+					"command": "RadiosityMaxPixelSpacing",
+					"default": 100.0
+				},
+				{
+					"label": "Multipler",
+					"type": "percent",
+					"command": "RadiosityMultiplier",
+					"default": 1.0
 				}
 				]
 			}
