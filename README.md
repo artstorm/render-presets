@@ -58,6 +58,7 @@
   - Rewrote the plugin in Python and deprecated the LScript version.
   - Added new settings introduced with LightWave 3D 11.0: Shading Samples, Light
     Samples.
+  - Default values updated to reflect defaults in LightWave 3D 11.0.
 - v1.3 - 28 Jun 2011
   - Fixed Issue 1: Line 430, attempt to access undeclared array selectedPreset.
     when running under LightWave 10.0 and 10.1.
