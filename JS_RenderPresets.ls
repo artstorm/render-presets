@@ -1,13 +1,13 @@
 /*------------------------------------------------------------------------------
  Master Class LScript: Render Presets
- Version: 1.2
+ Version: 1.3
  Author: Johan Steen
  Author URI: http://www.artstorm.net/
- Date: 1 July 2010
+ Date: 28 June 2011
  Description: Allow the user to define and apply different presets for
               render settings.
 
- Copyright (c) 2010, Johan Steen
+ Copyright (c) 2010-2011, Johan Steen
  All Rights Reserved.
  Use is subject to license terms.
 ------------------------------------------------------------------------------*/
@@ -56,8 +56,8 @@
 @define LWRDFLG_USE_BUMPS 9
 
 // Main Variables
-rp_version = "1.2";
-rp_date = "1 July 2010";
+rp_version = "1.3";
+rp_date = "28 June 2011";
 presetsFile = getdir(SETTINGSDIR) + getsep() + "JS_RenderPresets.cfg";
 
 // Variables for GUI gadgets
@@ -167,7 +167,7 @@ options
     //
     // List and main buttons
     // --------------------------------------------------------------------------------
-    ctlPresetList = ctllistbox("Presets", 150,310,"ListSize","ListItem","ListEvent");	// label, width, height, count_udf, name_udf[, event_udf , [select_udf] ]
+    ctlPresetList = ctllistbox("Presets", 150,286,"ListSize","ListItem","ListEvent");	// label, width, height, count_udf, name_udf[, event_udf , [select_udf] ]
 	
 	// Main Buttons
     c1 = ctlbutton("New", 73, "onBtn_NewPreset");			// label, width, udf, arguments to udf:string
@@ -176,10 +176,11 @@ options
     c4 = ctlbutton("Delete", 73, "onBtn_DelPreset");
 	c5 = ctlbutton("Up", 73, "onBtn_Sort", "1");
 	c6 = ctlbutton("Down", 73, "onBtn_Sort", "0");
-    c7 = ctlbutton("About", 73, "onBtn_About");
-    c8 = ctlbutton("Apply", 73, "onBtn_Apply");
+    c7 = ctlbutton("Duplicate", 73, "onBtn_Duplicate");
+    c8 = ctlbutton("About", 73, "onBtn_About");
+    c9 = ctlbutton("Apply", 150, "onBtn_Apply");
 	
-	ctlgroup(c1,c2,c3,c4,c5,c6,c7,c8);				// Group the buttons
+	ctlgroup(c1,c2,c3,c4,c5,c6,c7,c8,c9);				// Group the buttons
 	ctlposition(c2,77,0);							// Position the buttons
 	ctlposition(c3,0,24);
 	ctlposition(c4,77,24);
@@ -187,6 +188,8 @@ options
 	ctlposition(c6,77,48);
 	ctlposition(c7,0,72);
 	ctlposition(c8,77,72);
+//	ctlposition(c9,77,96);
+	ctlposition(c9,00,96);
 	
     //
     // The preset data GUI
@@ -413,6 +416,10 @@ ListItem: index
 // UDF to run when an item is selected
 ListEvent: selectedPreset
 {
+	// If the event is called without submitting a selection ID, return immediately (happens in LightWave 10.1, build 2144)
+	if (selectedPreset == nil)
+		return;
+
 	// Update the previous selected preset's settings in the array
 	if (selPreset != nil)
 		savePresetToArray(selPreset);
@@ -685,6 +692,55 @@ onBtn_Sort: direction {
 }
 
 /*
+ * The Duplicate button
+ *
+ * since		1.3
+ *
+ * @returns     Nothing
+ */
+onBtn_Duplicate {
+	// Get the array of selections
+	selections = getvalue(ctlPresetList);
+	// Check that one, and only one preset is selected
+	if (selections.count() == 1) {
+		selection = selections[1].asInt();
+
+		selection = selections[1].asInt();
+		source_name = arrPresetList[selection];
+
+		// Create a unique destination name
+		counter = 1;
+		dest_name = source_name + " - Copy " + counter;
+		while (arrPresetList.contains(dest_name) == true) {
+			counter++;
+			dest_name = source_name + " - Copy " + counter;
+		}
+
+		// Add it to the Preset List
+		arrPresetList += dest_name;
+		// Add it to the PresetID List
+		arrPresetLinks += dest_name;
+
+		// Get the PresetData IDs for source and desitnation
+		pDataID_src = getPresetDataID(source_name);
+		pDataID_dst = getPresetDataID(dest_name);
+
+		// Copy the settings from the source to the destination
+		presetSize = arrPresetData[pDataID_src].size();
+		for (i = 1; i <= presetSize; i++) {
+			arrPresetData[pDataID_dst][i] = arrPresetData[pDataID_src][i];
+		}
+		requpdate();
+	} else {
+		// Handle errors
+		if (selections.count() < 1)
+			infoWindow("Error", "You need to select a preset to duplicate.", 300);
+		else
+			infoWindow("Error", "You can only duplicate one preset at a time.", 300);
+	}
+}
+
+/*
  * The About button
  *
  * @returns     Nothing
@@ -693,17 +749,25 @@ onBtn_About {
 		reqbegin("About Render Presets");
 		reqsize(300,174);
 
-		ctlLogo = ctlimage("E:/Coding/LightWave/Classic/RenderPresets/trunk/AboutLogo.tga");
+		script_id = split(SCRIPTID);
+		script_path = script_id[1] + script_id[2];
+
+		ctlLogo = ctlimage(script_path + "JS_RenderPresets_About.tga");
 		ctlposition(ctlLogo, 0,0);
 		
 		ctlText1 = ctltext("","Render Presets");
 		ctlText2 = ctltext("","Version: " + rp_version);
 		ctlText3 = ctltext("","Build Date: " + rp_date);
-		ctlText4 = ctltext("","Copyright Johan Steen 2010, http://www.artstorm.net/");
+		ctlText4 = ctltext("","Copyright Johan Steen 2010-2011");
+
+		url_johan = "http://www.artstorm.net/";
+		ctlurl1 = ctlbutton("artstorm.net", 85, "goto_url", "url_johan");
+
 		ctlposition(ctlText1, 10, 60);
 		ctlposition(ctlText2, 10, 75);
 		ctlposition(ctlText3, 10, 90);
 		ctlposition(ctlText4, 10, 115);
+		ctlposition(ctlurl1, 205, 113);
 		
 		return if !reqpost();
 		reqend();
@@ -1377,4 +1441,23 @@ infoWindow: title, message, winWidth {
 
 		return if !reqpost();
 		reqend();
+}
+
+/*
+ * Opens a website in the system's browser
+ * @since		1.3
+ * @param		url	(string)	URL to open
+ * @returns		Nothing
+ */
+goto_url: url
+{
+	// Query the environment for the command line interpreter
+	cmd_ln = string(getenv("comspec"));
+
+	// Spawn the process
+	spawn_id = spawn(cmd_ln, " /C start ", url);
+
+	// If the spawn was unsuccessful, notify the user
+	if (spawn_id == nil)
+		info ("Failed to open website ", url);
 }

@@ -53,6 +53,11 @@
 --------------------------------------------------------------------------------
  Changelog
 
+ * v1.3 - 28 Jun 2011
+   * Fixed Issue 1: Line 430, attempt to access undeclared array selectedPreset.
+     when running under LightWave 10.0 and 10.1.
+   * Implemted Issue 2: Duplicate presets button.
+   * Minor fixes for running the script uncompiled.
  * v1.2 - 1 Jun 2010:
    * Added a [Grab] button on the Global Illum Panel to copy the current GI
      settings from the scene.
