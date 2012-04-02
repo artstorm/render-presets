@@ -20,6 +20,7 @@ __lwver__       = '11'
 import os
 import sys
 import json
+import math
 import lwsdk
 import collections
 
@@ -77,6 +78,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
             self._panel.setw(510)
             self._panel.seth(420)
             self._panel.setmaxh(420)
+            # TMP height override, until control positions are in place
+            self._panel.seth(520)
+            self._panel.setmaxh(520)
             self._panel.set_close_callback(self.panel_close_callback)
 
             if self.create_controls():
@@ -237,7 +241,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 for ctl in v['controls']:
 
                     ctl2 = getattr(self._panel, ctl['type']+'_ctl')
-                    if ctl['type'] in ['bool', 'int', 'float']:
+                    if ctl['type'] in ['bool', 'int', 'intro', 'float', 'angle', 'percent']:
                         ctl['ctl'] = ctl2(ctl['label'])
                         ctl['ctl'].set_w(200)
 
@@ -251,9 +255,13 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     if ctl['type'] in ['bool', 'int', 'wpopup']:
                         ctl['ctl'].set_int(ctl['default'])
 
-                    if ctl['type'] in ['float']:
+                    if ctl['type'] in ['float', 'percent']:
                         ctl['ctl'].set_float(ctl['default'])
 
+                    if ctl['type'] in ['angle']:
+                        rad = math.radians(ctl['default'])
+                        # math.degrees(x)
+                        ctl['ctl'].set_float(rad)
 
                     ctl['ctl'].move(200,y)
                     ctl['ctl'].ghost()
