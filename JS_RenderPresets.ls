@@ -1,30 +1,63 @@
-/* ******************************
- * Master Class LScript: Render Presets
- * Version: 1.1
- * Author: Johan Steen
- * Date: 27 May 2010
- * Description: Allow the user to define and apply different presets for render settings.
- *
- * http://www.artstorm.net/
- *
- * REVISIONS
- * Version 1.1 - 27 May 2010
- * - Fixed a bug that could cause a preset to be cleared when closing/opening the window.
- * - Added a preset option for Camera Resolution Multiplier.
- * - Made the script Open Source under the GPL 3.0 License.
- *
- * Version 1.0 - 7 Mar 2010
- * - Initial Release.
- * ****************************** */
+/*------------------------------------------------------------------------------
+ Master Class LScript: Render Presets
+ Version: 1.2
+ Author: Johan Steen
+ Author URI: http://www.artstorm.net/
+ Date: 1 July 2010
+ Description: Allow the user to define and apply different presets for
+              render settings.
+
+ Copyright (c) 2010, Johan Steen
+ All Rights Reserved.
+ Use is subject to license terms.
+------------------------------------------------------------------------------*/
 
 @version 2.7
 @warnings
 @script master
 @name "JS_RenderPresets"
 
+// Define constants for all Scene Flags
+// @Found in LWSDK -> include/lwrender.h
+// SceneInfo.renderOpts -> Scene().renderopts[]
+@define LWROPT_SHADOWTRACE 1
+@define LWROPT_REFLECTTRACE 2
+@define LWROPT_REFRACTTRACE 3
+@define LWROPT_FIELDS 4
+@define LWROPT_EVENFIELDS 5
+@define LWROPT_MOTIONBLUR 6
+@define LWROPT_DEPTHOFFIELD 7
+@define LWROPT_LIMITEDREGION 8
+@define LWROPT_PARTICLEBLUR 9
+@define LWROPT_ENHANCEDAA 10
+@define LWROPT_SAVEANIM 11
+@define LWROPT_SAVERGB 12
+@define LWROPT_SAVEALPHA 13
+@define LWROPT_ZBUFFERAA 14
+@define LWROPT_RTTRANSPARENCIES 15
+@define LWROPT_RADIOSITY 16
+@define LWROPT_CAUSTICS 17
+@define LWROPT_OCCLUSION 18
+@define LWROPT_RENDERLINES 19
+@define LWROPT_INTERPOLATED 20
+@define LWROPT_BLURBACKGROUND 21
+@define LWROPT_USETRANSPARENCY 22
+@define LWROPT_VOLUMETRICRADIOSITY 23
+@define LWROPT_USEAMBIENT 24
+@define LWROPT_DIRECTIONALRAYS 25
+@define LWROPT_LIMITDYNAMICRANGE 26
+@define LWROPT_CACHERADIOSITY 27
+@define LWROPT_USEGRADIENTS 28
+@define LWROPT_USEBEHINDTEST 29
+@define LWROPT_CAUSTICSCACHE 30
+@define LWROPT_EYECAMERA 31
+@define LWROPT_UNPREMULTIPLIEDALPHA 32
+// SceneInfo.radiosityFlags -> Scene().radiosityflags[]
+@define LWRDFLG_USE_BUMPS 9
+
 // Main Variables
-rp_version = "1.1";
-rp_date = "27 May 2010";
+rp_version = "1.2";
+rp_date = "1 July 2010";
 presetsFile = getdir(SETTINGSDIR) + getsep() + "JS_RenderPresets.cfg";
 
 // Variables for GUI gadgets
@@ -169,6 +202,7 @@ options
 	// Global Illum Tab
 	// ----------------
 	ctlGIEnabled			= ctlcheckbox("Enable in Preset", false);
+	ctlGIGrab				= ctlbutton("[Grab]", 100, "onBtn_Grab", "1");
 	ctlGIEnableRadiosity	= ctlcheckbox("Enable Radiosity", false);
     ctlGIType				= ctlpopup("Type", 3, @ "Backdrop Only", "Monte Carlo", "Final Gather" @);  // array or string UDF; the list of items, or a UDF which returns a string or array
 	ctlGIInterpolated		= ctlcheckbox("Interpolated", true);
@@ -193,6 +227,7 @@ options
 	ctlgroup(ctlGIEnableRadiosity, ctlGIType, ctlGIInterpolated, ctlGIBlurBackground, ctlGIUseTransparency, ctlGIVolumetricRadiosity, ctlGIAmbientOcclusion, ctlGIDirectionalRays, ctlGIUseGradients, ctlGIUseBehindTest, ctlGIUseBumps);
 	ctlgroup(ctlGIEnableRadiosity, ctlGIIntensity, ctlGIIndirectBounces, ctlGIRaysPerEvaluation, ctlGISecondaryBounceRays, ctlGIAngularTolerance, ctlGIMinimumPixelSpacing, ctlGIMaximumPixelSpacing, ctlGIMultiplier);
 	ctlposition(ctlGIEnabled,				190,	34,		150);
+	ctlposition(ctlGIGrab,					456,	34,		40);
 	//
 	ctlposition(ctlGIEnableRadiosity,		190,	64,		120);
 	ctlposition(ctlGIType,					126,	0);
@@ -215,12 +250,14 @@ options
 	ctlposition(ctlGIMaximumPixelSpacing,	39,		264,	245);
 	ctlposition(ctlGIMultiplier,			109,	288,	175);
 	//
-	ctlactive(ctlGIEnabled, "toggleOptions", ctlGIEnableRadiosity, ctlGIType, ctlGIInterpolated, ctlGIBlurBackground, ctlGIUseTransparency, ctlGIVolumetricRadiosity, ctlGIAmbientOcclusion, ctlGIDirectionalRays, ctlGIUseGradients, ctlGIUseBehindTest, ctlGIUseBumps);
+	ctlactive(ctlGIEnabled, "toggleOptions", ctlGIGrab, ctlGIEnableRadiosity, ctlGIType, ctlGIInterpolated, ctlGIBlurBackground, ctlGIUseTransparency, ctlGIVolumetricRadiosity, ctlGIAmbientOcclusion, ctlGIDirectionalRays, ctlGIUseGradients, ctlGIUseBehindTest, ctlGIUseBumps);
 	ctlactive(ctlGIEnabled, "toggleOptions", ctlGIIntensity, ctlGIIndirectBounces, ctlGIRaysPerEvaluation, ctlGISecondaryBounceRays, ctlGIAngularTolerance, ctlGIMinimumPixelSpacing, ctlGIMaximumPixelSpacing, ctlGIMultiplier);
 
 	// Render Tab
 	// ----------
 	ctlRNDEnabled			= ctlcheckbox("Enable in Preset", false);
+	ctlRNDGrab				= ctlbutton("[Grab]", 100, "onBtn_Grab", "2");
+	ctlRNDGrab.visible(false);
 	ctlRNDRaytraceShadows	= ctlcheckbox("Raytrace Shadows", false);
 	ctlRNDRaytraceReflection= ctlcheckbox("Raytrace Reflection", false);
 	ctlRNDRaytraceTransp	= ctlcheckbox("Raytrace Transparency", false);
@@ -235,6 +272,7 @@ options
 	ctlgroup(ctlRNDRaytraceShadows, ctlRNDRaytraceReflection, ctlRNDRaytraceTransp, ctlRNDRaytraceRefraction, ctlRNDRaytraceOcclusion, ctlRNDDepthBufferAA, ctlRNDRenderLines);
 	ctlgroup(ctlRNDRaytraceShadows, ctlRNDRayRecursion, ctlRNDRayPrecision, ctlRNDRayCutoff);
 	ctlposition(ctlRNDEnabled,				190,	34,		150);
+	ctlposition(ctlRNDGrab,					456,	34,		40);
 	//
 	ctlposition(ctlRNDRaytraceShadows,		190,	64,		150);
 	ctlposition(ctlRNDRaytraceReflection,	156,	0,		150);
@@ -248,7 +286,7 @@ options
 	ctlposition(ctlRNDRayPrecision,			85,		110,	221);
 	ctlposition(ctlRNDRayCutoff,			100,	132,	206);
 	//
-	ctlactive(ctlRNDEnabled, "toggleOptions", ctlRNDRaytraceShadows, ctlRNDRaytraceReflection, ctlRNDRaytraceTransp, ctlRNDRaytraceRefraction, ctlRNDRaytraceOcclusion, ctlRNDDepthBufferAA, ctlRNDRenderLines);
+	ctlactive(ctlRNDEnabled, "toggleOptions", ctlRNDGrab, ctlRNDRaytraceShadows, ctlRNDRaytraceReflection, ctlRNDRaytraceTransp, ctlRNDRaytraceRefraction, ctlRNDRaytraceOcclusion, ctlRNDDepthBufferAA, ctlRNDRenderLines);
 	ctlactive(ctlRNDEnabled, "toggleOptions", ctlRNDRayRecursion, ctlRNDRayPrecision, ctlRNDRayCutoff);
 	
 
@@ -282,7 +320,7 @@ options
 	ctlEffectSep = ctlsep();
 	ctlPROCEnabled			= ctlcheckbox("Enable in Preset", false);
 	ctlPROCLimitDynamicRange= ctlcheckbox("Limit Dynamic Range", false);
-    ctlPROCDitherIntensity	= ctlpopup("Dither Intensity", 2, @"Off", "Normal", "2 x Normal", "4 x Normal"@);  //array or string UDF; the list of items, or a UDF which returns a string or array
+    ctlPROCDitherIntensity	= ctlpopup("Dither Intensity", 2, @"Off", "Normal", "2 x Normal", "4 x Normal"@);  // array or string UDF; the list of items, or a UDF which returns a string or array
 	
 	ctlposition(ctlEffectSep,			190,	250,	320);
 	ctlposition(ctlPROCEnabled,			190,	260,	150);
@@ -295,6 +333,8 @@ options
 	// Camera Tab
 	// ------------
 	ctlCAMEnabled			= ctlcheckbox("Enable in Preset", false);
+	ctlCAMGrab				= ctlbutton("[Grab]", 100, "onBtn_Grab", "5");
+	ctlCAMGrab.visible(false);
 	ctlCAMAntialiasing		= ctlminislider("Antialiasing", 1, 1, 10000);
     ctlCAMReconstruction	= ctlpopup("Reconstruction Filter", 1, @"Classic", "Box", "Box (Sharp)", "Box (Soft)", "Gaussian", "Gaussian (Sharp)", "Gaussian (Soft)", "Mitchell", "Mitchell (Sharp)", "Mitchell (Soft)", "Lanczos", "Lanczos (Sharp)", "Lanczos (Soft)"@);  //array or string UDF; the list of items, or a UDF which returns a string or array
     ctlCAMSamplingPattern	= ctlpopup("Sampling Pattern", 2, @"Blue Noise", "Fixed", "Classic"@);  //array or string UDF; the list of items, or a UDF which returns a string or array
@@ -303,6 +343,7 @@ options
 	ctlCAMOversample		= ctlnumber("Oversample", 0.0);
 	
 	ctlposition(ctlCAMEnabled,			190,	34,		150);
+	ctlposition(ctlCAMGrab,				456,	34,		40);
 	ctlposition(ctlCAMAntialiasing,		287,	64,		187);
 	ctlposition(ctlCAMReconstruction,	243,	86,		253);
 	ctlposition(ctlCAMSamplingPattern,	260,	108,	236);
@@ -310,7 +351,7 @@ options
 	ctlposition(ctlCAMTreshold,			299,	152,	197);
 	ctlposition(ctlCAMOversample,		284,	174,	212);
 	//
-	ctlactive(ctlCAMEnabled, "toggleOptions", ctlCAMAntialiasing, ctlCAMReconstruction, ctlCAMSamplingPattern, ctlCAMAdaptiveSampling, ctlCAMTreshold, ctlCAMOversample);
+	ctlactive(ctlCAMEnabled, "toggleOptions", ctlCAMGrab, ctlCAMAntialiasing, ctlCAMReconstruction, ctlCAMSamplingPattern, ctlCAMAdaptiveSampling, ctlCAMTreshold, ctlCAMOversample);
 	
 	// resolution section
 	ctlRESSep = ctlsep();
@@ -326,13 +367,13 @@ options
 	
 	// The pages for the tabs
 	// ----------------------
-	ctlpage(1,ctlGIEnabled, ctlGIEnableRadiosity, ctlGIType, ctlGIInterpolated, ctlGIBlurBackground, ctlGIUseTransparency, ctlGIVolumetricRadiosity, ctlGIAmbientOcclusion, ctlGIDirectionalRays, ctlGIUseGradients, ctlGIUseBehindTest, ctlGIUseBumps);
+	ctlpage(1,ctlGIEnabled, ctlGIGrab, ctlGIEnableRadiosity, ctlGIType, ctlGIInterpolated, ctlGIBlurBackground, ctlGIUseTransparency, ctlGIVolumetricRadiosity, ctlGIAmbientOcclusion, ctlGIDirectionalRays, ctlGIUseGradients, ctlGIUseBehindTest, ctlGIUseBumps);
 	ctlpage(1,ctlGIIntensity, ctlGIIndirectBounces, ctlGIRaysPerEvaluation, ctlGISecondaryBounceRays, ctlGIAngularTolerance, ctlGIMinimumPixelSpacing, ctlGIMaximumPixelSpacing, ctlGIMultiplier);
-	ctlpage(2,ctlRNDEnabled, ctlRNDRaytraceShadows, ctlRNDRaytraceReflection, ctlRNDRaytraceTransp, ctlRNDRaytraceRefraction, ctlRNDRaytraceOcclusion, ctlRNDDepthBufferAA, ctlRNDRenderLines);
+	ctlpage(2,ctlRNDEnabled, ctlRNDGrab, ctlRNDRaytraceShadows, ctlRNDRaytraceReflection, ctlRNDRaytraceTransp, ctlRNDRaytraceRefraction, ctlRNDRaytraceOcclusion, ctlRNDDepthBufferAA, ctlRNDRenderLines);
 	ctlpage(2,ctlRNDRayRecursion, ctlRNDRayPrecision, ctlRNDRayCutoff);
 	ctlpage(3,ctlBDEnabled, ctlBDBackdropColor, ctlBDGradientBackdrop, ctlBDZenithColor, ctlBDSkyColor, ctlBDSkySqueeze, ctlBDGroundSqueeze, ctlBDGroundColor, ctlBDNadirColor);
 	ctlpage(3,ctlEffectSep, ctlPROCEnabled, ctlPROCLimitDynamicRange, ctlPROCDitherIntensity);
-	ctlpage(4,ctlCAMEnabled, ctlCAMAntialiasing, ctlCAMReconstruction, ctlCAMSamplingPattern, ctlCAMAdaptiveSampling, ctlCAMTreshold, ctlCAMOversample);
+	ctlpage(4,ctlCAMEnabled, ctlCAMGrab, ctlCAMAntialiasing, ctlCAMReconstruction, ctlCAMSamplingPattern, ctlCAMAdaptiveSampling, ctlCAMTreshold, ctlCAMOversample);
 	ctlpage(4,ctlRESSep, ctlRESEnabled, ctlRESMultiplier);
 	
 	// Comment Field
@@ -686,41 +727,6 @@ onBtn_Apply
 		presetName = arrPresetList[selection].asStr();
 		// Get the presetData ID
 		pDataID = getPresetDataID(presetName);
-
-/* SceneInfo.renderOpts */
-// Add +1 to the values for the LScript array
-// SHADOWTRACE 			(0)
-// REFLECTTRACE 		(1)
-// REFRACTTRACE 		(2)
-// FIELDS 				(3)
-// EVENFIELDS 			(4)
-// MOTIONBLUR 			(5)
-// DEPTHOFFIELD 		(6)
-// LIMITEDREGION 		(7)
-// PARTICLEBLUR 		(8)
-// ENHANCEDAA 			(9)
-// SAVEANIM 			(10)
-// SAVERGB 				(11)
-// SAVEALPHA 			(12)
-// ZBUFFERAA 			(13)
-// RTTRANSPARENCIES 	(14)
-// RADIOSITY 			(15)
-// CAUSTICS 			(16)
-// OCCLUSION 			(17)
-// RENDERLINES 			(18)
-// INTERPOLATED 		(19)
-// BLURBACKGROUND		(20)
-// USETRANSPARENCY		(21)
-// VOLUMETRICRADIOSITY  (22)
-// USEAMBIENT           (23)
-// DIRECTIONALRAYS      (24)
-// LIMITDYNAMICRANGE    (25)
-// CACHERADIOSITY       (26)
-// USEGRADIENTS         (27)
-// USEBEHINDTEST        (28)
-// CAUSTICSCACHE        (29)
-// EYECAMERA            (30)
-// UNPREMULTIPLIEDALPHA (31)
 
 		// GLOBAL ILLUM
 		if (isPresetEnabled(pDataID, "GIPanelEnabled") == true) {
@@ -1176,6 +1182,80 @@ isPresetEnabled: pDataID, presetOption {
 	return val;
 }
 
+/*
+ * Copies the settings from the scene into the current preset panel
+ *
+ * @section			The section to populate with scene data
+ *
+ * @returns     Nothing
+ */
+onBtn_Grab: section
+{
+	// Confirm that the user is sure
+	reqbegin("Copy Settings From Scene");
+	reqsize(420,70);
+	c0 = ctltext("","This will overwrite everything in this section with the scene's settings. Are you sure?");
+	ctlposition(c0,10,12);
+	return if !reqpost();
+
+	scene = Scene();
+	// GLOBAL ILLUM
+	if (section == 1) {
+		setvalue(ctlGIEnableRadiosity,		scene.renderopts[LWROPT_RADIOSITY]);
+		setvalue(ctlGIType,					scene.radiositytype + 1);
+		setvalue(ctlGIInterpolated,			scene.renderopts[LWROPT_INTERPOLATED]);
+		setvalue(ctlGIBlurBackground,		scene.renderopts[LWROPT_BLURBACKGROUND]);
+		setvalue(ctlGIUseTransparency,		scene.renderopts[LWROPT_USETRANSPARENCY]);
+		setvalue(ctlGIVolumetricRadiosity,	scene.renderopts[LWROPT_VOLUMETRICRADIOSITY]);
+		setvalue(ctlGIAmbientOcclusion,		scene.renderopts[LWROPT_USEAMBIENT]);
+		setvalue(ctlGIDirectionalRays,		scene.renderopts[LWROPT_DIRECTIONALRAYS]);
+		setvalue(ctlGIUseGradients,			scene.renderopts[LWROPT_USEGRADIENTS]);
+		setvalue(ctlGIUseBehindTest,		scene.renderopts[LWROPT_USEBEHINDTEST]);
+		setvalue(ctlGIUseBumps,				scene.radiosityflags[LWRDFLG_USE_BUMPS]);
+
+		setvalue(ctlGIIntensity,			scene.radiosityintensity);	
+		setvalue(ctlGIIndirectBounces,		scene.radiosityindirectbouncecount);	
+		setvalue(ctlGIRaysPerEvaluation,	scene.radiosityraysperevaluation1);	
+		setvalue(ctlGISecondaryBounceRays,	scene.radiosityraysperevaluation2);	
+		// Change the phase, convert from sin to radian, convert from radian to degree, shift the value 90 degrees.
+		setvalue(ctlGIAngularTolerance,		90 + (deg(asin(scene.radiosityangulartolerance - 1))));		
+		setvalue(ctlGIMinimumPixelSpacing,	scene.radiosityminimumpixelspacing);	
+		setvalue(ctlGIMaximumPixelSpacing,	scene.radiositymaximumpixelspacing);	
+		setvalue(ctlGIMultiplier,			scene.radiositymultiplier);	
+	}
+
+	// RENDER
+	if (section == 2) {
+		setvalue(ctlRNDRaytraceShadows,		scene.renderopts[LWROPT_SHADOWTRACE]);
+		setvalue(ctlRNDRaytraceReflection,	scene.renderopts[LWROPT_REFLECTTRACE]);
+		setvalue(ctlRNDRaytraceTransp,		scene.renderopts[LWROPT_RTTRANSPARENCIES]);
+		setvalue(ctlRNDRaytraceRefraction,	scene.renderopts[LWROPT_REFRACTTRACE]);
+		setvalue(ctlRNDRaytraceOcclusion,	scene.renderopts[LWROPT_OCCLUSION]);
+		setvalue(ctlRNDDepthBufferAA,		scene.renderopts[LWROPT_ZBUFFERAA]);
+		setvalue(ctlRNDRenderLines,			scene.renderopts[LWROPT_RENDERLINES]);
+
+		setvalue(ctlRNDRayRecursion,		scene.recursiondepth);
+//		setvalue(ctlRNDRayPrecision,		scene.RayPrecision);
+//		setvalue(ctlRNDRayCutoff,			scene.rayprecisiondepth);
+	}
+	
+	// CAMERA
+	if (section == 5) {
+		camera = Camera();
+//		setvalue(ctlCAMAntialiasing,		scene.radiositymultiplier);	
+//		setvalue(ctlCAMReconstruction,		scene.radiositymultiplier);	
+//		setvalue(ctlCAMSamplingPattern,		scene.radiositymultiplier);	
+		setvalue(ctlCAMAdaptiveSampling,	scene.adaptivesampling);	
+		setvalue(ctlCAMTreshold,			scene.adaptivethreshold);	
+//		setvalue(ctlCAMOversample,			scene.radiositymultiplier);	
+	}
+	
+	// CAMERA RESOLUTION
+	if (section == 6) {
+		camera = Camera();
+//		info (camera.pixelAspect(0));
+	}
+}
 
 //
 // FUNCTIONS TO LOAD/SAVE THE PRESET FILE

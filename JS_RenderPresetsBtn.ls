@@ -1,16 +1,17 @@
-/* ******************************
-** Generic Class LScript: Render Presets Button
-** Version: 1.0
-** Author: Johan Steen
-** Date: 7 Mar 2010
-** Description: Companion to Render Presets, adds a command to LightWave to map Render Presets to a menu item or keyboard shortcut.
-**
-** http://www.artstorm.net/
-**
-** Revisions
-** Version 1.0 - 7 Mar 2010
-** * Initial Release.
-** ****************************** */
+/*------------------------------------------------------------------------------
+ Generic Class LScript: Render Presets Button
+ Version: 1.0
+ Author: Johan Steen
+ Author URI: http://www.artstorm.net/
+ Date: 7 Mar 2010
+ Description: Companion to Render Presets, adds a command to LightWave to map
+              Render Presets to a menu item or keyboard shortcut.
+
+ Copyright (c) 2010, Johan Steen
+ All Rights Reserved.
+ Use is subject to license terms.
+------------------------------------------------------------------------------*/
+
 @version 2.3
 @script generic
 @name "JS_RenderPresetsBtn"
