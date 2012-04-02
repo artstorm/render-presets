@@ -38,8 +38,7 @@ use it.
 
 Compability
 ===========
-Render Presets has been tested with LightWave 3D 9.6, Win32 and Win64.
-As far as I know it should also work fine on the Mac.
+Render Presets has been tested with LightWave 3D 9.6, Win32, Win64 and Mac OS.
 
 
 Author
@@ -50,21 +49,24 @@ Contact me through http://www.artstorm.net/
 
 Changelog
 =========
+Version 1.1 - 27 May 2010:
+  * Fixed a bug that could cause a preset to be cleared when closing/opening the window.
+  * Added a preset option for Camera Resolution Multiplier.
+
 Version 1.0 - 7 Mar 2010:
   * Release of version 1.0, first public release.
 
 
-Disclaimer / Legal Stuff
-========================
-Render Presets is freeware. 
-Please do not distribute or re-post this 
-tool without the author's permission.
+LICENSE
+=======
+Render Presets for LightWave 3D,
+Copyright (C) 2010 Johan Steen.
 
-Render Presets is provided "as is" without 
-warranty of any kind, either express or implied,
-no liability for consequential damages.
+Please do not distribute or re-post this tool without the
+author's permission.
 
-By installing and or using this software
-you agree to the terms above.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+FITNESS FOR A PARTICULAR PURPOSE.
 
-Copyright © 2010 Johan Steen.
+By installing and or using this software you agree to the terms above.

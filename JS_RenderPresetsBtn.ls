@@ -53,29 +53,4 @@ generic
 			CommandInput(deactivate);
 		}
 	}
-// Gamla, funkar fint men vill prova det ovan
-
-   // commanderActive = false;
-   // curScene = Scene();
-   // applied = curScene.server("MasterHandler");
-
-   // if(applied)
-   // {    
-       // counter = size(applied);
-    
-       // for(x = 1; x <= counter; x++)
-       // {
-           // if(applied[x] == "JS_RenderPresets")
-           // {
-               // commanderActive = true;
-               // break;
-           // }
-       // }
-   // }
-
-   // if(!commanderActive)
-       // ApplyServer("MasterHandler", "JS_RenderPresets");
-
-   // openServer = string("EditServer MasterHandler ",x);
-   // CommandInput(openServer);
 }

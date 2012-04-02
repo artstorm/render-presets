@@ -1,16 +1,21 @@
 /* ******************************
-** Master Class LScript: Render Presets
-** Version: 1.0
-** Author: Johan Steen
-** Date: 7 Mar 2010
-** Description: Allow the user to define and apply different presets for render settings.
-**
-** http://www.artstorm.net/
-**
-** Revisions
-** Version 1.0 - 7 Mar 2010
-** * Initial Release.
-** ****************************** */
+ * Master Class LScript: Render Presets
+ * Version: 1.1
+ * Author: Johan Steen
+ * Date: 27 May 2010
+ * Description: Allow the user to define and apply different presets for render settings.
+ *
+ * http://www.artstorm.net/
+ *
+ * REVISIONS
+ * Version 1.1 - 27 May 2010
+ * - Fixed a bug that could cause a preset to be cleared when closing/opening the window.
+ * - Added a preset option for Camera Resolution Multiplier.
+ * - Made the script Open Source under the GPL 3.0 License.
+ *
+ * Version 1.0 - 7 Mar 2010
+ * - Initial Release.
+ * ****************************** */
 
 @version 2.7
 @warnings
@@ -18,8 +23,8 @@
 @name "JS_RenderPresets"
 
 // Main Variables
-rp_version = "1.0";
-rp_date = "7 March 2010";
+rp_version = "1.1";
+rp_date = "27 May 2010";
 presetsFile = getdir(SETTINGSDIR) + getsep() + "JS_RenderPresets.cfg";
 
 // Variables for GUI gadgets
@@ -42,6 +47,9 @@ ctlPROCLimitDynamicRange, ctlPROCDitherIntensity;
 // Camera Panel
 ctlCAMEnabled;
 ctlCAMAntialiasing, ctlCAMReconstruction, ctlCAMSamplingPattern, ctlCAMAdaptiveSampling, ctlCAMTreshold, ctlCAMOversample;
+// Resolution Panel
+ctlRESEnabled;
+ctlRESMultiplier;
 // Comment
 ctlComment;
 
@@ -62,7 +70,8 @@ arrPresetOptions = @ "Comment",
 "ProcessingPanelEnabled",
 "LimitDynamicRange", "DitherIntensity",
 "CameraPanelEnabled",
-"Antialiasing", "ReconstructionFilter", "NoiseSampler", "AdaptiveSampling", "AdaptiveThreshold", "Oversampling"@;
+"Antialiasing", "ReconstructionFilter", "NoiseSampler", "AdaptiveSampling", "AdaptiveThreshold", "Oversampling",
+"ResolutionPanelEnabled", "ResolutionMultiplier"@;
 
 //
 // FUNCTIONS ALWAYS AVAILABLE IN MASTER CLASS PLUGINS
@@ -115,6 +124,9 @@ options
 {
     if(reqisopen())
         return;
+
+	// Reset some initialization values
+	selPreset = nil;
 
     reqbegin("Render Presets v" + rp_version);
 	reqsize(510,420);
@@ -300,6 +312,17 @@ options
 	//
 	ctlactive(ctlCAMEnabled, "toggleOptions", ctlCAMAntialiasing, ctlCAMReconstruction, ctlCAMSamplingPattern, ctlCAMAdaptiveSampling, ctlCAMTreshold, ctlCAMOversample);
 	
+	// resolution section
+	ctlRESSep = ctlsep();
+	ctlRESEnabled			= ctlcheckbox("Enable in Preset", false);
+    ctlRESMultiplier		= ctlpopup("Multiplier", 3, @"25 %", "50 %", "100 %", "200 %", "400 %"@);  //array or string UDF; the list of items, or a UDF which returns a string or array
+
+	ctlposition(ctlRESSep,				190,	206,	320);
+	ctlposition(ctlRESEnabled,			190,	216,	150);
+	ctlposition(ctlRESMultiplier,		299,	246,	197);
+	
+	ctlactive(ctlRESEnabled, "toggleOptions", ctlRESMultiplier);
+	
 	
 	// The pages for the tabs
 	// ----------------------
@@ -310,7 +333,8 @@ options
 	ctlpage(3,ctlBDEnabled, ctlBDBackdropColor, ctlBDGradientBackdrop, ctlBDZenithColor, ctlBDSkyColor, ctlBDSkySqueeze, ctlBDGroundSqueeze, ctlBDGroundColor, ctlBDNadirColor);
 	ctlpage(3,ctlEffectSep, ctlPROCEnabled, ctlPROCLimitDynamicRange, ctlPROCDitherIntensity);
 	ctlpage(4,ctlCAMEnabled, ctlCAMAntialiasing, ctlCAMReconstruction, ctlCAMSamplingPattern, ctlCAMAdaptiveSampling, ctlCAMTreshold, ctlCAMOversample);
-
+	ctlpage(4,ctlRESSep, ctlRESEnabled, ctlRESMultiplier);
+	
 	// Comment Field
     ctlCommSep = ctlsep();
 	ctlComment = ctlstring("Comment", "", 262);
@@ -797,7 +821,8 @@ onBtn_Apply
 		}
 
 		// CAMERA
-		if (isPresetEnabled(pDataID, "CameraPanelEnabled") == true) {
+		// Ask the user which camera to apply the preset to if multiple cameras
+		if (isPresetEnabled(pDataID, "CameraPanelEnabled") == true || isPresetEnabled(pDataID, "ResolutionPanelEnabled") == true) {
 			// Build an array of available cameras
 			camera = Camera();
 			while(camera) {
@@ -822,8 +847,10 @@ onBtn_Apply
 					reqend();
 				}
 			}
-			
-			// Apply the camera presets
+		}
+		
+		// Apply the camera Antialiasing Presets
+		if (isPresetEnabled(pDataID, "CameraPanelEnabled") == true) {
 			if (!cancelCam) {
 				ApplyPreset(pDataID, 0, "Antialiasing",);
 				ApplyPreset(pDataID, 2, "ReconstructionFilter",);
@@ -840,6 +867,14 @@ onBtn_Apply
 			}
 		}
 
+		// Apply the camera Resolution Presets
+		if (isPresetEnabled(pDataID, "ResolutionPanelEnabled") == true) {
+			if (!cancelCam) {
+				ApplyPreset(pDataID, 4, "ResolutionMultiplier",);
+			}
+		}
+		
+		
 		// Notify the user
 		infoWindow("Applied", presetName + " applied.", 200);
 	} else {
@@ -860,7 +895,7 @@ onBtn_Apply
  * Applies a preset to the scene
  *
  * @pDataID			The current Preset data ID
- * @mode			The mode to apply with, 0 = normal command input, 1 = toggle only checkboxes, 2 = dropdown menues, 3 = colors
+ * @mode			The mode to apply with, 0 = normal command input, 1 = toggle only checkboxes, 2 = dropdown menues, 3 = colors, 4 = Resolution Converter
  * @presetOption	The preset option to apply
  * @rFlag			The render option flag for mode 1, to determine if the toggle only checkbox needs toggling
  *
@@ -893,6 +928,15 @@ ApplyPreset: pDataID, mode, presetOption, rFlag
 				// Color Values as vector
 				case 3:
 					val = val.asVec() / 255;
+					CommandInput(presetOption + " " + val);
+				break;
+				// Resolution Converter
+				case 4:
+					if (val == 1) { val = 0.25; }
+					if (val == 2) { val = 0.5; }
+					if (val == 3) { val = 1; }
+					if (val == 4) { val = 2; }
+					if (val == 5) { val = 4; }
 					CommandInput(presetOption + " " + val);
 				break;
 			}
@@ -974,6 +1018,10 @@ savePresetToArray: presetName
 	saveInPDArray(pDataID, "AdaptiveSampling", ctlCAMAdaptiveSampling);
 	saveInPDArray(pDataID, "AdaptiveThreshold", ctlCAMTreshold);
 	saveInPDArray(pDataID, "Oversampling", ctlCAMOversample);
+
+	// RESOLUTION
+	saveInPDArray(pDataID, "ResolutionPanelEnabled", ctlRESEnabled);
+	saveInPDArray(pDataID, "ResolutionMultiplier", ctlRESMultiplier);
 }
 
 /*
@@ -1051,6 +1099,10 @@ refreshPDataPanels: selectedPreset
 	setGUIValue(pDataID, "AdaptiveSampling", ctlCAMAdaptiveSampling, false);
 	setGUIValue(pDataID, "AdaptiveThreshold", ctlCAMTreshold, 0.1);
 	setGUIValue(pDataID, "Oversampling", ctlCAMOversample, 0.0);
+
+	// RESOLUTION
+	setGUIValue(pDataID, "ResolutionPanelEnabled", ctlRESEnabled, false);
+	setGUIValue(pDataID, "ResolutionMultiplier", ctlRESMultiplier, 3);
 }
 
 /*
