@@ -429,7 +429,16 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Presets.save()
 
     def rename(self):
-        print 'rename'
+        panel = self._ui.create('Rename Preset')
+        panel.setw(300)
+        panel.seth(60)
+
+        if panel.open(lwsdk.PANF_BLOCKING | lwsdk.PANF_CANCEL) == 0:
+            ui.destroy(panel)
+
+        ui.destroy(panel)
+
+
 
     def delete(self):
         print 'delete'
@@ -485,6 +494,7 @@ class Presets:
     # User defined Presets
     user = None
     # User defined Preset Names
+    # TODO: Presets.name ska kanske vara en return funktion istallet? Sa jag ev kan anvanda dict:en (defs) for allt.
     names = None
 
 
