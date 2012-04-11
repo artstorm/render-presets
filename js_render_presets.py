@@ -485,7 +485,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # delete old, and insert it on the new row
         Presets.names.insert(new_row, Presets.names.pop(row))
 
-        # Refresh GUI
+        # Refresh GUI and selection
+        self._controls[0].set_int(new_row)
+        self._selection = new_row
         self._controls[0].redraw()
 
     def duplicate(self):
