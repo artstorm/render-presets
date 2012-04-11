@@ -45,6 +45,11 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._panel = None
         self._controls = None
 
+        # Track selected preset 
+        # (as get_int() won't return -1 for deselections, we track it ourselves)
+        self._selection = -1
+
+        # Load user defined presets
         Presets.load()
 
     def __del__(self):
@@ -126,6 +131,17 @@ class RenderPresetsMaster(lwsdk.IMaster):
         for t in self.lookup:
             t['ctl'].unghost()
 
+    # Preset List Callbacks
+    def preset_name_callback(self, control, userdata, row):
+        return Presets.names[row]
+    def preset_count_callback(self, control, userdata):
+        return len(Presets.names)
+    def preset_select_callback(self, control, user_data, row, selecting):
+        # Globally track the selected row, as get_int() on the control doesn't
+        # return a value to determine when nothing is selected in the list
+        # row = -1 when noting is selected
+        self._selection = row
+        self.refresh_controls()
 
     # --------------------------------------------------------------------------
     # Custom Methods
@@ -187,8 +203,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
 
         # TMP GUI Setup
-        self._controls[0] = self._panel.listbox_ctl('Presets', 150, 18, self.name_1d, self.count_1d)
-        self._controls[0].set_select(self.single_select_event_func)
+        self._controls[0] = self._panel.listbox_ctl('Presets', 150, 18, \
+            self.preset_name_callback, self.preset_count_callback)
+        self._controls[0].set_select(self.preset_select_callback)
 
 
 
@@ -277,26 +294,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         return True
 
 
-    # Callbacks --------------------------------------
-    def name_1d(self, control, userdata, row):
-        return Presets.names[row]
 
-    def count_1d(self, control, userdata):
-        return len(Presets.names)
-
-    def single_select_event_func(self, control, user_data, row, selecting):
-#        if row < 0:
-#            return  # list selections are being cleared
-        print row
-
-        action = 'deselected'
-        if selecting:
-            action = action[2:]
-
-        print 'You %s: %s' % (action, Presets.names[row])
-
-        # TMP
-        self.refresh_controls()
 
 
     def tabs_callback(self, id, user_data):
@@ -425,6 +423,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # Presets.save()
 
     def save(self):
+        print self._controls[0].get_int()
+        print self._controls[0].get_userdata()
         print 'save'
         Presets.save()
 
@@ -589,6 +589,17 @@ class Presets:
     @staticmethod
     def delete(name):
         pass
+
+    # --------------------------------------------------------------------------
+    # Helpers
+    # --------------------------------------------------------------------------
+    @staticmethod
+    def get_name(row):
+        """ Return the name, or False if the row doesn't exist. """
+        if row < 0 or row >= len(Presets.names):
+            return False
+
+        return Presets.names[row]
 
 
 
