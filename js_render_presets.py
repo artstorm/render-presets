@@ -141,7 +141,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # return a value to determine when nothing is selected in the list
         # row = -1 when noting is selected
         self._selection = row
-        print Presets.get_name(row)
         self.refresh_controls()
 
     # --------------------------------------------------------------------------
