@@ -429,16 +429,23 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Presets.save()
 
     def rename(self):
+        """
+        Create a rename dialog.
+        """
         panel = self._ui.create('Rename Preset')
         panel.setw(300)
         panel.seth(60)
 
+        # Create the string field, and populate it with the current name.
+        name = panel.str_ctl('Name', 50)
+        name.set_str('yike')
+
         if panel.open(lwsdk.PANF_BLOCKING | lwsdk.PANF_CANCEL) == 0:
-            ui.destroy(panel)
+            self._ui.destroy(panel)
+            return
 
-        ui.destroy(panel)
-
-
+        print name.get_str()
+        self._ui.destroy(panel)
 
     def delete(self):
         print 'delete'
