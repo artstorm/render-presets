@@ -464,7 +464,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         Presets.delete(row)
 
-        # self.c1.redraw()
+        # Refresh GUI and selection
+        self._controls[0].set_int(-1)
+        self._selection = -1
         self._controls[0].redraw()
 
     def up(self):
