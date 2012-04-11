@@ -471,16 +471,22 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self.c1.redraw()
 
     def down(self):
-        print 'down'
-        # get the current index
-        old_index = Presets.names.index('new preset')
+        """ Move selection down the list. """
+        # Get selected row
+        row = self._selection
+
+        # Check so we can move down, else return
+        print len(Presets.names)
+        if row == -1 or row >= (len(Presets.names)-1):
+            return
+
         # move it down
-        new_index = old_index + 1
+        new_row = row + 1
+        # delete old, and insert it on the new row
+        Presets.names.insert(new_row, Presets.names.pop(row))
 
-        # delete old, and insert it on the new index
-        Presets.names.insert(new_index, Presets.names.pop(old_index))
-
-        self.c1.redraw()
+        # Refresh GUI
+        self._controls[0].redraw()
 
     def duplicate(self):
         print 'duplicate'
