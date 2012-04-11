@@ -429,7 +429,29 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Presets.save()
 
     def rename(self):
-        print 'rename'
+        """ Create a rename dialog. """
+        # Get the name of the selected preset, or return if nothing selected
+        row = self._selection
+        name = Presets.get_name(row)
+        if name == False:
+            return
+
+        panel = self._ui.create('Rename Preset')
+        panel.setw(300)
+        panel.seth(60)
+
+        # Create the string field, and populate it with the current name.
+        name_ctl = panel.str_ctl('Name', 50)
+        name_ctl.set_str(name)
+
+        if panel.open(lwsdk.PANF_BLOCKING | lwsdk.PANF_CANCEL) == 0:
+            self._ui.destroy(panel)
+            return
+
+        Presets.rename(self._selection, name_ctl.get_str())
+        self._controls[0].redraw()
+
+        self._ui.destroy(panel)
 
     def delete(self):
         print 'delete'
@@ -485,6 +507,7 @@ class Presets:
     # User defined Presets
     user = None
     # User defined Preset Names
+    # TODO: Presets.name ska kanske vara en return funktion istallet? Sa jag ev kan anvanda dict:en (defs) for allt.
     names = None
 
 
@@ -573,12 +596,49 @@ class Presets:
     def delete(name):
         pass
 
+    @staticmethod
+    def rename(row, new_name):
+        """ Rename a preset.
+
+        @param   int    row       The row in the list to rename
+        @param   string new_name  The new name of the preset
+
+        @return  False if failed to rename
+        """
+        # Get the old name
+        old_name = Presets.get_name(row)
+
+        # If the new name is the same as the old, silently return
+        if old_name == new_name:
+            return False
+
+        # Check so we got a unique name, else return with an error message.
+        if new_name in Presets.names:
+            lwsdk.LWMessageFuncs().error('Name "%s" already exists.' % new_name, \
+                'rename error')
+            return False
+
+        # Make a copy with the new name, and then delete the old name
+        Presets.user['presets'][new_name] = Presets.user['presets'][old_name]
+        del Presets.user['presets'][old_name]
+
+        # Also update the list of names
+        Presets.names.insert(row, new_name)
+        Presets.names.remove(old_name)
+
+
+
     # --------------------------------------------------------------------------
     # Helpers
     # --------------------------------------------------------------------------
     @staticmethod
     def get_name(row):
-        """ Return the name, or False if the row doesn't exist. """
+        """ Return the name, or False if the row doesn't exist.
+
+        @param   int  row  The row in the list to retrieve
+
+        @return  False if no name was found.
+        """
         if row < 0 or row >= len(Presets.names):
             return False
 
