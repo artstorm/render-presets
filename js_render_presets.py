@@ -454,9 +454,18 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._ui.destroy(panel)
 
     def delete(self):
-        print 'delete'
-        Presets.names.remove('new preset')
-        self.c1.redraw()
+        """ Delete selected preset. """
+        # Get selected row
+        row = self._selection
+
+        # Check so we have a selection, else return
+        if row < 0:
+            return
+
+        Presets.delete(row)
+
+        # self.c1.redraw()
+        self._controls[0].redraw()
 
     def up(self):
         """ Move selection up the list. """
@@ -607,8 +616,22 @@ class Presets:
 
 
     @staticmethod
-    def delete(name):
-        pass
+    def delete(row):
+        """ Delete a preset.
+
+        @param   int    row       The row in the list to rename
+
+        @return  False if failed to delete
+        """
+        # Get name of preset to delete
+        name = Presets.get_name(row)
+
+        if name == False:
+            return False
+
+        # Remove from ordereddict and list of names
+        del Presets.user['presets'][name]
+        Presets.names.remove(name)
 
     @staticmethod
     def rename(row, new_name):
