@@ -598,7 +598,19 @@ class Presets:
 
     @staticmethod
     def rename(row, new_name):
-        Presets.names[row] = new_name
+        """ Rename a preset.
+
+        @param   int    row       The row in the list to rename.
+        @param   string new_name  The new name of the preset.
+        """
+        # Get the old name
+        old_name = Presets.get_name(row)
+
+        # Presets.names.insert(row, new_name)
+
+        Presets.user['presets'][new_name] = Presets.user['presets'][old_name]
+        del Presets.user['presets'][old_name]
+        # Presets.names[row] = new_name
 
 
     # --------------------------------------------------------------------------
