@@ -448,7 +448,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
             self._ui.destroy(panel)
             return
 
-        print name_ctl.get_str()
+        Presets.rename(self._selection, name_ctl.get_str())
+        self._controls[0].redraw()
+
         self._ui.destroy(panel)
 
     def delete(self):
@@ -593,6 +595,11 @@ class Presets:
     @staticmethod
     def delete(name):
         pass
+
+    @staticmethod
+    def rename(row, new_name):
+        Presets.names[row] = new_name
+
 
     # --------------------------------------------------------------------------
     # Helpers
