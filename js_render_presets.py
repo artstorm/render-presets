@@ -579,7 +579,8 @@ class Presets:
     # --------------------------------------------------------------------------
     @staticmethod
     def get_name(row):
-        if row < 0:
+        """ Return the name, or False if the row doesn't exist. """
+        if row < 0 or row >= len(Presets.names):
             return False
 
         return Presets.names[row]
