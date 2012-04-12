@@ -511,7 +511,20 @@ class RenderPresetsMaster(lwsdk.IMaster):
         print 'duplicate'
 
     def about(self):
-        print 'about'
+        """ Display About window. """
+        panel = self._ui.create('About Render Presets')
+        panel.setw(300)
+        panel.seth(174)
+
+        # Create the string field, and populate it with the current name.
+        # name_ctl = panel.str_ctl('Name', 50)
+
+        if panel.open(lwsdk.PANF_BLOCKING | lwsdk.PANF_CANCEL) == 0:
+            self._ui.destroy(panel)
+            return
+
+        self._ui.destroy(panel)
+
 
     def apply(self):
         print 'Apply selected: ' + str(self._controls[0].get_int())
