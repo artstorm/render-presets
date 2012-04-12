@@ -306,7 +306,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                     if ctl['type'] in ['angle']:
                         rad = math.radians(ctl['default'])
-                        # math.degrees(x)
                         ctl['ctl'].set_float(rad)
 
                     ctl['ctl'].move(200,y)
@@ -368,6 +367,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
 
     def refresh_controls(self):
+        """ Refresh GUI controls to reflect the current selected preset. """
 
         # Get name of selected preset
         row = self._selection
@@ -377,22 +377,10 @@ class RenderPresetsMaster(lwsdk.IMaster):
         if name == False:
             return
 
-
         # Reference part of the definitions dictionary
         tabs = Presets.definitions['tabs']
-
-        # TODO: no preset selected and this is called?
-
-        # Get selected preset index
-        index = self._controls[0].get_int()
-        tab_names = self._tmp_tab_names
-
-
-        # Get the selected presets settings
+        # Get the selected presets dict to read settings from
         settings = Presets.user['presets'][name]
-
-        # Reference part of the definitions dictionary
-        tabs = Presets.definitions['tabs']
 
         # Loop tabs
         for tab in tabs:
@@ -405,14 +393,17 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 for ctl in v['controls']:
                     cmd = ctl['command']
 
-                    # Store setting depending on controller type
 
                     # Consolidate this with the one in create_controls into a function
 
-                    if ctl['type'] in ['bool', 'int']:
+                    # Set settings depending on controller type
+                    if ctl['type'] in ['bool', 'int', 'wpopup']:
                         ctl['ctl'].set_int(settings[cmd])
                     if ctl['type'] in ['float', 'percent']:
                         ctl['ctl'].set_float(settings[cmd])
+                    if ctl['type'] in ['angle']:
+                        rad = math.radians(settings[cmd])
+                        ctl['ctl'].set_float(rad)
 
     def store_preset(self):
         """ Copy selected preset settings from GUI to user dict. """
@@ -440,10 +431,13 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     cmd = ctl['command']
 
                     # Store setting depending on controller type
-                    if ctl['type'] in ['bool', 'int']:
+                    if ctl['type'] in ['bool', 'int', 'wpopup']:
                         Presets.user['presets'][name][cmd] = ctl['ctl'].get_int()
                     if ctl['type'] in ['float', 'percent']:
                         Presets.user['presets'][name][cmd] = ctl['ctl'].get_float()
+                    if ctl['type'] in ['angle']:
+                        deg = math.degrees(ctl['ctl'].get_float())
+                        Presets.user['presets'][name][cmd] = deg
 
 
     # --------------------------------------------------------------------------
