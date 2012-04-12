@@ -418,67 +418,35 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def store_preset(self):
         """ Copy selected preset settings from GUI to user dict. """
+        # Get name of selected preset
         row = self._selection
         name = Presets.get_name(row)
 
+        # Return if nothin selected
+        if name == False:
+            return
 
         # Reference part of the definitions dictionary
         tabs = Presets.definitions['tabs']
 
+        # Loop tabs
         for tab in tabs:
-        #     y = 40
-
+            # Loop sections in tab
             for k, v in tabs[tab].iteritems():
-
-                # v['ctl'].set_int(settings[k])
+                # Store setting if the section is enabled
                 cmd = v['id']
-                print v['ctl'].get_int()
                 Presets.user['presets'][name][cmd] = v['ctl'].get_int()
 
-
-
+                # Loop controls in section
                 for ctl in v['controls']:
-                    # if ctl['enable'] == user_data:
-                    #     if id.get_int() == True:
-                    #         ctl['ctl'].unghost()
-                    #     else:
-                    #         ctl['ctl'].ghost()
-                    if ctl['type'] == 'button':
-                        pass
-                        # t['ctl'].set_int(settings[t['command']])
+                    cmd = ctl['command']
 
+                    # Store setting depending on controller type
                     if ctl['type'] in ['bool', 'int']:
-                        cmd = ctl['command']
-                        print ctl['ctl'].get_int()
                         Presets.user['presets'][name][cmd] = ctl['ctl'].get_int()
-
-
-                        # t['ctl'].set_int(settings[t['command']])
-
                     if ctl['type'] in ['float']:
-                        pass
-                        # t['ctl'].set_float(settings[t['command']])
+                        Presets.user['presets'][name][cmd] = ctl['ctl'].get_float()
 
-
-        # cmd = control['command']
-        # Presets.user['presets'][name][cmd] = control['default']
-
-
-
-        # print name
-        # for s, v in Presets.user['presets'][name].iteritems():
-        #     print v
-
-        # for ctl in Presets.user['presets'][name]:
-        #     print ctl
-
-
-
-
-        # print self._controls[0].get_int()
-        # print self._controls[0].get_userdata()
-        # print 'save'
-        pass
 
     # --------------------------------------------------------------------------
     # Button Methods
