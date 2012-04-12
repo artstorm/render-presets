@@ -8,7 +8,7 @@ __author__      = 'Johan Steen'
 __copyright__   = 'Copyright (C) 2010-2012, Johan Steen'
 __credits__     = ''
 __license__     = 'New BSD License'
-__version__     = 'DEV_HEAD'
+__version__     = '2.0'
 __maintainer__  = 'Johan Steen'
 __email__       = 'http://www.artstorm.net/contact/'
 __status__      = 'Development'
@@ -369,6 +369,15 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def refresh_controls(self):
 
+        # Get name of selected preset
+        row = self._selection
+        name = Presets.get_name(row)
+
+        # Return if nothin selected
+        if name == False:
+            return
+
+
         # Reference part of the definitions dictionary
         tabs = Presets.definitions['tabs']
 
@@ -376,45 +385,34 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         # Get selected preset index
         index = self._controls[0].get_int()
-
-        #Tmp
         tab_names = self._tmp_tab_names
 
+
         # Get the selected presets settings
-        settings = Presets.user['presets'][Presets.names[index]]
+        settings = Presets.user['presets'][name]
 
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
 
-        tmp = tabs[tab_names[0]]
-        for k, v in tmp.iteritems():
-            # v['ctl'] = self._panel.bool_ctl('enable')
-            # v['ctl'].set_w(200)
-            # v['ctl'].move(200,y)
-            # v['ctl'].set_event(self.enable_in_preset_callback, 0)
-            # self.lookup = v['controls']
-            # y += 40
-            v['ctl'].set_int(settings[k])
+        # Loop tabs
+        for tab in tabs:
+            # Loop sections in tab
+            for k, v in tabs[tab].iteritems():
+                # Store setting if the section is enabled
+                v['ctl'].set_int(settings[k])
 
-            # for t in tmp[s]:
-            for t in v['controls']:
-                # t['control'] = self._panel.bool_ctl(t['label'])
-                # if t['type'] == 'button':
-                #     t['control'].set_int(t['default'])
-                # t['control'].set_w(200)
-                # t['control'].move(200,y)
-                # t['control'].ghost()
-                # y += 20
-                # t['control'].set_int(1)
+                # Loop controls in section
+                for ctl in v['controls']:
+                    cmd = ctl['command']
 
-                # Consolidate this with the one in create_controls into a function
-                if t['type'] == 'button':
-                    t['ctl'].set_int(settings[t['command']])
+                    # Store setting depending on controller type
 
-                if t['type'] in ['bool', 'int']:
-                    t['ctl'].set_int(settings[t['command']])
+                    # Consolidate this with the one in create_controls into a function
 
-                if t['type'] in ['float']:
-                    t['ctl'].set_float(settings[t['command']])
-
+                    if ctl['type'] in ['bool', 'int']:
+                        ctl['ctl'].set_int(settings[cmd])
+                    if ctl['type'] in ['float', 'percent']:
+                        ctl['ctl'].set_float(settings[cmd])
 
     def store_preset(self):
         """ Copy selected preset settings from GUI to user dict. """
@@ -444,7 +442,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     # Store setting depending on controller type
                     if ctl['type'] in ['bool', 'int']:
                         Presets.user['presets'][name][cmd] = ctl['ctl'].get_int()
-                    if ctl['type'] in ['float']:
+                    if ctl['type'] in ['float', 'percent']:
                         Presets.user['presets'][name][cmd] = ctl['ctl'].get_float()
 
 
