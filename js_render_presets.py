@@ -513,15 +513,24 @@ class RenderPresetsMaster(lwsdk.IMaster):
     def about(self):
         """ Display About window. """
         panel = self._ui.create('About Render Presets')
-        panel.setw(300)
-        panel.seth(174)
+        panel.setw(200)
+        panel.seth(180)
 
         # Create the controls
         auth_ctl = panel.text_ctl('Author:', [__author__])
         vers_ctl = panel.text_ctl('Version:', [__version__])
         copy_ctl = panel.text_ctl('', [__copyright__])
-        cont_ctl = panel.button_ctl('Contact the Author >>')
+        help_ctl = panel.wbutton_ctl('Info >>', 80)
+        supp_ctl = panel.wbutton_ctl('Support >>', 80)
+        cont_ctl = panel.wbutton_ctl('Contact the Author >>', 170)
 
+        # Position them
+        auth_ctl.move(10, 0)
+        vers_ctl.move(10, 20)
+        copy_ctl.move(10, 40)
+        help_ctl.move(20, 80)
+        supp_ctl.move(110, 80)
+        cont_ctl.move(20, 110)
 
         if panel.open(lwsdk.PANF_BLOCKING) == 0:
             self._ui.destroy(panel)
