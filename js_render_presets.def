@@ -214,16 +214,48 @@
 				"id": "CameraSection",
 				"controls": [
 				{
-					"type": "bool",
-					"label": "CAM Enable Radiosity",
-					"command": "GlobalIllumination 1",
+					"type": "int",
+					"label": "Minimum Samples",
+					"command": "MinAntialiasing",
+					"default": 1
+				},
+				{
+					"type": "int",
+					"label": "Maximum Samples",
+					"command": "MaxAntialiasing",
+					"default": 1
+				},
+				{
+					"type": "wpopup",
+					"label": "Reconstruction Filter",
+					"items": ["Classic", "Box", "Box (Sharp)", "Box (Soft)", "Gaussian", "Gaussian (Sharp)", "Gaussian (Soft)", "Mitchell", "Mitchell (Sharp)", "Mitchell (Soft)", "Lanczos", "Lanczos (Sharp)", "Lanczos (Soft)"],
+					"command": "ReconstructionFilter",
+					"default": 0
+				},
+				{
+					"type": "wpopup",
+					"label": "Sampling Pattern",
+					"items": ["Low-Discrepancy", "Fixed", "Classic"],
+					"command": "NoiseSampler",
 					"default": 0
 				},
 				{
 					"type": "bool",
-					"label": "CAM Interpolated",
-					"command": "GlobalIllumination 1",
-					"default": 0
+					"label": "Adaptive Sampling",
+					"command": "AdaptiveSampling",
+					"default": 1
+				},
+				{
+					"type": "float",
+					"label": "Threshold",
+					"command": "AdaptiveThreshold",
+					"default": 0.01
+				},
+				{
+					"type": "float",
+					"label": "Oversample",
+					"command": "Oversampling",
+					"default": 0.0
 				}
 				]
 			},
@@ -231,16 +263,11 @@
 				"id": "ResolutionSection",
 				"controls": [
 				{
-					"type": "bool",
-					"label": "CAM Enable Radiosity",
-					"command": "GlobalIllumination 1",
-					"default": 0
-				},
-				{
-					"type": "bool",
-					"label": "CAM Interpolated",
-					"command": "GlobalIllumination 1",
-					"default": 0
+					"type": "wpopup",
+					"label": "Multiplier",
+					"items": ["25 %", "50 %", "100 %", "200 %", "400 %"],
+					"command": "ResolutionMultiplier",
+					"default": 2
 				}
 				]
 			}
@@ -252,16 +279,52 @@
 				"id": "BackdropSection",
 				"controls": [
 				{
-					"type": "bool",
-					"label": "FX Enable Radiosity",
-					"command": "GlobalIllumination 1",
-					"default": 0
+					"type": "minirgb",
+					"label": "Backdrop Color",
+					"command": "BackdropColor",
+					"default": [0,0,0]
 				},
 				{
 					"type": "bool",
-					"label": "FX Interpolated",
-					"command": "GlobalIllumination 1",
+					"label": "Gradien Backdrop",
+					"command": "GradientBackdrop",
 					"default": 0
+				},
+				{
+					"type": "minirgb",
+					"label": "Zenith Color",
+					"command": "ZenithColor",
+					"default": [158,188,255]
+				},
+				{
+					"type": "minirgb",
+					"label": "Sky Color",
+					"command": "SkyColor",
+					"default": [225,234,255]
+				},
+				{
+					"type": "float",
+					"label": "Sky Squeeze",
+					"command": "SkySqueezeColor",
+					"default": 6.0
+				},
+				{
+					"type": "float",
+					"label": "Ground Squeeze",
+					"command": "GroundSqueezeColor",
+					"default": 6.0
+				},
+				{
+					"type": "minirgb",
+					"label": "Ground Color",
+					"command": "GroundColor",
+					"default": [225,234,255]
+				},
+				{
+					"type": "minirgb",
+					"label": "Nadir Color",
+					"command": "NadirColor",
+					"default": [31,24,21]
 				}
 				]
 			},
@@ -270,14 +333,15 @@
 				"controls": [
 				{
 					"type": "bool",
-					"label": "FX Enable Radiosity",
-					"command": "GlobalIllumination 1",
+					"label": "Limit Dynamic Range",
+					"command": "LimitDynamicRange",
 					"default": 0
 				},
 				{
-					"type": "bool",
-					"label": "FX Interpolated",
-					"command": "GlobalIllumination 1",
+					"type": "wpopup",
+					"label": "Dither Intensity",
+					"items": ["Off", "Normal", "2 x Normal", "4 x Normal"],
+					"command": "DitherIntensity",
 					"default": 0
 				}
 				]
