@@ -428,6 +428,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # Presets.save()
 
     def save(self):
+        """ Force a presets save. """
         print self._controls[0].get_int()
         print self._controls[0].get_userdata()
         print 'save'
@@ -626,8 +627,18 @@ class Presets:
     @staticmethod
     def save():
         """ Saves the user presets to a json formatted file """
-        f = open(Presets.file_path(), 'w')
-        json.dump(Presets.user, f, indent=4)
+        # Recreate the presets dictionary, in the current order found in the 
+        # names list, to save user sorting.
+        presets = {
+            'version': __version__,
+            'presets': {}
+        }
+        print Presets.names
+        for name in Presets.names:
+            presets['presets'][name] = {}
+
+        f = open(Presets.file_path() + '2', 'w')
+        json.dump(presets, f, indent=4)
         f.close()
 
 
