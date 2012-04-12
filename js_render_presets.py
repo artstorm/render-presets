@@ -633,11 +633,11 @@ class Presets:
             'version': __version__,
             'presets': collections.OrderedDict({})
         }
-        print Presets.names
         for name in Presets.names:
-            presets['presets'][name] = {}
+            presets['presets'][name] = Presets.user['presets'][name]
 
-        f = open(Presets.file_path() + '2', 'w')
+        # Save the dict as json
+        f = open(Presets.file_path(), 'w')
         json.dump(presets, f, indent=4)
         f.close()
 
