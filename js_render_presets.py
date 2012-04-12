@@ -8,7 +8,7 @@ __author__      = 'Johan Steen'
 __copyright__   = 'Copyright (C) 2010-2012, Johan Steen'
 __credits__     = ''
 __license__     = 'New BSD License'
-__version__     = '2.0'
+__version__     = 'DEV_HEAD'
 __maintainer__  = 'Johan Steen'
 __email__       = 'http://www.artstorm.net/contact/'
 __status__      = 'Development'
@@ -452,9 +452,84 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def save(self):
         """ Force a presets save. """
-        print self._controls[0].get_int()
-        print self._controls[0].get_userdata()
-        print 'save'
+
+        # reference part of the definitions dictionary
+        # preset = Presets.user['tabs']
+
+        # # Get the current settings for selected preset
+        # for tab in presets:
+        #     for section in defaults[tab]:
+        #         # Set default value for section bool ctl to false
+        #         section_id = defaults[tab][section]['id']
+        #         Presets.user['presets'][name][section_id] = 0
+
+        #         for control in defaults[tab][section]['controls']:
+        #             # Set the default values from definitions for the controls.
+        #             # We treat the command as an ID for the controls.
+        #             cmd = control['command']
+        #             Presets.user['presets'][name][cmd] = control['default']
+
+
+        row = self._selection
+        name = Presets.get_name(row)
+
+
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+
+        for tab in tabs:
+        #     y = 40
+
+            for k, v in tabs[tab].iteritems():
+
+                # v['ctl'].set_int(settings[k])
+                cmd = v['id']
+                print v['ctl'].get_int()
+                Presets.user['presets'][name][cmd] = v['ctl'].get_int()
+
+
+
+                for ctl in v['controls']:
+                    # if ctl['enable'] == user_data:
+                    #     if id.get_int() == True:
+                    #         ctl['ctl'].unghost()
+                    #     else:
+                    #         ctl['ctl'].ghost()
+                    if ctl['type'] == 'button':
+                        pass
+                        # t['ctl'].set_int(settings[t['command']])
+
+                    if ctl['type'] in ['bool', 'int']:
+                        cmd = ctl['command']
+                        print ctl['ctl'].get_int()
+                        Presets.user['presets'][name][cmd] = ctl['ctl'].get_int()
+
+
+                        # t['ctl'].set_int(settings[t['command']])
+
+                    if ctl['type'] in ['float']:
+                        pass
+                        # t['ctl'].set_float(settings[t['command']])
+
+
+        # cmd = control['command']
+        # Presets.user['presets'][name][cmd] = control['default']
+
+
+
+        # print name
+        # for s, v in Presets.user['presets'][name].iteritems():
+        #     print v
+
+        # for ctl in Presets.user['presets'][name]:
+        #     print ctl
+
+
+
+
+        # print self._controls[0].get_int()
+        # print self._controls[0].get_userdata()
+        # print 'save'
         Presets.save()
 
     def rename(self):
