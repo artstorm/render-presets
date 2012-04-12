@@ -416,60 +416,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     t['ctl'].set_float(settings[t['command']])
 
 
-
-    # --------------------------------------------------------------------------
-    # Button Methods
-    # --------------------------------------------------------------------------
-    def new(self):
-
-        # TODO:
-        # // Update the previous selected preset's settings in the array
-        # if (selPreset != nil)
-        #     savePresetToArray(selPreset);        
-        # temp_list.append('new preset')
-        # Presets.presets["presets"].append('new preset')
-
-        # Create a unique new name
-        ctr = 1
-        name = 'Preset %s' % ctr
-        while name in Presets.names:
-            ctr += 1
-            name = 'Preset %s' % ctr
-
-        Presets.add(name)
-
-        # TODO:
-        # // Select the new preset
-        # setvalue(ctlPresetList,arrPresetList.count());
-        # selPreset = newName;
-
-
-
-        # self.c1.redraw()
-        self._controls[0].redraw()
-
-        # Presets.save()
-
-    def save(self):
-        """ Force a presets save. """
-
-        # reference part of the definitions dictionary
-        # preset = Presets.user['tabs']
-
-        # # Get the current settings for selected preset
-        # for tab in presets:
-        #     for section in defaults[tab]:
-        #         # Set default value for section bool ctl to false
-        #         section_id = defaults[tab][section]['id']
-        #         Presets.user['presets'][name][section_id] = 0
-
-        #         for control in defaults[tab][section]['controls']:
-        #             # Set the default values from definitions for the controls.
-        #             # We treat the command as an ID for the controls.
-        #             cmd = control['command']
-        #             Presets.user['presets'][name][cmd] = control['default']
-
-
+    def store_preset(self):
+        """ Copy selected preset settings from GUI to user dict. """
         row = self._selection
         name = Presets.get_name(row)
 
@@ -530,6 +478,44 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # print self._controls[0].get_int()
         # print self._controls[0].get_userdata()
         # print 'save'
+        pass
+
+    # --------------------------------------------------------------------------
+    # Button Methods
+    # --------------------------------------------------------------------------
+    def new(self):
+
+        # TODO:
+        # // Update the previous selected preset's settings in the array
+        # if (selPreset != nil)
+        #     savePresetToArray(selPreset);        
+        # temp_list.append('new preset')
+        # Presets.presets["presets"].append('new preset')
+
+        # Create a unique new name
+        ctr = 1
+        name = 'Preset %s' % ctr
+        while name in Presets.names:
+            ctr += 1
+            name = 'Preset %s' % ctr
+
+        Presets.add(name)
+
+        # TODO:
+        # // Select the new preset
+        # setvalue(ctlPresetList,arrPresetList.count());
+        # selPreset = newName;
+
+
+
+        # self.c1.redraw()
+        self._controls[0].redraw()
+
+        # Presets.save()
+
+    def save(self):
+        """ Force a presets save. """
+        self.store_preset()
         Presets.save()
 
     def rename(self):
