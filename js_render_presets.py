@@ -529,6 +529,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         Presets.duplicate(row)
 
+        # Refresh GUI and selection
+        self._controls[0].redraw()
+
     def about(self):
         """ Display About window. """
         panel = self._ui.create('About Render Presets')
