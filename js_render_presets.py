@@ -291,10 +291,16 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         ctl['ctl'] = ctl2(ctl['label'])
                         ctl['ctl'].set_w(200)
 
+
                     if ctl['type'] in ['wpopup']:
                         # Get rid of Unicode character (u')
                         items = [s.encode('utf-8') for s in ctl['items']]
                         ctl['ctl'] = ctl2(ctl['label'], items, 200)
+
+                    if ctl['type'] in ['minirgb']:
+                        print 'pal'
+                        ctl['ctl'] = ctl2(ctl['label'])
+                        ctl['ctl'].set_ivec(200,200,200)
 
 
                     # Consolidate this with the one in refresh_controls into a function
@@ -303,6 +309,10 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                     if ctl['type'] in ['float', 'percent']:
                         ctl['ctl'].set_float(ctl['default'])
+
+                    if ctl['type'] in ['minirgb']:
+                        rgb = ctl['default']
+                        ctl['ctl'].set_ivec(rgb[0], rgb[1], rgb[2])
 
                     if ctl['type'] in ['angle']:
                         rad = math.radians(ctl['default'])
@@ -401,6 +411,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         ctl['ctl'].set_int(settings[cmd])
                     if ctl['type'] in ['float', 'percent']:
                         ctl['ctl'].set_float(settings[cmd])
+                    if ctl['type'] in ['minirgb']:
+                        rgb = settings[cmd]
+                        ctl['ctl'].set_ivec(rgb[0], rgb[1], rgb[2])
                     if ctl['type'] in ['angle']:
                         rad = math.radians(settings[cmd])
                         ctl['ctl'].set_float(rad)
@@ -435,6 +448,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         Presets.user['presets'][name][cmd] = ctl['ctl'].get_int()
                     if ctl['type'] in ['float', 'percent']:
                         Presets.user['presets'][name][cmd] = ctl['ctl'].get_float()
+                    if ctl['type'] in ['minirgb']:
+                        Presets.user['presets'][name][cmd] = ctl['ctl'].get_ivec()
                     if ctl['type'] in ['angle']:
                         deg = math.degrees(ctl['ctl'].get_float())
                         Presets.user['presets'][name][cmd] = deg
