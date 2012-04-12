@@ -631,7 +631,7 @@ class Presets:
         # names list, to save user sorting.
         presets = {
             'version': __version__,
-            'presets': {}
+            'presets': collections.OrderedDict({})
         }
         print Presets.names
         for name in Presets.names:
