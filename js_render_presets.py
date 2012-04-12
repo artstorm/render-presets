@@ -737,16 +737,13 @@ class Presets:
         src_name = Presets.get_name(row)
 
         # Generate the destination name
-        name = src_name + ' - Copy'
+        dest_name = src_name + ' - Copy'
         ctr = 1
-        while name in Presets.names:
+        while dest_name in Presets.names:
             ctr += 1
-            name = src_name + ' - Copy %s' % ctr
+            dest_name = src_name + ' - Copy %s' % ctr
 
-        Presets.add(name)
-
-        dest_name = 'mupp2'
-
+        # Copy the preset, and add the new name to the list of names
         Presets.user['presets'][dest_name] = Presets.user['presets'][src_name]
         Presets.names.append(dest_name)
 
