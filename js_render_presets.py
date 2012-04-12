@@ -467,6 +467,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
         if row < 0:
             return
 
+        # Confirm that the user is sure
+        confirm = lwsdk.LWMessageFuncs().yesNo('Confirm Delete', \
+            'Deleting preset "%s".' % Presets.get_name(row), 'Are you sure?')
+        if confirm == False:
+            return
+
         Presets.delete(row)
 
         # Refresh GUI and selection
