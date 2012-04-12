@@ -22,6 +22,7 @@ import sys
 import json
 import math
 import lwsdk
+import webbrowser
 import collections
 
 
@@ -130,6 +131,10 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # print id.get_int()
         for t in self.lookup:
             t['ctl'].unghost()
+
+    def about_url_callback(self, id, user_data):
+        """ Handles callbacks from the buttons in the about window. """
+        webbrowser.open_new_tab(self._urls[user_data])
 
     # Preset List Callbacks
     def preset_name_callback(self, control, userdata, row):
@@ -516,11 +521,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
         panel.setw(200)
         panel.seth(180)
 
+
         # Create the controls
         auth_ctl = panel.text_ctl('Author:', [__author__])
         vers_ctl = panel.text_ctl('Version:', [__version__])
         copy_ctl = panel.text_ctl('', [__copyright__])
-        help_ctl = panel.wbutton_ctl('Info >>', 80)
+        info_ctl = panel.wbutton_ctl('Info >>', 80)
         supp_ctl = panel.wbutton_ctl('Support >>', 80)
         cont_ctl = panel.wbutton_ctl('Contact the Author >>', 170)
 
@@ -528,9 +534,21 @@ class RenderPresetsMaster(lwsdk.IMaster):
         auth_ctl.move(10, 0)
         vers_ctl.move(10, 20)
         copy_ctl.move(10, 40)
-        help_ctl.move(20, 80)
+        info_ctl.move(20, 80)
         supp_ctl.move(110, 80)
         cont_ctl.move(20, 110)
+
+        # Set URLs in a global list
+        self._urls = [
+        'http://www.artstorm.net/plugins/render-presets/',
+        'https://github.com/artstorm/render-presets/issues',
+        __email__
+        ]
+
+        # Set callbacks for the buttons
+        info_ctl.set_event(self.about_url_callback, 0)
+        supp_ctl.set_event(self.about_url_callback, 1)
+        cont_ctl.set_event(self.about_url_callback, 2)
 
         if panel.open(lwsdk.PANF_BLOCKING) == 0:
             self._ui.destroy(panel)
@@ -540,8 +558,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def apply(self):
         print 'Apply selected: ' + str(self._controls[0].get_int())
-
-
 
 
 # ------------------------------------------------------------------------------
