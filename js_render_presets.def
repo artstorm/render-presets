@@ -286,9 +286,45 @@
 				},
 				{
 					"type": "bool",
-					"label": "FX Interpolated",
-					"command": "GlobalIllumination 1",
+					"label": "Gradien Backdrop",
+					"command": "GradientBackdrop",
 					"default": 0
+				},
+				{
+					"type": "minirgb",
+					"label": "Zenith Color",
+					"command": "ZenithColor",
+					"default": [158,188,255]
+				},
+				{
+					"type": "minirgb",
+					"label": "Sky Color",
+					"command": "SkyColor",
+					"default": [225,234,255]
+				},
+				{
+					"type": "float",
+					"label": "Sky Squeeze",
+					"command": "SkySqueezeColor",
+					"default": 6.0
+				},
+				{
+					"type": "float",
+					"label": "Ground Squeeze",
+					"command": "GroundSqueezeColor",
+					"default": 6.0
+				},
+				{
+					"type": "minirgb",
+					"label": "Ground Color",
+					"command": "GroundColor",
+					"default": [225,234,255]
+				},
+				{
+					"type": "minirgb",
+					"label": "Nadir Color",
+					"command": "NadirColor",
+					"default": [31,24,21]
 				}
 				]
 			},
