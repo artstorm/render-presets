@@ -516,15 +516,18 @@ class RenderPresetsMaster(lwsdk.IMaster):
         panel.setw(300)
         panel.seth(174)
 
-        # Create the string field, and populate it with the current name.
-        # name_ctl = panel.str_ctl('Name', 50)
+        # Create the controls
+        auth_ctl = panel.text_ctl('Author:', [__author__])
+        vers_ctl = panel.text_ctl('Version:', [__version__])
+        copy_ctl = panel.text_ctl('', [__copyright__])
+        cont_ctl = panel.button_ctl('Contact the Author >>')
 
-        if panel.open(lwsdk.PANF_BLOCKING | lwsdk.PANF_CANCEL) == 0:
+
+        if panel.open(lwsdk.PANF_BLOCKING) == 0:
             self._ui.destroy(panel)
             return
 
         self._ui.destroy(panel)
-
 
     def apply(self):
         print 'Apply selected: ' + str(self._controls[0].get_int())
