@@ -270,14 +270,15 @@
 				"controls": [
 				{
 					"type": "bool",
-					"label": "FX Enable Radiosity",
-					"command": "GlobalIllumination 1",
+					"label": "Limit Dynamic Range",
+					"command": "LimitDynamicRange",
 					"default": 0
 				},
 				{
-					"type": "bool",
-					"label": "FX Interpolated",
-					"command": "GlobalIllumination 1",
+					"type": "wpopup",
+					"label": "Dither Intensity",
+					"items": ["Off", "Normal", "2 x Normal", "4 x Normal"],
+					"command": "DitherIntensity",
 					"default": 0
 				}
 				]
