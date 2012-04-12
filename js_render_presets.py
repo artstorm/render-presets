@@ -519,14 +519,24 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._controls[0].redraw()
 
     def duplicate(self):
-        print 'duplicate'
+        """ Duplicate selected preset. """
+        # Get selected row
+        row = self._selection
+
+        # Check so we have a selection, else return
+        if row < 0:
+            return
+
+        Presets.duplicate(row)
+
+        # Refresh GUI and selection
+        self._controls[0].redraw()
 
     def about(self):
         """ Display About window. """
         panel = self._ui.create('About Render Presets')
         panel.setw(200)
         panel.seth(180)
-
 
         # Create the controls
         auth_ctl = panel.text_ctl('Author:', [__author__])
@@ -712,6 +722,30 @@ class Presets:
         Presets.names.insert(row, new_name)
         Presets.names.remove(old_name)
 
+    @staticmethod
+    def duplicate(row):
+        """ Duplicate a preset.
+
+        @param   int    row       The row in the list to rename
+
+        @return  False if failed to duplicate
+        """
+        if row < 0 or row >= len(Presets.names):
+            return False
+
+        # Get the old name
+        src_name = Presets.get_name(row)
+
+        # Generate the destination name
+        dest_name = src_name + ' - Copy'
+        ctr = 1
+        while dest_name in Presets.names:
+            ctr += 1
+            dest_name = src_name + ' - Copy %s' % ctr
+
+        # Copy the preset, and add the new name to the list of names
+        Presets.user['presets'][dest_name] = Presets.user['presets'][src_name]
+        Presets.names.append(dest_name)
 
 
     # --------------------------------------------------------------------------
