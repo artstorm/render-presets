@@ -8,7 +8,7 @@ __author__      = 'Johan Steen'
 __copyright__   = 'Copyright (C) 2010-2012, Johan Steen'
 __credits__     = ''
 __license__     = 'New BSD License'
-__version__     = '2.0'
+__version__     = 'DEV_HEAD'
 __maintainer__  = 'Johan Steen'
 __email__       = 'http://www.artstorm.net/contact/'
 __status__      = 'Development'
@@ -129,8 +129,29 @@ class RenderPresetsMaster(lwsdk.IMaster):
     def enable_in_preset_callback(self, id, user_data):
         # print 'enable'
         # print id.get_int()
-        for t in self.lookup:
-            t['ctl'].unghost()
+        print user_data
+
+
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+
+        for tab in tabs:
+            y = 40
+
+            for k, v in tabs[tab].iteritems():
+
+                for ctl in v['controls']:
+                    if ctl['enable'] == user_data:
+                        if id.get_int() == True:
+                            ctl['ctl'].unghost()
+                        else:
+                            ctl['ctl'].ghost()
+
+        # for ctl in id['controls']:
+        #     print 'mupp'
+        # for t in self.lookup:
+            # t['ctl'].unghost()
+            # t.unghost()
 
     def about_url_callback(self, id, user_data):
         """ Handles callbacks from the buttons in the about window. """
@@ -245,7 +266,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._c2.move(200,0)
 
 
-
+        # PRESET SETUP STARTS HERE
+        enable = 0
         for tab in tabs:
             y = 40
 
@@ -253,7 +275,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 v['ctl'] = self._panel.bool_ctl('enable')
                 v['ctl'].set_w(200)
                 v['ctl'].move(200,y)
-                v['ctl'].set_event(self.enable_in_preset_callback, 0)
+                v['ctl'].set_event(self.enable_in_preset_callback, enable)
                 self.lookup = v['ctl']
                 y += 40
 
@@ -261,6 +283,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     v['ctl'].erase()
 
                 for ctl in v['controls']:
+
+                    ctl['enable'] = enable
 
                     ctl2 = getattr(self._panel, ctl['type']+'_ctl')
                     if ctl['type'] in ['bool', 'int', 'intro', 'float', 'angle', 'percent']:
@@ -292,14 +316,13 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     if tab != 'Render':
                         ctl['ctl'].erase()
 
+                enable += 1
+
 
         self._tmp_tabs = tabs
         self._tmp_tab_names = tab_names
 
         return True
-
-
-
 
 
     def tabs_callback(self, id, user_data):
@@ -393,6 +416,37 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     t['ctl'].set_float(settings[t['command']])
 
 
+    def store_preset(self):
+        """ Copy selected preset settings from GUI to user dict. """
+        # Get name of selected preset
+        row = self._selection
+        name = Presets.get_name(row)
+
+        # Return if nothin selected
+        if name == False:
+            return
+
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+
+        # Loop tabs
+        for tab in tabs:
+            # Loop sections in tab
+            for k, v in tabs[tab].iteritems():
+                # Store setting if the section is enabled
+                cmd = v['id']
+                Presets.user['presets'][name][cmd] = v['ctl'].get_int()
+
+                # Loop controls in section
+                for ctl in v['controls']:
+                    cmd = ctl['command']
+
+                    # Store setting depending on controller type
+                    if ctl['type'] in ['bool', 'int']:
+                        Presets.user['presets'][name][cmd] = ctl['ctl'].get_int()
+                    if ctl['type'] in ['float']:
+                        Presets.user['presets'][name][cmd] = ctl['ctl'].get_float()
+
 
     # --------------------------------------------------------------------------
     # Button Methods
@@ -429,9 +483,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def save(self):
         """ Force a presets save. """
-        print self._controls[0].get_int()
-        print self._controls[0].get_userdata()
-        print 'save'
+        self.store_preset()
         Presets.save()
 
     def rename(self):
@@ -774,8 +826,6 @@ class Presets:
             return False
 
         return Presets.names[row]
-
-
 
 
 # ------------------------------------------------------------------------------
