@@ -129,8 +129,29 @@ class RenderPresetsMaster(lwsdk.IMaster):
     def enable_in_preset_callback(self, id, user_data):
         # print 'enable'
         # print id.get_int()
-        for t in self.lookup:
-            t['ctl'].unghost()
+        print user_data
+
+
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+
+        for tab in tabs:
+            y = 40
+
+            for k, v in tabs[tab].iteritems():
+
+                for ctl in v['controls']:
+                    if ctl['enable'] == user_data:
+                        if id.get_int() == True:
+                            ctl['ctl'].unghost()
+                        else:
+                            ctl['ctl'].ghost()
+
+        # for ctl in id['controls']:
+        #     print 'mupp'
+        # for t in self.lookup:
+            # t['ctl'].unghost()
+            # t.unghost()
 
     def about_url_callback(self, id, user_data):
         """ Handles callbacks from the buttons in the about window. """
@@ -245,7 +266,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._c2.move(200,0)
 
 
-
+        # PRESET SETUP STARTS HERE
+        enable = 0
         for tab in tabs:
             y = 40
 
@@ -253,7 +275,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 v['ctl'] = self._panel.bool_ctl('enable')
                 v['ctl'].set_w(200)
                 v['ctl'].move(200,y)
-                v['ctl'].set_event(self.enable_in_preset_callback, 0)
+                v['ctl'].set_event(self.enable_in_preset_callback, enable)
                 self.lookup = v['ctl']
                 y += 40
 
@@ -261,6 +283,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     v['ctl'].erase()
 
                 for ctl in v['controls']:
+
+                    ctl['enable'] = enable
 
                     ctl2 = getattr(self._panel, ctl['type']+'_ctl')
                     if ctl['type'] in ['bool', 'int', 'intro', 'float', 'angle', 'percent']:
@@ -292,14 +316,13 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     if tab != 'Render':
                         ctl['ctl'].erase()
 
+                enable += 1
+
 
         self._tmp_tabs = tabs
         self._tmp_tab_names = tab_names
 
         return True
-
-
-
 
 
     def tabs_callback(self, id, user_data):
@@ -774,8 +797,6 @@ class Presets:
             return False
 
         return Presets.names[row]
-
-
 
 
 # ------------------------------------------------------------------------------
