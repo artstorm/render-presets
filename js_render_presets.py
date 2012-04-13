@@ -144,33 +144,15 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def enable_in_preset_callback(self, id, user_data):
         """ Handle GUI updates with the section enabling buttons. """
-
-
-        # print 'enable'
-        # print id.get_int()
-#        print user_data
-
-        # Reference part of the definitions dictionary
         tabs = Presets.definitions['tabs']
+        sel_tab = Presets.get_tab_name(self._controls[1].get_int())
+        self.enable_controls(tabs[sel_tab])
 
-        for tab in tabs:
-            y = 40
-
-            for k, v in tabs[tab].iteritems():
-
-                for ctl in v['controls']:
-                    if ctl['enable'] == user_data:
-                        if id.get_int() == True:
-                            ctl['ctl'].unghost()
-                        else:
-                            ctl['ctl'].ghost()
-
-        # for ctl in id['controls']:
-        #     print 'mupp'
 
     def about_url_callback(self, id, user_data):
         """ Handles callbacks from the buttons in the about window. """
         webbrowser.open_new_tab(self._urls[user_data])
+
 
     # Preset List Callbacks
     def preset_name_callback(self, control, userdata, row):
@@ -507,6 +489,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
             ctr += 1
             name = 'Preset %s' % ctr
 
+        # Add preset and select it
         if Presets.add(name) != False:
             idx = Presets.names.index(name)
             self._controls[0].redraw()
