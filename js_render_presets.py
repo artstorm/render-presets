@@ -336,6 +336,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                 enable += 1
 
+        self.refresh_main_buttons()
         return True
 
 
@@ -398,6 +399,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # If nothing is selected, ghost all controls in tab
         if name == False:
             self.ghost_controls(tabs[sel_tab])
+            self.refresh_main_buttons()
             return
 
         # Get the selected presets dict to read settings from
@@ -430,6 +432,29 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                 if tab == sel_tab:
                     self.enable_controls(tabs[tab])
+
+        self.refresh_main_buttons()
+
+
+    def refresh_main_buttons(self):
+        """ Handle ghost and unghost of main buttons depending on selection. """
+        for k, v in self._controls.iteritems():
+            # Controllers always unghosted (list, tabs, new, about)
+            if k < 3 or k == 9:
+                continue
+
+            # When preset is selected, unghost everything (with exceptions)
+            if self._selection >= 0:
+                v['ctl'].unghost()
+                # Ghost up if first preset selected
+                if self._selection == 0 and k == 6:
+                    v['ctl'].ghost()
+                # Ghost down if last preset selected
+                if self._selection == len(Presets.names)-1 and k == 7:
+                    v['ctl'].ghost()
+                continue
+            # Ghost the rest
+            v['ctl'].ghost()
 
 
     def store_preset(self):
