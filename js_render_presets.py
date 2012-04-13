@@ -348,6 +348,10 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # # Render the controls on the clicked tab
         tab_names = self._tmp_tab_names
         tmp = self._controls[1].get_int()
+
+        print Presets.get_tab_name(tmp)
+
+
         tmp_pan = tabs[tab_names[tmp]]
 
         for s, v in tmp_pan.iteritems():
@@ -355,6 +359,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
             for t in v['controls']:
                 t['ctl'].render()
 
+
+    def enable_controls(self, tab):
+        pass
 
     def erase_controls(self, tab):
         """ Erase controls in tab.
@@ -838,6 +845,28 @@ class Presets:
             return False
 
         return Presets.names[row]
+
+    @staticmethod
+    def get_tab_name(index):
+        """ Return the tab name, or False if the tab doesn't exist.
+
+        @param   int  index  The index of the tab to retrieve
+
+        @return  False if no name was found, else the name as string.
+        """
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+
+        # Make a list of tab names
+        names = []
+        for tab in tabs:
+            names.append(tab.encode('utf-8'))
+
+        # Return False if index out of list scope
+        if index < 0 or index >= len(names):
+            return False
+
+        return names[index]
 
 
 # ------------------------------------------------------------------------------
