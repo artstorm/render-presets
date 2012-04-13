@@ -103,8 +103,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
         so we have a clean slate to recreate all assets in the inter_ui() method
         if the user chooses to open this plugin instance again.
         """
-        # We better make sure the presets are saved
-        Presets.save()
+        # We better make sure the presets are stored and saved
+        self.store_preset()
 
         # Calling destroy() here, crashes LightWave (v11.0), so I have it 
         # commented out, and relies on only setting the variables to None.
@@ -122,6 +122,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def button_callback(self, id, user_data):
         """ Handle clicks on on main buttons in the Panel. """
+        # Before perfoming any action, store and save the current selection.
+        self.store_preset()
         # user_data contains the dictionary key of the pressed button.
         self._controls[user_data]['fn']()
 
@@ -139,36 +141,20 @@ class RenderPresetsMaster(lwsdk.IMaster):
             else:
                 self.erase_controls(tabs[tab])
 
+        self.refresh_controls()
+
 
     def enable_in_preset_callback(self, id, user_data):
         """ Handle GUI updates with the section enabling buttons. """
-
-
-        # print 'enable'
-        # print id.get_int()
-#        print user_data
-
-        # Reference part of the definitions dictionary
         tabs = Presets.definitions['tabs']
+        sel_tab = Presets.get_tab_name(self._controls[1].get_int())
+        self.enable_controls(tabs[sel_tab])
 
-        for tab in tabs:
-            y = 40
-
-            for k, v in tabs[tab].iteritems():
-
-                for ctl in v['controls']:
-                    if ctl['enable'] == user_data:
-                        if id.get_int() == True:
-                            ctl['ctl'].unghost()
-                        else:
-                            ctl['ctl'].ghost()
-
-        # for ctl in id['controls']:
-        #     print 'mupp'
 
     def about_url_callback(self, id, user_data):
         """ Handles callbacks from the buttons in the about window. """
         webbrowser.open_new_tab(self._urls[user_data])
+
 
     # Preset List Callbacks
     def preset_name_callback(self, control, userdata, row):
@@ -176,6 +162,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
     def preset_count_callback(self, control, userdata):
         return len(Presets.names)
     def preset_select_callback(self, control, user_data, row, selecting):
+        # Before switchin preset, store and save the current selection.
+        self.store_preset()
         # Globally track the selected row, as get_int() on the control doesn't
         # return a value to determine when nothing is selected in the list
         # row = -1 when noting is selected
@@ -193,7 +181,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         @return  False if definitions file failed to load
         """
-
         # Get the path to the definitions file. The same location as the script.
         script_file = os.path.realpath(__file__)
         dir_path = os.path.dirname(script_file)
@@ -209,21 +196,10 @@ class RenderPresetsMaster(lwsdk.IMaster):
             print >>sys.stderr, 'The file %s was not found.' % DEFINITIONS_FILE
             return False
 
-        # Reference part of the definitions dictionary
-        tabs = Presets.definitions['tabs']
-
-
-
-
-        tab_names = []
-        for key in tabs:
-            tab_names.append(key.encode('utf-8'))
-
-
-
+        # Define Main controls
         self._controls = {
-            0: {'ctl': None},
-            1: {'ctl': None},
+            0: {'ctl': None, 'lbl': 'List'},
+            1: {'ctl': None, 'lbl': 'Tabs'},
             2: {'ctl': None, 'lbl': 'New',       'x': 4,    'w': None, 'col': 'l', 'fn': self.new},
             3: {'ctl': None, 'lbl': 'Save',      'x': 82,   'w': None, 'col': 'r', 'fn': self.save},
             4: {'ctl': None, 'lbl': 'Rename',    'x': None, 'w': None, 'col': 'l', 'fn': self.rename},
@@ -235,46 +211,49 @@ class RenderPresetsMaster(lwsdk.IMaster):
            10: {'ctl': None, 'lbl': 'Apply',     'x': None, 'w': 150,  'col': 'l', 'fn': self.apply}
         }
 
-
-        # TMP GUI Setup
+        # Setup the Preset List Controller
         self._controls[0] = self._panel.listbox_ctl('Presets', 150, 18, \
             self.preset_name_callback, self.preset_count_callback)
         self._controls[0].set_select(self.preset_select_callback)
 
-
-
+        # Setup the controllers for the main buttons
         left_column = []
         right_column = []
-
         for key, val in self._controls.iteritems():
+            # Skip the first two (list, tabs)
             if key < 2:
                 continue
 
-#            print key
+            # Default width
             w = 72 if val['w'] is None else val['w']
 
             val['ctl'] = self._panel.wbutton_ctl(val['lbl'], w)
             val['ctl'].set_event(self.button_callback, key)
 
-
             x = 0 if val['x'] is None else val['x']
             val['ctl'].move(x, 282)
 
+            # Make two lists with the controllers to split in two columns.
             if val['col'] == 'l':
                 left_column.append(val['ctl'])
             else:
                 right_column.append(val['ctl'])
 
+        # Align the controllers in columns
         self._panel.align_controls_vertical(left_column)
         self._panel.align_controls_vertical(right_column)
 
-
+        # Create the tab controller
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+        tab_names = []
+        for key in tabs:
+            tab_names.append(key.encode('utf-8'))
         self._controls[1] = self._panel.tabchoice_ctl('Tabs', tab_names)
         self._controls[1].set_event(self.tabs_callback)
         self._controls[1].move(200,0)
 
-
-        # PRESET SETUP STARTS HERE
+        # Setup the controllers for preset definitions
         enable = 0
         for tab in tabs:
             y = 40
@@ -300,7 +279,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         ctl['ctl'] = ctl2(ctl['label'])
                         ctl['ctl'].set_w(200)
 
-
                     if ctl['type'] in ['wpopup']:
                         # Get rid of Unicode character (u')
                         items = [s.encode('utf-8') for s in ctl['items']]
@@ -309,7 +287,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     if ctl['type'] in ['minirgb']:
                         ctl['ctl'] = ctl2(ctl['label'])
                         ctl['ctl'].set_ivec(200,200,200)
-
 
                     # Consolidate this with the one in refresh_controls into a function
                     if ctl['type'] in ['bool', 'int', 'wpopup']:
@@ -336,6 +313,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                 enable += 1
 
+        self.refresh_main_buttons()
         return True
 
 
@@ -386,7 +364,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def refresh_controls(self):
         """ Refresh GUI controls to reflect the current selected preset. """
-
         # Get name of selected preset and tab
         row = self._selection
         name = Presets.get_name(row)
@@ -398,6 +375,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # If nothing is selected, ghost all controls in tab
         if name == False:
             self.ghost_controls(tabs[sel_tab])
+            self.refresh_main_buttons()
             return
 
         # Get the selected presets dict to read settings from
@@ -430,6 +408,36 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                 if tab == sel_tab:
                     self.enable_controls(tabs[tab])
+
+        self.refresh_main_buttons()
+
+
+    def refresh_main_buttons(self):
+        """ Handle ghost and unghost of main buttons depending on selection. """
+        for k, v in self._controls.iteritems():
+            # Controllers always unghosted (list, tabs, new, about)
+            if k < 3 or k == 9:
+                continue
+
+            # When preset is selected, unghost everything (with exceptions)
+            if self._selection >= 0:
+                v['ctl'].unghost()
+                # Ghost up if first preset selected
+                if self._selection == 0 and k == 6:
+                    v['ctl'].ghost()
+                # Ghost down if last preset selected
+                if self._selection == len(Presets.names)-1 and k == 7:
+                    v['ctl'].ghost()
+                continue
+            # Ghost the rest
+            v['ctl'].ghost()
+
+    def refresh_list(self, index):
+        """ ll """
+        self._controls[0].redraw()
+        self._controls[0].set_int(index)
+        self._selection = index
+        self.refresh_controls()
 
 
     def store_preset(self):
@@ -467,20 +475,14 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     if ctl['type'] in ['angle']:
                         deg = math.degrees(ctl['ctl'].get_float())
                         Presets.user['presets'][name][cmd] = deg
+        Presets.save()
 
 
     # --------------------------------------------------------------------------
     # Button Methods
     # --------------------------------------------------------------------------
     def new(self):
-
-        # TODO:
-        # // Update the previous selected preset's settings in the array
-        # if (selPreset != nil)
-        #     savePresetToArray(selPreset);        
-        # temp_list.append('new preset')
-        # Presets.presets["presets"].append('new preset')
-
+        """ Add new preset. """
         # Create a unique new name
         ctr = 1
         name = 'Preset %s' % ctr
@@ -488,19 +490,10 @@ class RenderPresetsMaster(lwsdk.IMaster):
             ctr += 1
             name = 'Preset %s' % ctr
 
-        Presets.add(name)
-
-        # TODO:
-        # // Select the new preset
-        # setvalue(ctlPresetList,arrPresetList.count());
-        # selPreset = newName;
-
-
-
-        # self.c1.redraw()
-        self._controls[0].redraw()
-
-        # Presets.save()
+        # Add preset and select it
+        if Presets.add(name) != False:
+            idx = Presets.names.index(name)
+            self.refresh_list(idx)
 
     def save(self):
         """ Force a presets save. """
@@ -509,28 +502,15 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def rename(self):
         """ Create a rename dialog. """
-        # Get the name of the selected preset, or return if nothing selected
         row = self._selection
         name = Presets.get_name(row)
         if name == False:
             return
 
-        panel = self._ui.create('Rename Preset')
-        panel.setw(300)
-        panel.seth(60)
+        new_name = lwsdk.LWMessageFuncs().askName('Rename Preset', 'Name', name)
 
-        # Create the string field, and populate it with the current name.
-        name_ctl = panel.str_ctl('Name', 50)
-        name_ctl.set_str(name)
-
-        if panel.open(lwsdk.PANF_BLOCKING | lwsdk.PANF_CANCEL) == 0:
-            self._ui.destroy(panel)
-            return
-
-        Presets.rename(self._selection, name_ctl.get_str())
-        self._controls[0].redraw()
-
-        self._ui.destroy(panel)
+        Presets.rename(row, new_name)
+        self.refresh_list(row)
 
     def delete(self):
         """ Delete selected preset. """
@@ -550,9 +530,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Presets.delete(row)
 
         # Refresh GUI and selection
-        self._controls[0].set_int(-1)
-        self._selection = -1
-        self._controls[0].redraw()
+        self.refresh_list(-1)
 
     def up(self):
         """ Move selection up the list. """
@@ -569,9 +547,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Presets.names.insert(new_row, Presets.names.pop(row))
 
         # Refresh GUI and selection
-        self._controls[0].set_int(new_row)
-        self._selection = new_row
-        self._controls[0].redraw()
+        self.refresh_list(new_row)
 
     def down(self):
         """ Move selection down the list. """
@@ -588,9 +564,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Presets.names.insert(new_row, Presets.names.pop(row))
 
         # Refresh GUI and selection
-        self._controls[0].set_int(new_row)
-        self._selection = new_row
-        self._controls[0].redraw()
+        self.refresh_list(new_row)
 
     def duplicate(self):
         """ Duplicate selected preset. """
@@ -604,7 +578,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Presets.duplicate(row)
 
         # Refresh GUI and selection
-        self._controls[0].redraw()
+        self.refresh_list(row)
 
     def about(self):
         """ Display About window. """
