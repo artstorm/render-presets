@@ -139,6 +139,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
             else:
                 self.erase_controls(tabs[tab])
 
+        self.refresh_controls()
+
 
     def enable_in_preset_callback(self, id, user_data):
         """ Handle GUI updates with the section enabling buttons. """
@@ -387,7 +389,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def refresh_controls(self):
         """ Refresh GUI controls to reflect the current selected preset. """
-
         # Get name of selected preset and tab
         row = self._selection
         name = Presets.get_name(row)
