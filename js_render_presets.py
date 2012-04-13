@@ -127,9 +127,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
 
     def enable_in_preset_callback(self, id, user_data):
+        """ Handle GUI updates with the section enabling buttons. """
+
+
         # print 'enable'
         # print id.get_int()
-        print user_data
+#        print user_data
 
 
         # Reference part of the definitions dictionary
@@ -242,7 +245,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
             if key < 2:
                 continue
 
-            print key
+#            print key
             w = 72 if val['w'] is None else val['w']
 
             val['ctl'] = self._panel.wbutton_ctl(val['lbl'], w)
@@ -298,7 +301,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         ctl['ctl'] = ctl2(ctl['label'], items, 200)
 
                     if ctl['type'] in ['minirgb']:
-                        print 'pal'
                         ctl['ctl'] = ctl2(ctl['label'])
                         ctl['ctl'].set_ivec(200,200,200)
 
@@ -676,11 +678,7 @@ class Presets:
         Presets.names = []
 
         for s, v in Presets.user['presets'].iteritems():
-            print s
             Presets.names.append(s.encode('utf-8'))
-
-        print Presets.user
-        print Presets.names
 
 
     @staticmethod
