@@ -499,14 +499,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
     # Button Methods
     # --------------------------------------------------------------------------
     def new(self):
-
-        # TODO:
-        # // Update the previous selected preset's settings in the array
-        # if (selPreset != nil)
-        #     savePresetToArray(selPreset);        
-        # temp_list.append('new preset')
-        # Presets.presets["presets"].append('new preset')
-
+        """ Add new preset. """
         # Create a unique new name
         ctr = 1
         name = 'Preset %s' % ctr
@@ -514,19 +507,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
             ctr += 1
             name = 'Preset %s' % ctr
 
-        Presets.add(name)
-
-        # TODO:
-        # // Select the new preset
-        # setvalue(ctlPresetList,arrPresetList.count());
-        # selPreset = newName;
-
-
-
-        # self.c1.redraw()
-        self._controls[0].redraw()
-
-        # Presets.save()
+        if Presets.add(name) != False:
+            idx = Presets.names.index(name)
+            self._controls[0].redraw()
+            self._controls[0].set_int(idx)
+            self._selection = idx
+            self.refresh_controls()
 
     def save(self):
         """ Force a presets save. """
@@ -579,6 +565,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._controls[0].set_int(-1)
         self._selection = -1
         self._controls[0].redraw()
+        self.refresh_controls()
 
     def up(self):
         """ Move selection up the list. """
