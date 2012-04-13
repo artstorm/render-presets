@@ -165,9 +165,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         # for ctl in id['controls']:
         #     print 'mupp'
-        # for t in self.lookup:
-            # t['ctl'].unghost()
-            # t.unghost()
 
     def about_url_callback(self, id, user_data):
         """ Handles callbacks from the buttons in the about window. """
@@ -218,12 +215,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
 
 
-
-        # Get rid of Unicode character (u')
-        # tabs = [s.encode('utf-8') for s in data['tabs']]
-
         tab_names = []
-        # for key, val in tabs.iteritems():
         for key in tabs:
             tab_names.append(key.encode('utf-8'))
 
@@ -292,7 +284,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 v['ctl'].set_w(200)
                 v['ctl'].move(200,y)
                 v['ctl'].set_event(self.enable_in_preset_callback, enable)
-                self.lookup = v['ctl']
                 y += 40
 
                 if tab == 'Render':
@@ -345,10 +336,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                 enable += 1
 
-
-        self._tmp_tabs = tabs
-        self._tmp_tab_names = tab_names
-
         return True
 
 
@@ -360,9 +347,15 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # Loop sections
         for k, v in tab.iteritems():
             v['ctl'].render()
+            v['ctl'].unghost()
+            enable = v['ctl'].get_int()
             # Loop controls in section
             for ctl in v['controls']:
                 ctl['ctl'].render()
+                if enable:
+                    ctl['ctl'].unghost()
+                else:
+                    ctl['ctl'].ghost()
 
 
     def erase_controls(self, tab):
@@ -378,36 +371,37 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 ctl['ctl'].erase()
 
 
+    def ghost_controls(self, tab):
+        """ Ghost controls in tab.
+
+        @param  ref  tab  Pointer to the tab in the dict to ghost controls in
+        """
+        # Loop sections
+        for k, v in tab.iteritems():
+            v['ctl'].ghost()
+            # Loop controls in section
+            for ctl in v['controls']:
+                ctl['ctl'].ghost()
+
+
     def refresh_controls(self):
         """ Refresh GUI controls to reflect the current selected preset. """
 
-        print 'refresh'
-
-        # Get name of selected preset
+        # Get name of selected preset and tab
         row = self._selection
         name = Presets.get_name(row)
+        sel_tab = Presets.get_tab_name(self._controls[1].get_int())
 
         # Reference part of the definitions dictionary
         tabs = Presets.definitions['tabs']
 
-        # If nothing is selected, ghost all controls
+        # If nothing is selected, ghost all controls in tab
         if name == False:
-            # Loop tabs
-            for tab in tabs:
-                # Loop sections in tab
-                for k, v in tabs[tab].iteritems():
-                    # Store setting if the section is enabled
-                    v['ctl'].ghost()
-                    for ctl in v['controls']:
-                        pass
-                        # ctl['ctl'].ghost()
+            self.ghost_controls(tabs[sel_tab])
             return
 
         # Get the selected presets dict to read settings from
         settings = Presets.user['presets'][name]
-
-        sel_tab = self._controls[1].get_int()
-        print sel_tab
 
         # Loop tabs
         for tab in tabs:
@@ -415,7 +409,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
             for k, v in tabs[tab].iteritems():
                 # Store setting if the section is enabled
                 v['ctl'].set_int(settings[k])
-                # v['ctl'].unghost()
 
                 # Loop controls in section
                 for ctl in v['controls']:
@@ -434,6 +427,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     if ctl['type'] in ['angle']:
                         rad = math.radians(settings[cmd])
                         ctl['ctl'].set_float(rad)
+
+                if tab == sel_tab:
+                    self.enable_controls(tabs[tab])
 
 
     def store_preset(self):
@@ -667,7 +663,6 @@ class Presets:
     # User defined Presets
     user = None
     # User defined Preset Names
-    # TODO: Presets.name ska kanske vara en return funktion istallet? Sa jag ev kan anvanda dict:en (defs) for allt.
     names = None
 
 
