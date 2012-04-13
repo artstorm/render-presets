@@ -428,6 +428,13 @@ class RenderPresetsMaster(lwsdk.IMaster):
             # Ghost the rest
             v['ctl'].ghost()
 
+    def refresh_list(self, index):
+        """ ll """
+        self._controls[0].redraw()
+        self._controls[0].set_int(index)
+        self._selection = index
+        self.refresh_controls()
+
 
     def store_preset(self):
         """ Copy selected preset settings from GUI to user dict. """
@@ -481,10 +488,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # Add preset and select it
         if Presets.add(name) != False:
             idx = Presets.names.index(name)
-            self._controls[0].redraw()
-            self._controls[0].set_int(idx)
-            self._selection = idx
-            self.refresh_controls()
+            self.refresh_list(idx)
 
     def save(self):
         """ Force a presets save. """
@@ -534,10 +538,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Presets.delete(row)
 
         # Refresh GUI and selection
-        self._controls[0].set_int(-1)
-        self._selection = -1
-        self._controls[0].redraw()
-        self.refresh_controls()
+        self.refresh_list(-1)
 
     def up(self):
         """ Move selection up the list. """
@@ -554,9 +555,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Presets.names.insert(new_row, Presets.names.pop(row))
 
         # Refresh GUI and selection
-        self._controls[0].set_int(new_row)
-        self._selection = new_row
-        self._controls[0].redraw()
+        self.refresh_list(new_row)
 
     def down(self):
         """ Move selection down the list. """
@@ -573,9 +572,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Presets.names.insert(new_row, Presets.names.pop(row))
 
         # Refresh GUI and selection
-        self._controls[0].set_int(new_row)
-        self._selection = new_row
-        self._controls[0].redraw()
+        self.refresh_list(new_row)
 
     def duplicate(self):
         """ Duplicate selected preset. """
@@ -589,7 +586,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         Presets.duplicate(row)
 
         # Refresh GUI and selection
-        self._controls[0].redraw()
+        self.refresh_list(row)
 
     def about(self):
         """ Display About window. """
