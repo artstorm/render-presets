@@ -126,11 +126,27 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._controls[user_data]['fn']()
 
 
+    def tabs_callback(self, id, user_data):
+        """ Handles tab switching in the preset setup. """
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+        sel_tab = Presets.get_tab_name(self._controls[1].get_int())
+
+        # Loop through tabs
+        for tab in tabs:
+            if sel_tab == tab:
+                self.enable_controls(tabs[tab])
+            else:
+                self.erase_controls(tabs[tab])
+
+
     def enable_in_preset_callback(self, id, user_data):
+        """ Handle GUI updates with the section enabling buttons. """
+
+
         # print 'enable'
         # print id.get_int()
-        print user_data
-
+#        print user_data
 
         # Reference part of the definitions dictionary
         tabs = Presets.definitions['tabs']
@@ -149,9 +165,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         # for ctl in id['controls']:
         #     print 'mupp'
-        # for t in self.lookup:
-            # t['ctl'].unghost()
-            # t.unghost()
 
     def about_url_callback(self, id, user_data):
         """ Handles callbacks from the buttons in the about window. """
@@ -202,12 +215,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
 
 
-
-        # Get rid of Unicode character (u')
-        # tabs = [s.encode('utf-8') for s in data['tabs']]
-
         tab_names = []
-        # for key, val in tabs.iteritems():
         for key in tabs:
             tab_names.append(key.encode('utf-8'))
 
@@ -242,7 +250,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
             if key < 2:
                 continue
 
-            print key
+#            print key
             w = 72 if val['w'] is None else val['w']
 
             val['ctl'] = self._panel.wbutton_ctl(val['lbl'], w)
@@ -261,9 +269,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._panel.align_controls_vertical(right_column)
 
 
-        self._c2 = self._panel.tabchoice_ctl('Tabs', tab_names)
-        self._c2.set_event(self.tabs_callback)
-        self._c2.move(200,0)
+        self._controls[1] = self._panel.tabchoice_ctl('Tabs', tab_names)
+        self._controls[1].set_event(self.tabs_callback)
+        self._controls[1].move(200,0)
 
 
         # PRESET SETUP STARTS HERE
@@ -276,10 +284,11 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 v['ctl'].set_w(200)
                 v['ctl'].move(200,y)
                 v['ctl'].set_event(self.enable_in_preset_callback, enable)
-                self.lookup = v['ctl']
                 y += 40
 
-                if tab != 'Render':
+                if tab == 'Render':
+                    v['ctl'].ghost()
+                else:
                     v['ctl'].erase()
 
                 for ctl in v['controls']:
@@ -298,7 +307,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         ctl['ctl'] = ctl2(ctl['label'], items, 200)
 
                     if ctl['type'] in ['minirgb']:
-                        print 'pal'
                         ctl['ctl'] = ctl2(ctl['label'])
                         ctl['ctl'].set_ivec(200,200,200)
 
@@ -319,76 +327,79 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         ctl['ctl'].set_float(rad)
 
                     ctl['ctl'].move(200,y)
-                    ctl['ctl'].ghost()
                     y += 20
 
-                    if tab != 'Render':
+                    if tab == 'Render':
+                        ctl['ctl'].ghost()
+                    else:
                         ctl['ctl'].erase()
 
                 enable += 1
 
-
-        self._tmp_tabs = tabs
-        self._tmp_tab_names = tab_names
-
         return True
 
 
-    def tabs_callback(self, id, user_data):
-#        print 'You selected: %s' % temp_list[self._c2.get_int()]
-#        print self._c2.get_int()
-        tmp = self._c2.get_int()
+    def enable_controls(self, tab):
+        """ Enable controls in tab.
 
-        tabs = self._tmp_tabs
-        tab_names = self._tmp_tab_names
-
-        # Optimize below: erase in one loop. Don't erase the tab that's clicked.
-        # Erase controllers on all tabs
-        tmp_pan = tabs[tab_names[0]]
-        for s, v in tmp_pan.iteritems():
-            v['ctl'].erase()
-            for t in v['controls']:
-                t['ctl'].erase()
-
-        tmp_pan = tabs[tab_names[1]]
-        for s, v in tmp_pan.iteritems():
-            v['ctl'].erase()
-            for t in v['controls']:
-                t['ctl'].erase()
-
-        tmp_pan = tabs[tab_names[2]]
-        for s, v in tmp_pan.iteritems():
-            v['ctl'].erase()
-            for t in v['controls']:
-                t['ctl'].erase()
-
-        tmp_pan = tabs[tab_names[3]]
-        for s, v in tmp_pan.iteritems():
-            v['ctl'].erase()
-            for t in v['controls']:
-                t['ctl'].erase()
-
-        # Render the controls on the clicked tab
-        tmp_pan = tabs[tab_names[tmp]]
-        for s, v in tmp_pan.iteritems():
+        @param  ref  tab  Pointer to the tab in the dict to enable controls in
+        """
+        # Loop sections
+        for k, v in tab.iteritems():
             v['ctl'].render()
-            for t in v['controls']:
-                t['ctl'].render()
+            v['ctl'].unghost()
+            enable = v['ctl'].get_int()
+            # Loop controls in section
+            for ctl in v['controls']:
+                ctl['ctl'].render()
+                if enable:
+                    ctl['ctl'].unghost()
+                else:
+                    ctl['ctl'].ghost()
+
+
+    def erase_controls(self, tab):
+        """ Erase controls in tab.
+
+        @param  ref  tab  Pointer to the tab in the dict to erase controls in
+        """
+        # Loop sections
+        for k, v in tab.iteritems():
+            v['ctl'].erase()
+            # Loop controls in section
+            for ctl in v['controls']:
+                ctl['ctl'].erase()
+
+
+    def ghost_controls(self, tab):
+        """ Ghost controls in tab.
+
+        @param  ref  tab  Pointer to the tab in the dict to ghost controls in
+        """
+        # Loop sections
+        for k, v in tab.iteritems():
+            v['ctl'].ghost()
+            # Loop controls in section
+            for ctl in v['controls']:
+                ctl['ctl'].ghost()
 
 
     def refresh_controls(self):
         """ Refresh GUI controls to reflect the current selected preset. """
 
-        # Get name of selected preset
+        # Get name of selected preset and tab
         row = self._selection
         name = Presets.get_name(row)
-
-        # Return if nothin selected
-        if name == False:
-            return
+        sel_tab = Presets.get_tab_name(self._controls[1].get_int())
 
         # Reference part of the definitions dictionary
         tabs = Presets.definitions['tabs']
+
+        # If nothing is selected, ghost all controls in tab
+        if name == False:
+            self.ghost_controls(tabs[sel_tab])
+            return
+
         # Get the selected presets dict to read settings from
         settings = Presets.user['presets'][name]
 
@@ -403,7 +414,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 for ctl in v['controls']:
                     cmd = ctl['command']
 
-
                     # Consolidate this with the one in create_controls into a function
 
                     # Set settings depending on controller type
@@ -417,6 +427,10 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     if ctl['type'] in ['angle']:
                         rad = math.radians(settings[cmd])
                         ctl['ctl'].set_float(rad)
+
+                if tab == sel_tab:
+                    self.enable_controls(tabs[tab])
+
 
     def store_preset(self):
         """ Copy selected preset settings from GUI to user dict. """
@@ -649,7 +663,6 @@ class Presets:
     # User defined Presets
     user = None
     # User defined Preset Names
-    # TODO: Presets.name ska kanske vara en return funktion istallet? Sa jag ev kan anvanda dict:en (defs) for allt.
     names = None
 
 
@@ -676,11 +689,7 @@ class Presets:
         Presets.names = []
 
         for s, v in Presets.user['presets'].iteritems():
-            print s
             Presets.names.append(s.encode('utf-8'))
-
-        print Presets.user
-        print Presets.names
 
 
     @staticmethod
@@ -833,6 +842,28 @@ class Presets:
             return False
 
         return Presets.names[row]
+
+    @staticmethod
+    def get_tab_name(index):
+        """ Return the tab name, or False if the tab doesn't exist.
+
+        @param   int  index  The index of the tab to retrieve
+
+        @return  False if no name was found, else the name as string.
+        """
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+
+        # Make a list of tab names
+        names = []
+        for tab in tabs:
+            names.append(tab.encode('utf-8'))
+
+        # Return False if index out of list scope
+        if index < 0 or index >= len(names):
+            return False
+
+        return names[index]
 
 
 # ------------------------------------------------------------------------------
