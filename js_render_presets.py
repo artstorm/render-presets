@@ -103,8 +103,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
         so we have a clean slate to recreate all assets in the inter_ui() method
         if the user chooses to open this plugin instance again.
         """
-        # We better make sure the presets are saved
-        Presets.save()
+        # We better make sure the presets are stored and saved
+        self.store_preset()
 
         # Calling destroy() here, crashes LightWave (v11.0), so I have it 
         # commented out, and relies on only setting the variables to None.
@@ -122,6 +122,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def button_callback(self, id, user_data):
         """ Handle clicks on on main buttons in the Panel. """
+        # Before perfoming any action, store and save the current selection.
+        self.store_preset()
         # user_data contains the dictionary key of the pressed button.
         self._controls[user_data]['fn']()
 
@@ -160,6 +162,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
     def preset_count_callback(self, control, userdata):
         return len(Presets.names)
     def preset_select_callback(self, control, user_data, row, selecting):
+        # Before switchin preset, store and save the current selection.
+        self.store_preset()
         # Globally track the selected row, as get_int() on the control doesn't
         # return a value to determine when nothing is selected in the list
         # row = -1 when noting is selected
@@ -471,6 +475,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     if ctl['type'] in ['angle']:
                         deg = math.degrees(ctl['ctl'].get_float())
                         Presets.user['presets'][name][cmd] = deg
+        Presets.save()
 
 
     # --------------------------------------------------------------------------
