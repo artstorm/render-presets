@@ -502,28 +502,15 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def rename(self):
         """ Create a rename dialog. """
-        # Get the name of the selected preset, or return if nothing selected
         row = self._selection
         name = Presets.get_name(row)
         if name == False:
             return
 
-        panel = self._ui.create('Rename Preset')
-        panel.setw(300)
-        panel.seth(60)
+        new_name = lwsdk.LWMessageFuncs().askName('Rename Preset', 'Name', name)
 
-        # Create the string field, and populate it with the current name.
-        name_ctl = panel.str_ctl('Name', 50)
-        name_ctl.set_str(name)
-
-        if panel.open(lwsdk.PANF_BLOCKING | lwsdk.PANF_CANCEL) == 0:
-            self._ui.destroy(panel)
-            return
-
-        Presets.rename(self._selection, name_ctl.get_str())
-        self._controls[0].redraw()
-
-        self._ui.destroy(panel)
+        Presets.rename(row, new_name)
+        self.refresh_list(row)
 
     def delete(self):
         """ Delete selected preset. """
