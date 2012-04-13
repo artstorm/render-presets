@@ -177,7 +177,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         @return  False if definitions file failed to load
         """
-
         # Get the path to the definitions file. The same location as the script.
         script_file = os.path.realpath(__file__)
         dir_path = os.path.dirname(script_file)
@@ -193,21 +192,10 @@ class RenderPresetsMaster(lwsdk.IMaster):
             print >>sys.stderr, 'The file %s was not found.' % DEFINITIONS_FILE
             return False
 
-        # Reference part of the definitions dictionary
-        tabs = Presets.definitions['tabs']
-
-
-
-
-        tab_names = []
-        for key in tabs:
-            tab_names.append(key.encode('utf-8'))
-
-
-
+        # Define Main controls
         self._controls = {
-            0: {'ctl': None},
-            1: {'ctl': None},
+            0: {'ctl': None, 'lbl': 'List'},
+            1: {'ctl': None, 'lbl': 'Tabs'},
             2: {'ctl': None, 'lbl': 'New',       'x': 4,    'w': None, 'col': 'l', 'fn': self.new},
             3: {'ctl': None, 'lbl': 'Save',      'x': 82,   'w': None, 'col': 'r', 'fn': self.save},
             4: {'ctl': None, 'lbl': 'Rename',    'x': None, 'w': None, 'col': 'l', 'fn': self.rename},
@@ -219,46 +207,49 @@ class RenderPresetsMaster(lwsdk.IMaster):
            10: {'ctl': None, 'lbl': 'Apply',     'x': None, 'w': 150,  'col': 'l', 'fn': self.apply}
         }
 
-
-        # TMP GUI Setup
+        # Setup the Preset List Controller
         self._controls[0] = self._panel.listbox_ctl('Presets', 150, 18, \
             self.preset_name_callback, self.preset_count_callback)
         self._controls[0].set_select(self.preset_select_callback)
 
-
-
+        # Setup the controllers for the main buttons
         left_column = []
         right_column = []
-
         for key, val in self._controls.iteritems():
+            # Skip the first two (list, tabs)
             if key < 2:
                 continue
 
-#            print key
+            # Default width
             w = 72 if val['w'] is None else val['w']
 
             val['ctl'] = self._panel.wbutton_ctl(val['lbl'], w)
             val['ctl'].set_event(self.button_callback, key)
 
-
             x = 0 if val['x'] is None else val['x']
             val['ctl'].move(x, 282)
 
+            # Make two lists with the controllers to split in two columns.
             if val['col'] == 'l':
                 left_column.append(val['ctl'])
             else:
                 right_column.append(val['ctl'])
 
+        # Align the controllers in columns
         self._panel.align_controls_vertical(left_column)
         self._panel.align_controls_vertical(right_column)
 
-
+        # Create the tab controller
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+        tab_names = []
+        for key in tabs:
+            tab_names.append(key.encode('utf-8'))
         self._controls[1] = self._panel.tabchoice_ctl('Tabs', tab_names)
         self._controls[1].set_event(self.tabs_callback)
         self._controls[1].move(200,0)
 
-
-        # PRESET SETUP STARTS HERE
+        # Setup the controllers for preset definitions
         enable = 0
         for tab in tabs:
             y = 40
@@ -284,7 +275,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         ctl['ctl'] = ctl2(ctl['label'])
                         ctl['ctl'].set_w(200)
 
-
                     if ctl['type'] in ['wpopup']:
                         # Get rid of Unicode character (u')
                         items = [s.encode('utf-8') for s in ctl['items']]
@@ -293,7 +283,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     if ctl['type'] in ['minirgb']:
                         ctl['ctl'] = ctl2(ctl['label'])
                         ctl['ctl'].set_ivec(200,200,200)
-
 
                     # Consolidate this with the one in refresh_controls into a function
                     if ctl['type'] in ['bool', 'int', 'wpopup']:
