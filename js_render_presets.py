@@ -126,6 +126,20 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._controls[user_data]['fn']()
 
 
+    def tabs_callback(self, id, user_data):
+        """ Handles tab switching in the preset setup. """
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+        sel_tab = Presets.get_tab_name(self._controls[1].get_int())
+
+        # Loop through tabs
+        for tab in tabs:
+            if sel_tab == tab:
+                self.enable_controls(tabs[tab])
+            else:
+                self.erase_controls(tabs[tab])
+
+
     def enable_in_preset_callback(self, id, user_data):
         """ Handle GUI updates with the section enabling buttons. """
 
@@ -338,30 +352,18 @@ class RenderPresetsMaster(lwsdk.IMaster):
         return True
 
 
-    def tabs_callback(self, id, user_data):
-        # Reference part of the definitions dictionary
-        tabs = Presets.definitions['tabs']
-
-        for tab in tabs:
-            self.erase_controls(tabs[tab])
-
-        # # Render the controls on the clicked tab
-        tab_names = self._tmp_tab_names
-        tmp = self._controls[1].get_int()
-
-        print Presets.get_tab_name(tmp)
-
-
-        tmp_pan = tabs[tab_names[tmp]]
-
-        for s, v in tmp_pan.iteritems():
-            v['ctl'].render()
-            for t in v['controls']:
-                t['ctl'].render()
-
-
     def enable_controls(self, tab):
-        pass
+        """ Enable controls in tab.
+
+        @param  ref  tab  Pointer to the tab in the dict to enable controls in
+        """
+        # Loop sections
+        for k, v in tab.iteritems():
+            v['ctl'].render()
+            # Loop controls in section
+            for ctl in v['controls']:
+                ctl['ctl'].render()
+
 
     def erase_controls(self, tab):
         """ Erase controls in tab.
