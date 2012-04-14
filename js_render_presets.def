@@ -18,7 +18,7 @@
 					"label": "Raytrace Reflection",
 					"type": "bool",
 					"command": "RayTraceReflection",
-					"column": "left",
+					"column": "right",
 					"default": 1
 				},
 				{
@@ -32,7 +32,7 @@
 					"label": "Raytrace Refraction",
 					"type": "bool",
 					"command": "RayTraceRefraction",
-					"column": "left",
+					"column": "right",
 					"default": 1
 				},
 				{
@@ -46,7 +46,7 @@
 					"label": "Depth Buffer AA",
 					"type": "bool",
 					"command": "DepthBufferAA",
-					"column": "left",
+					"column": "right",
 					"default": 0
 				},
 				{
@@ -60,35 +60,36 @@
 					"label": "Ray Recursion Limit",
 					"type": "int",
 					"command": "RayRecursionLimit",
-					"column": "left",
+					"column": "right",
+					"width": 200,
 					"default": 6
 				},
 				{
 					"label": "Ray Precision",
 					"type": "float",
 					"command": "RayPrecision",
-					"column": "left",
+					"column": "right",
 					"default": 6.0
 				},
 				{
 					"label": "Ray Cutoff",
 					"type": "float",
 					"command": "RayCutoff",
-					"column": "left",
+					"column": "right",
 					"default": 0.01
 				},
 				{
 					"label": "Shading Samples",
 					"type": "int",
 					"command": "ShadingSamples",
-					"column": "left",
+					"column": "right",
 					"default": 8
 				},
 				{
 					"label": "Light Samples",
 					"type": "int",
 					"command": "LightSamples",
-					"column": "left",
+					"column": "right",
 					"default": 8
 				}
 				]
@@ -105,7 +106,7 @@
 					"label": "Enable Radiosity",
 					"type": "bool",
 					"command": "EnableRadiosity",
-					"column": "left",
+					"column": "right",
 					"default": 0
 				},
 				{
@@ -248,7 +249,7 @@
 					"type": "int",
 					"label": "Minimum Samples",
 					"command": "MinAntialiasing",
-					"column": "left",
+					"column": "right",
 					"default": 1
 				},
 				{
@@ -321,7 +322,7 @@
 					"type": "minirgb",
 					"label": "Backdrop Color",
 					"command": "BackdropColor",
-					"column": "left",
+					"column": "right",
 					"default": [0,0,0]
 				},
 				{

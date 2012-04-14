@@ -281,7 +281,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     ctl2 = getattr(self._panel, ctl['type']+'_ctl')
                     if ctl['type'] in ['bool', 'int', 'float', 'angle', 'percent']:
                         ctl['ctl'] = ctl2(ctl['label'])
-                        ctl['ctl'].set_w(150)
+                        try:
+                            width = ctl['width']
+                        except:
+                            width = 150
+                        ctl['ctl'].set_w(width)
+
 
                     if ctl['type'] in ['wpopup']:
                         # Get rid of Unicode character (u')
@@ -325,7 +330,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                 enable += 1
             # Align the controllers in columns
-            print left_column
             # self._panel.align_controls_vertical(left_column)
             self._panel.align_controls_vertical(right_column)
 
