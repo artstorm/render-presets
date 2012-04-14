@@ -257,10 +257,14 @@ class RenderPresetsMaster(lwsdk.IMaster):
         enable = 0
         for tab in tabs:
             y = 40
+            del left_column[:]
+            del right_column[:]
+            # left_column = []
+            # right_column = []
 
             for k, v in tabs[tab].iteritems():
                 v['ctl'] = self._panel.bool_ctl('enable')
-                v['ctl'].set_w(200)
+                v['ctl'].set_w(150)
                 v['ctl'].move(200,y)
                 v['ctl'].set_event(self.enable_in_preset_callback, enable)
                 y += 40
@@ -275,9 +279,14 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     ctl['enable'] = enable
 
                     ctl2 = getattr(self._panel, ctl['type']+'_ctl')
-                    if ctl['type'] in ['bool', 'int', 'intro', 'float', 'angle', 'percent']:
+                    if ctl['type'] in ['bool', 'int', 'float', 'angle', 'percent']:
                         ctl['ctl'] = ctl2(ctl['label'])
-                        ctl['ctl'].set_w(200)
+                        try:
+                            width = ctl['width']
+                        except:
+                            width = 150
+                        ctl['ctl'].set_w(width)
+
 
                     if ctl['type'] in ['wpopup']:
                         # Get rid of Unicode character (u')
@@ -303,7 +312,15 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         rad = math.radians(ctl['default'])
                         ctl['ctl'].set_float(rad)
 
-                    ctl['ctl'].move(200,y)
+
+
+                    if ctl['column'] == 'right':
+                        right_column.append(ctl['ctl'])
+                        ctl['ctl'].move(380,y)
+                    else:
+                        ctl['ctl'].move(200,y)
+                        left_column.append(ctl['ctl'])
+
                     y += 20
 
                     if tab == 'Render':
@@ -312,6 +329,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         ctl['ctl'].erase()
 
                 enable += 1
+            # Align the controllers in columns
+            # self._panel.align_controls_vertical(left_column)
+            self._panel.align_controls_vertical(right_column)
 
         self.refresh_main_buttons()
         return True
