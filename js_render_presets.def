@@ -61,7 +61,7 @@
 					"type": "int",
 					"command": "RayRecursionLimit",
 					"column": "right",
-					"width": 200,
+					"width": 250,
 					"default": 6
 				},
 				{
@@ -69,6 +69,7 @@
 					"type": "float",
 					"command": "RayPrecision",
 					"column": "right",
+					"width": 221,
 					"default": 6.0
 				},
 				{
@@ -76,6 +77,7 @@
 					"type": "float",
 					"command": "RayCutoff",
 					"column": "right",
+					"width": 206,
 					"default": 0.01
 				},
 				{
@@ -83,6 +85,7 @@
 					"type": "int",
 					"command": "ShadingSamples",
 					"column": "right",
+					"width": 238,
 					"default": 8
 				},
 				{
@@ -90,6 +93,7 @@
 					"type": "int",
 					"command": "LightSamples",
 					"column": "right",
+					"width": 222,
 					"default": 8
 				}
 				]
@@ -106,7 +110,7 @@
 					"label": "Enable Radiosity",
 					"type": "bool",
 					"command": "EnableRadiosity",
-					"column": "right",
+					"column": "left",
 					"default": 0
 				},
 				{
@@ -114,7 +118,7 @@
 					"type": "wpopup",
 					"items": ["Backdrop Only", "Monte Carlo", "Final Gather"],
 					"command": "RadiosityType",
-					"column": "left",
+					"column": "right",
 					"default": 1
 				},
 				{
@@ -128,7 +132,7 @@
 					"label": "Blur Background",
 					"type": "bool",
 					"command": "BlurBackgroundRadiosity",
-					"column": "left",
+					"column": "right",
 					"default": 1
 				},
 				{
@@ -142,7 +146,7 @@
 					"label": "Volumetric Radiosity",
 					"type": "bool",
 					"command": "VolumetricRadiosity",
-					"column": "left",
+					"column": "right",
 					"default": 0
 				},
 				{
@@ -156,7 +160,7 @@
 					"label": "Directional Rays",
 					"type": "bool",
 					"command": "RadiosityDirectionalRays",
-					"column": "left",
+					"column": "right",
 					"default": 0
 				},
 				{
@@ -170,70 +174,78 @@
 					"label": "Use Behind Test",
 					"type": "bool",
 					"command": "RadiosityUseBehindTest",
-					"column": "left",
+					"column": "right",
 					"default": 1
 				},
 				{
 					"label": "Use Bumps",
 					"type": "bool",
 					"command": "RadiosityUseBumps",
-					"column": "left",
+					"column": "right",
 					"default": 0
 				},
 				{
 					"label": "Intensity",
 					"type": "percent",
 					"command": "RadiosityIntensity",
-					"column": "left",
+					"column": "right",
+					"width": 173,
 					"default": 100.0
 				},
 				{
 					"label": "Indirect Bounces",
 					"type": "int",
 					"command": "IndirectBounces",
-					"column": "left",
+					"column": "right",
+					"width": 214,
 					"default": 1
 				},
 				{
 					"label": "Rays Per Evaluation",
 					"type": "int",
 					"command": "RaysPerEvaluation",
-					"column": "left",
+					"column": "right",
+					"width": 230,
 					"default": 100
 				},
 				{
 					"label": "Secondary Bounce Rays",
 					"type": "int",
 					"command": "RaysPerEvaluation2",
-					"column": "left",
+					"column": "right",
+					"width": 252,
 					"default": 50
 				},
 				{
 					"label": "Angular Tolerance",
 					"type": "angle",
 					"command": "RadiosityTolerance",
-					"column": "left",
+					"column": "right",
+					"width": 221,
 					"default": 45.0
 				},
 				{
 					"label": "Minimum Pixel Spacing",
 					"type": "float",
 					"command": "RadiosityMinPixelSpacing",
-					"column": "left",
+					"column": "right",
+					"width": 242,
 					"default": 3.0
 				},
 				{
 					"label": "Maximum Pixel Spacing",
 					"type": "float",
 					"command": "RadiosityMaxPixelSpacing",
-					"column": "left",
+					"column": "right",
+					"width": 245,
 					"default": 100.0
 				},
 				{
 					"label": "Multipler",
 					"type": "percent",
 					"command": "RadiosityMultiplier",
-					"column": "left",
+					"column": "right",
+					"width": 175,
 					"default": 100.0
 				}
 				]
@@ -256,7 +268,7 @@
 					"type": "int",
 					"label": "Maximum Samples",
 					"command": "MaxAntialiasing",
-					"column": "left",
+					"column": "right",
 					"default": 1
 				},
 				{
@@ -264,7 +276,7 @@
 					"label": "Reconstruction Filter",
 					"items": ["Classic", "Box", "Box (Sharp)", "Box (Soft)", "Gaussian", "Gaussian (Sharp)", "Gaussian (Soft)", "Mitchell", "Mitchell (Sharp)", "Mitchell (Soft)", "Lanczos", "Lanczos (Sharp)", "Lanczos (Soft)"],
 					"command": "ReconstructionFilter",
-					"column": "left",
+					"column": "right",
 					"default": 0
 				},
 				{
@@ -272,28 +284,28 @@
 					"label": "Sampling Pattern",
 					"items": ["Low-Discrepancy", "Fixed", "Classic"],
 					"command": "NoiseSampler",
-					"column": "left",
+					"column": "right",
 					"default": 0
 				},
 				{
 					"type": "bool",
 					"label": "Adaptive Sampling",
 					"command": "AdaptiveSampling",
-					"column": "left",
+					"column": "right",
 					"default": 1
 				},
 				{
 					"type": "float",
 					"label": "Threshold",
 					"command": "AdaptiveThreshold",
-					"column": "left",
+					"column": "right",
 					"default": 0.01
 				},
 				{
 					"type": "float",
 					"label": "Oversample",
 					"command": "Oversampling",
-					"column": "left",
+					"column": "right",
 					"default": 0.0
 				}
 				]
@@ -306,7 +318,7 @@
 					"label": "Multiplier",
 					"items": ["25 %", "50 %", "100 %", "200 %", "400 %"],
 					"command": "ResolutionMultiplier",
-					"column": "left",
+					"column": "right",
 					"default": 2
 				}
 				]
@@ -329,49 +341,51 @@
 					"type": "bool",
 					"label": "Gradient Backdrop",
 					"command": "GradientBackdrop",
-					"column": "left",
+					"column": "right",
 					"default": 0
 				},
 				{
 					"type": "minirgb",
 					"label": "Zenith Color",
 					"command": "ZenithColor",
-					"column": "left",
+					"column": "right",
 					"default": [158,188,255]
 				},
 				{
 					"type": "minirgb",
 					"label": "Sky Color",
 					"command": "SkyColor",
-					"column": "left",
+					"column": "right",
 					"default": [225,234,255]
 				},
 				{
 					"type": "float",
 					"label": "Sky Squeeze",
 					"command": "SkySqueezeColor",
-					"column": "left",
+					"column": "right",
+					"width": 219,
 					"default": 6.0
 				},
 				{
 					"type": "float",
 					"label": "Ground Squeeze",
 					"command": "GroundSqueezeColor",
-					"column": "left",
+					"column": "right",
+					"width": 236,
 					"default": 6.0
 				},
 				{
 					"type": "minirgb",
 					"label": "Ground Color",
 					"command": "GroundColor",
-					"column": "left",
+					"column": "right",
 					"default": [225,234,255]
 				},
 				{
 					"type": "minirgb",
 					"label": "Nadir Color",
 					"command": "NadirColor",
-					"column": "left",
+					"column": "right",
 					"default": [31,24,21]
 				}
 				]
@@ -383,7 +397,7 @@
 					"type": "bool",
 					"label": "Limit Dynamic Range",
 					"command": "LimitDynamicRange",
-					"column": "left",
+					"column": "right",
 					"default": 0
 				},
 				{
@@ -391,7 +405,7 @@
 					"label": "Dither Intensity",
 					"items": ["Off", "Normal", "2 x Normal", "4 x Normal"],
 					"command": "DitherIntensity",
-					"column": "left",
+					"column": "right",
 					"default": 0
 				}
 				]
