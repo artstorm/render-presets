@@ -627,7 +627,29 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._ui.destroy(panel)
 
     def apply(self):
-        print 'Apply selected: ' + str(self._controls[0].get_int())
+        """ Apply selected preset. """
+        row = self._controls[0].get_int()
+        name = Presets.get_name(row)
+
+        # Reference part of the definitions dictionary
+        tabs = Presets.definitions['tabs']
+
+        # Get the selected presets dict to read settings from
+        settings = Presets.user['presets'][name]
+
+        # Loop tabs
+        for tab in tabs:
+            # Loop sections in tab
+            for k, v in tabs[tab].iteritems():
+                # If section is enabled, apply the commands in the section
+                if settings[k] == True:
+
+                    # Loop commands in section
+                    for ctl in v['controls']:
+                        # Create and set command line
+                        val = settings[ctl['command']]
+                        cmd = ctl['command'] + ' ' + str(val)
+                        lwsdk.command(cmd)
 
 
 # ------------------------------------------------------------------------------
