@@ -4,15 +4,15 @@ Enables the user to create a library of presets for render settings to apply and
 quickly switch between.
 """
 
-__author__      = 'Johan Steen'
-__copyright__   = 'Copyright (C) 2010-2012, Johan Steen'
-__credits__     = ''
-__license__     = 'New BSD License'
-__version__     = '2.0'
-__maintainer__  = 'Johan Steen'
-__email__       = 'http://www.artstorm.net/contact/'
-__status__      = 'Development'
-__lwver__       = '11'
+__author__ = 'Johan Steen'
+__copyright__ = 'Copyright (C) 2010-2012, Johan Steen'
+__credits__ = ''
+__license__ = 'New BSD License'
+__version__ = '2.0'
+__maintainer__ = 'Johan Steen'
+__email__ = 'http://www.artstorm.net/contact/'
+__status__ = 'Development'
+__lwver__ = '11'
 
 # ------------------------------------------------------------------------------
 # Import Modules
@@ -30,7 +30,7 @@ import collections
 # Constants
 # ------------------------------------------------------------------------------
 DEFINITIONS_FILE = 'js_render_presets.def'
-PRESETS_FILE     = 'js_render_presets.cfg'
+PRESETS_FILE = 'js_render_presets.cfg'
 
 
 # ------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._panel = None
         self._controls = None
 
-        # Track selected preset 
+        # Track selected preset
         # (as get_int() won't return -1 for deselections, we track it ourselves)
         self._selection = -1
 
@@ -65,7 +65,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         know that the plugin has been removed, and do the cleaning up.
         """
         # Here we'd like to call panel.close() if window is opened and then set
-        # all objects to None (ui, panel, controllers). As I use events and 
+        # all objects to None (ui, panel, controllers). As I use events and
         # callbacks in the class and therefore the destructor not being called,
         # we just keep a pass here and hope that this will be fixed in a future
         # LightWave version.
@@ -80,7 +80,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 self._ui = lwsdk.LWPanels()
 
             # Define the Panel
-            self._panel = self._ui.create('Render Presets v'+__version__)
+            self._panel = self._ui.create('Render Presets v' + __version__)
             self._panel.setw(510)
             self._panel.seth(420)
             self._panel.setmaxh(420)
@@ -94,7 +94,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         return lwsdk.AFUNC_OK
 
-
     # --------------------------------------------------------------------------
     # Callbacks
     # --------------------------------------------------------------------------
@@ -106,19 +105,18 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # We better make sure the presets are stored and saved
         self.store_preset()
 
-        # Calling destroy() here, crashes LightWave (v11.0), so I have it 
+        # Calling destroy() here, crashes LightWave (v11.0), so I have it
         # commented out, and relies on only setting the variables to None.
         # self._ui.destroy(self._panel)
         self._panel = None
         self._ui = None
         self._controls = None
 
-        # Perhaps it would be better to remove the plugin completely when 
+        # Perhaps it would be better to remove the plugin completely when
         # closing the window? I keep that line here, commented out, during dev
         # until I've decided. If I keep it, I need to add a method to find the
         # actual index in the Master Plugins list.
         lwsdk.command('RemoveServer MasterHandler 1')
-
 
     def button_callback(self, id, user_data):
         """ Handle clicks on on main buttons in the Panel. """
@@ -126,7 +124,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self.store_preset()
         # user_data contains the dictionary key of the pressed button.
         self._controls[user_data]['fn']()
-
 
     def tabs_callback(self, id, user_data):
         """ Handles tab switching in the preset setup. """
@@ -143,24 +140,23 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         self.refresh_controls()
 
-
     def enable_in_preset_callback(self, id, user_data):
         """ Handle GUI updates with the section enabling buttons. """
         tabs = Presets.definitions['tabs']
         sel_tab = Presets.get_tab_name(self._controls[1].get_int())
         self.enable_controls(tabs[sel_tab])
 
-
     def about_url_callback(self, id, user_data):
         """ Handles callbacks from the buttons in the about window. """
         webbrowser.open_new_tab(self._urls[user_data])
 
-
     # Preset List Callbacks
     def preset_name_callback(self, control, userdata, row):
         return Presets.names[row]
+
     def preset_count_callback(self, control, userdata):
         return len(Presets.names)
+
     def preset_select_callback(self, control, user_data, row, selecting):
         # Before switchin preset, store and save the current selection.
         self.store_preset()
@@ -190,7 +186,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         try:
             f = open(def_file, 'r')
             Presets.definitions = json.load( \
-                f, object_pairs_hook = collections.OrderedDict)
+                f, object_pairs_hook=collections.OrderedDict)
             f.close()
         except:
             print >>sys.stderr, 'The file %s was not found.' % DEFINITIONS_FILE
@@ -251,7 +247,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
             tab_names.append(key.encode('utf-8'))
         self._controls[1] = self._panel.tabchoice_ctl('Tabs', tab_names)
         self._controls[1].set_event(self.tabs_callback)
-        self._controls[1].move(200,0)
+        self._controls[1].move(200, 0)
 
         # Setup the controllers for preset definitions
         enable = 0
@@ -265,7 +261,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
             for k, v in tabs[tab].iteritems():
                 v['ctl'] = self._panel.bool_ctl('enable')
                 v['ctl'].set_w(150)
-                v['ctl'].move(200,y)
+                v['ctl'].move(200, y)
                 v['ctl'].set_event(self.enable_in_preset_callback, enable)
                 y += 40
 
@@ -278,7 +274,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                     ctl['enable'] = enable
 
-                    ctl2 = getattr(self._panel, ctl['type']+'_ctl')
+                    ctl2 = getattr(self._panel, ctl['type'] + '_ctl')
                     if ctl['type'] in ['bool', 'int', 'float', 'angle', 'percent']:
                         ctl['ctl'] = ctl2(ctl['label'])
                         try:
@@ -287,7 +283,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
                             width = 150
                         ctl['ctl'].set_w(width)
 
-
                     if ctl['type'] in ['wpopup']:
                         # Get rid of Unicode character (u')
                         items = [s.encode('utf-8') for s in ctl['items']]
@@ -295,7 +290,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                     if ctl['type'] in ['minirgb']:
                         ctl['ctl'] = ctl2(ctl['label'])
-                        ctl['ctl'].set_ivec(200,200,200)
+                        ctl['ctl'].set_ivec(200, 200, 200)
 
                     # Consolidate this with the one in refresh_controls into a function
                     if ctl['type'] in ['bool', 'int', 'wpopup']:
@@ -312,13 +307,11 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         rad = math.radians(ctl['default'])
                         ctl['ctl'].set_float(rad)
 
-
-
                     if ctl['column'] == 'right':
                         right_column.append(ctl['ctl'])
-                        ctl['ctl'].move(380,y)
+                        ctl['ctl'].move(380, y)
                     else:
-                        ctl['ctl'].move(200,y)
+                        ctl['ctl'].move(200, y)
                         left_column.append(ctl['ctl'])
 
                     y += 20
@@ -335,7 +328,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         self.refresh_main_buttons()
         return True
-
 
     def enable_controls(self, tab):
         """ Enable controls in tab.
@@ -355,7 +347,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 else:
                     ctl['ctl'].ghost()
 
-
     def erase_controls(self, tab):
         """ Erase controls in tab.
 
@@ -368,7 +359,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
             for ctl in v['controls']:
                 ctl['ctl'].erase()
 
-
     def ghost_controls(self, tab):
         """ Ghost controls in tab.
 
@@ -380,7 +370,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
             # Loop controls in section
             for ctl in v['controls']:
                 ctl['ctl'].ghost()
-
 
     def refresh_controls(self):
         """ Refresh GUI controls to reflect the current selected preset. """
@@ -431,7 +420,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         self.refresh_main_buttons()
 
-
     def refresh_main_buttons(self):
         """ Handle ghost and unghost of main buttons depending on selection. """
         for k, v in self._controls.iteritems():
@@ -446,7 +434,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 if self._selection == 0 and k == 6:
                     v['ctl'].ghost()
                 # Ghost down if last preset selected
-                if self._selection == len(Presets.names)-1 and k == 7:
+                if self._selection == len(Presets.names) - 1 and k == 7:
                     v['ctl'].ghost()
                 continue
             # Ghost the rest
@@ -458,7 +446,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._controls[0].set_int(index)
         self._selection = index
         self.refresh_controls()
-
 
     def store_preset(self):
         """ Copy selected preset settings from GUI to user dict. """
@@ -496,7 +483,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         deg = math.degrees(ctl['ctl'].get_float())
                         Presets.user['presets'][name][cmd] = deg
         Presets.save()
-
 
     # --------------------------------------------------------------------------
     # Button Methods
@@ -575,7 +561,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         row = self._selection
 
         # Check so we can move down, else return
-        if row == -1 or row >= (len(Presets.names)-1):
+        if row == -1 or row >= (len(Presets.names) - 1):
             return
 
         # move it down
@@ -659,7 +645,6 @@ class Presets:
     # User defined Preset Names
     names = None
 
-
     # --------------------------------------------------------------------------
     # Methods
     # --------------------------------------------------------------------------
@@ -671,7 +656,7 @@ class Presets:
             # f = open(Presets.file_path()+'ad', 'r')
             f = open(Presets.file_path(), 'r')
             Presets.user = json.load( \
-                f, object_pairs_hook = collections.OrderedDict)
+                f, object_pairs_hook=collections.OrderedDict)
             f.close()
         except:
             Presets.user = {
@@ -685,11 +670,10 @@ class Presets:
         for s, v in Presets.user['presets'].iteritems():
             Presets.names.append(s.encode('utf-8'))
 
-
     @staticmethod
     def save():
         """ Saves the user presets to a json formatted file """
-        # Recreate the presets dictionary, in the current order found in the 
+        # Recreate the presets dictionary, in the current order found in the
         # names list, to save user sorting.
         presets = {
             'version': __version__,
@@ -703,7 +687,6 @@ class Presets:
         json.dump(presets, f, indent=4)
         f.close()
 
-
     @staticmethod
     def file_path():
         """ @return Absolute path to the presets file """
@@ -711,7 +694,6 @@ class Presets:
         folder = lwsdk.LWDirInfoFunc(lwsdk.LWFTYPE_SETTING)
         file_path = os.path.join(folder, PRESETS_FILE)
         return file_path
-
 
     @staticmethod
     def add(name):
@@ -745,7 +727,6 @@ class Presets:
                     Presets.user['presets'][name][cmd] = control['default']
 
         Presets.save()
-
 
     @staticmethod
     def delete(row):
@@ -820,7 +801,6 @@ class Presets:
         Presets.user['presets'][dest_name] = Presets.user['presets'][src_name]
         Presets.names.append(dest_name)
 
-
     # --------------------------------------------------------------------------
     # Helpers
     # --------------------------------------------------------------------------
@@ -867,7 +847,6 @@ ServerTagInfo = [
     ('Render Presets', lwsdk.SRVTAG_USERNAME | lwsdk.LANGID_USENGLISH)
 ]
 
-ServerRecord = { 
-    lwsdk.MasterFactory('js_Render_Presets', RenderPresetsMaster) 
-    : ServerTagInfo
+ServerRecord = {
+    lwsdk.MasterFactory('js_Render_Presets', RenderPresetsMaster): ServerTagInfo
 }
