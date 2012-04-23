@@ -639,11 +639,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
         bd = lwsdk.LWBackdropInfo()
         print str(bd.type)
 
-        mupp = [10, 20, 30]
-        test = 'BackdropColor %(0)s %(1)s %(2)s' % {'0': mupp[0] / 255.0, '1': mupp[1] / 255.0, '2': mupp[2] / 255.0}
-        lwsdk.command(test)
-        print test
-
         # Loop tabs
         for tab in tabs:
             # Loop sections in tab
@@ -656,8 +651,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         # Create and set command line
                         val = settings[ctl['command']]
 
-                        if ctl['command'] == 'EnableRadiosity' and val == False:
-                            break
+                        if self.gi_tab_logic(settings, ctl['command']) == False:
+                            continue
 
                         try:
                             mode = ctl['mode']
@@ -687,7 +682,33 @@ class RenderPresetsMaster(lwsdk.IMaster):
                                 lwsdk.command(ctl['command'])
                         else:
                             lwsdk.command(ctl['command'] + ' ' + str(val))
-                            # print ctl['command'] + ' ' + (val)
+
+                        if ctl['command'] == 'EnableRadiosity' and val == False:
+                            break
+
+    # --------------------------------------------------------------------------
+    # Apply Helpers
+    # --------------------------------------------------------------------------
+    def gi_tab_logic(self, settings, cmd):
+        """ The controller logic for the Global Illum tab. """
+
+        # If radiosity is not interpolated, don't apply these
+        if settings['RadiosityInterpolation'] == False and cmd in \
+        ['RadiosityUseGradients', 'RadiosityUseBehindTest']:
+            return False
+
+        # Don't apply these on Backdrop Only
+        if settings['RadiosityType'] == 0 and cmd in \
+        ['IndirectBounces', 'RaysPerEvaluation2']:
+            return False
+
+        # Don't apply these on Backdrop Only/Monte Carlo, no interpolation
+        if settings['RadiosityInterpolation'] == False and \
+        settings['RadiosityType'] in [0, 1] and cmd in \
+        ['RaysPerEvaluation2', 'RadiosityTolerance', 'RadiosityMinPixelSpacing', 'RadiosityMaxPixelSpacing', 'RadiosityMultiplier']:
+            return False
+
+        return True
 
 
 # ------------------------------------------------------------------------------
