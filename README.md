@@ -22,14 +22,16 @@ Installation
  
 General installation steps:
  
-* Copy JS_RenderPresets.lsc and JS_RenderPresetsBtn.lsc to LightWave's
-   plug-in folder.
-* If "Autoscan Plugins" is enabled, just restart LightWave and it's installed.
-* Else, locate the “Add Plugins” button in LightWave and add them manually.
+* Copy js_render_presets.py, js_render_presets_button.py and 
+  js_render_presets.def to LightWave's plug-in folder.
+* "Autoscan Plugins" in LightWave 3D 11.0 doesn't seem to pickup Python scripts
+   so you will have to tell LightWave manually of their existence.
+* locate the "Add Plugins" button in LightWave and manually add the two .py
+  files.
 
-I’d recommend to add the plugin to a convenient spot in LightWave’s menu,
-so all you have to do is press the Render Presets button when you need to
-use it. 
+After the plugin is added to LightWave, I'd recommend placing it in a convenient
+spot in LightWave’s menu, so all you have to do is press the Render Presets 
+button when you need to use it. 
 
  
 Usage
@@ -52,7 +54,7 @@ clone or by exploring the repository directly in your browser.
 Changelog
 =========
 
-* v2.0 - 24 Apr 2012
+* v2.0 - 23 Apr 2012
   * Rewrote the plugin in Python and deprecated the LScript version.
   * Added new settings introduced with LightWave 3D 11.0: Shading Samples, Light
     Samples, Camera Min/Max Samples.
