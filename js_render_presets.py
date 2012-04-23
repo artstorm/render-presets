@@ -207,7 +207,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
             7: {'ctl': None, 'lbl': 'Down',      'x': None, 'w': None, 'col': 'r', 'fn': self.down},
             8: {'ctl': None, 'lbl': 'Duplicate', 'x': None, 'w': None, 'col': 'l', 'fn': self.duplicate},
             9: {'ctl': None, 'lbl': 'About',     'x': None, 'w': None, 'col': 'r', 'fn': self.about},
-           10: {'ctl': None, 'lbl': 'Apply',     'x': None, 'w': 150,  'col': 'l', 'fn': self.apply}
+           10: {'ctl': None, 'lbl': 'Apply',     'x': None, 'w': 150,  'col': 'l', 'fn': self.apply},
+           11: {'ctl': None, 'lbl': 'Comment'}
         }
 
         # Setup the Preset List Controller
@@ -220,7 +221,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         right_column = []
         for key, val in self._controls.iteritems():
             # Skip the first two (list, tabs)
-            if key < 2:
+            if key < 2 or key > 10:
                 continue
 
             # Default width
@@ -251,6 +252,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._controls[1] = self._panel.tabchoice_ctl('Tabs', tab_names)
         self._controls[1].set_event(self.tabs_callback)
         self._controls[1].move(200, 0)
+
+        self._controls[11]['ctl'] = self._panel.str_ctl('Comment', 60)
+        self._controls[11]['ctl'].move(200, 400)
 
         # Setup the controllers for preset definitions
         enable = 0
@@ -421,6 +425,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 if tab == sel_tab:
                     self.enable_controls(tabs[tab])
 
+        self._controls[11]['ctl'].set_str(settings['comment'])
         self.refresh_main_buttons()
 
     def refresh_main_buttons(self):
@@ -485,6 +490,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     if ctl['type'] in ['angle']:
                         deg = math.degrees(ctl['ctl'].get_float())
                         Presets.user['presets'][name][cmd] = deg
+
+        Presets.user['presets'][name]['comment'] = self._controls[11]['ctl'].get_str()
         Presets.save()
 
     # --------------------------------------------------------------------------
@@ -853,6 +860,7 @@ class Presets:
                     cmd = control['command']
                     Presets.user['presets'][name][cmd] = control['default']
 
+        Presets.user['presets'][name]['comment'] = ''
         Presets.save()
 
     @staticmethod
