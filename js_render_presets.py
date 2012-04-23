@@ -4,15 +4,15 @@ Enables the user to create a library of presets for render settings to apply and
 quickly switch between.
 """
 
-__author__ = 'Johan Steen'
-__copyright__ = 'Copyright (C) 2010-2012, Johan Steen'
-__credits__ = ''
-__license__ = 'New BSD License'
-__version__ = '2.0'
+__author__     = 'Johan Steen'
+__copyright__  = 'Copyright (C) 2010-2012, Johan Steen'
+__credits__    = ''
+__license__    = 'New BSD License'
+__version__    = '2.0'
 __maintainer__ = 'Johan Steen'
-__email__ = 'http://www.artstorm.net/contact/'
-__status__ = 'Development'
-__lwver__ = '11'
+__email__      = 'http://www.artstorm.net/contact/'
+__status__     = 'Development'
+__lwver__      = '11'
 
 # ------------------------------------------------------------------------------
 # Import Modules
@@ -260,6 +260,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         enable = 0
         for tab in tabs:
             y = 40
+            prev_col = ''
             del left_column[:]
             del right_column[:]
             # left_column = []
@@ -317,11 +318,19 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     if ctl['column'] == 'right':
                         right_column.append(ctl['ctl'])
                         ctl['ctl'].move(380, y)
+                        if ctl['type'] == 'minirgb':
+                            ctl['ctl'].move(280, y)
                     else:
                         ctl['ctl'].move(200, y)
                         left_column.append(ctl['ctl'])
 
-                    y += 20
+                    if ctl['column'] == prev_col:
+                        y += 10
+
+                    if ctl['column'] == 'right':
+                        prev_col = 'right'
+                    else:
+                        prev_col = 'left'
 
                     if tab == 'Render':
                         ctl['ctl'].ghost()
@@ -333,6 +342,27 @@ class RenderPresetsMaster(lwsdk.IMaster):
             if tab in ['Render', 'Global Illum']:
                 self._panel.align_controls_vertical(left_column)
             self._panel.align_controls_vertical(right_column)
+
+            if tab == 'Render':
+                offset = 24
+            elif tab == 'Global Illum':
+                offset = 54
+            elif tab == 'Camera':
+                offset = 114
+            elif tab == 'Effects':
+                for k, v in tabs[tab].iteritems():
+                    for ctl in v['controls']:
+                        if ctl['type'] in ['minirgb']:
+                            y = ctl['ctl'].y()
+                            x = ctl['ctl'].x()
+                            ctl['ctl'].move(x - 80, y)
+
+                offset = 1
+
+            for ctl in right_column:
+                y = ctl.y()
+                x = ctl.x()
+                ctl.move(x - offset, y)
 
         self.refresh_main_buttons()
         return True
@@ -615,9 +645,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
         auth_ctl.move(10, 0)
         vers_ctl.move(10, 20)
         copy_ctl.move(10, 40)
-        info_ctl.move(20, 80)
-        supp_ctl.move(110, 80)
-        cont_ctl.move(20, 110)
+        info_ctl.move(18, 80)
+        supp_ctl.move(108, 80)
+        cont_ctl.move(18, 110)
 
         # Set URLs in a global list
         self._urls = [
