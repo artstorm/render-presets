@@ -266,7 +266,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
             # right_column = []
 
             for k, v in tabs[tab].iteritems():
-                v['ctl'] = self._panel.bool_ctl('enable')
+                v['ctl'] = self._panel.bool_ctl('Enable in Preset')
                 v['ctl'].set_w(150)
                 v['ctl'].move(200, y)
                 v['ctl'].set_event(self.enable_in_preset_callback, enable)
@@ -330,7 +330,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                 enable += 1
             # Align the controllers in columns
-            # self._panel.align_controls_vertical(left_column)
+            if tab in ['Render', 'Global Illum']:
+                self._panel.align_controls_vertical(left_column)
             self._panel.align_controls_vertical(right_column)
 
         self.refresh_main_buttons()
