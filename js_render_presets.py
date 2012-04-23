@@ -636,9 +636,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # Get the selected presets dict to read settings from
         settings = Presets.user['presets'][name]
 
-        bd = lwsdk.LWBackdropInfo()
-        print str(bd.type)
-
         # Loop tabs
         for tab in tabs:
             # Loop sections in tab
@@ -652,6 +649,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         val = settings[ctl['command']]
 
                         if self.gi_tab_logic(settings, ctl['command']) == False:
+                            continue
+
+                        if self.fx_tab_logic(settings, ctl['command'], val) == False:
                             continue
 
                         try:
@@ -706,6 +706,25 @@ class RenderPresetsMaster(lwsdk.IMaster):
         if settings['RadiosityInterpolation'] == False and \
         settings['RadiosityType'] in [0, 1] and cmd in \
         ['RaysPerEvaluation2', 'RadiosityTolerance', 'RadiosityMinPixelSpacing', 'RadiosityMaxPixelSpacing', 'RadiosityMultiplier']:
+            return False
+
+        return True
+
+    def fx_tab_logic(self, settings, cmd, val):
+        """ The controller logic for the Effects tab. """
+        bd_info = lwsdk.LWBackdropInfo()
+
+        # The Gradient Backdrop Button
+        if cmd == 'GradientBackdrop':
+            if bd_info.type == val:
+                return False
+        # Single color
+        if settings['GradientBackdrop'] == 1 and cmd == 'BackdropColor':
+            return False
+
+        # Gradient color
+        if settings['GradientBackdrop'] == 0 and cmd in \
+        ['ZenithColor', 'SkyColor', 'GroundColor', 'NadirColor', 'SkySqueezeColor', 'GroundSqueezeColor']:
             return False
 
         return True
