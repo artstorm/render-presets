@@ -269,6 +269,11 @@ class RenderPresetsMaster(lwsdk.IMaster):
             # right_column = []
 
             for k, v in tabs[tab].iteritems():
+                if tab == "Camera" and y > 30:
+                    y = 240
+                if tab == "Effects" and y > 30:
+                    y = 260
+
                 v['ctl'] = self._panel.bool_ctl('Enable in Preset')
                 v['ctl'].set_w(150)
                 v['ctl'].move(180, y)
@@ -374,6 +379,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 x = ctl.x()
                 ctl.move(x - offset, y - offset_y)
                 offset_y += 5
+                if tab == 'Render' and offset_y == 15:
+                    offset_y -= 25
+                if tab == 'Camera' and offset_y == 35:
+                    offset_y -= 50
+                if tab == 'Effects' and offset_y == 40:
+                    offset_y -= 50
 
         self.refresh_main_buttons()
         return True
