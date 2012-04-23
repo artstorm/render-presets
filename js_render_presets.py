@@ -243,8 +243,8 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._panel.align_controls_vertical(left_column)
         self._panel.align_controls_vertical(right_column)
 
-        bordertop_ctl = self._panel.area_ctl('', 310, 0)
-        bordertop_ctl.move(180, 20)
+        tabline_ctl = self._panel.area_ctl('', 310, 0)
+        tabline_ctl.move(180, 20)
 
         # Create the tab controller
         # Reference part of the definitions dictionary
@@ -256,14 +256,13 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._controls[1].set_event(self.tabs_callback)
         self._controls[1].move(180, 0)
 
-
         self._controls[11]['ctl'] = self._panel.str_ctl('Comment', 50)
         self._controls[11]['ctl'].move(180, 500)
 
         # Setup the controllers for preset definitions
         enable = 0
         for tab in tabs:
-            y = 40
+            y = 30
             prev_col = ''
             del left_column[:]
             del right_column[:]
@@ -275,7 +274,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 v['ctl'].set_w(150)
                 v['ctl'].move(180, y)
                 v['ctl'].set_event(self.enable_in_preset_callback, enable)
-                y += 40
+                y += 30
 
                 if tab == 'Render':
                     v['ctl'].ghost()
@@ -363,10 +362,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                 offset = 1
 
+            offset_y = 0
             for ctl in right_column:
                 y = ctl.y()
                 x = ctl.x()
-                ctl.move(x - offset, y)
+                ctl.move(x - offset, y - offset_y)
+                offset_y += 4
 
         self.refresh_main_buttons()
         return True
