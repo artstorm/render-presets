@@ -39,7 +39,7 @@ class RenderPresetsButton(lwsdk.IGeneric):
         index = 1
         server_added = False
         while True:
-            server_name = item_info.server(None, 'MasterHandler', index);
+            server_name = item_info.server(None, 'MasterHandler', index)
 
             # Reached end of list, break loop
             if server_name == None:
