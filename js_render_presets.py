@@ -654,6 +654,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         if self.fx_tab_logic(settings, ctl['command'], val) == False:
                             continue
 
+                        if self.cam_tab_logic(settings, ctl['command']) == False:
+                            continue
+
                         try:
                             mode = ctl['mode']
                         except:
@@ -667,6 +670,11 @@ class RenderPresetsMaster(lwsdk.IMaster):
                             {'r': val[0] / 255.0, \
                              'g': val[1] / 255.0, \
                              'b': val[2] / 255.0}
+
+                        if ctl['command'] == 'ResolutionMultiplier':
+                            # Resolution Converter
+                            res = [0.25, 0.5, 1, 2, 4]
+                            val = res[val]
 
                         # Handle buttons that just toggles their state which can
                         # not by command be set to a specific state.
@@ -725,6 +733,22 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # Gradient color
         if settings['GradientBackdrop'] == 0 and cmd in \
         ['ZenithColor', 'SkyColor', 'GroundColor', 'NadirColor', 'SkySqueezeColor', 'GroundSqueezeColor']:
+            return False
+
+        return True
+
+    def cam_tab_logic(self, settings, cmd):
+        """ The controller logic for the Camera tab. """
+
+        # Adaptive Sampling
+        scene = lwsdk.LWSceneInfo()
+        if cmd == 'AdaptiveSampling':
+            if scene.adaptiveSampling == settings[cmd]:
+                return False
+
+        # Threshold
+        if settings['AdaptiveSampling'] == False and cmd in \
+        ['MaxAntialiasing', 'AdaptiveThreshold']:
             return False
 
         return True
