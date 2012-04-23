@@ -1,4 +1,5 @@
-# Render Presets - README
+Render Presets
+--------------
 
 Render Presets lets you manage a library of different common rendering related
 settings to quickly organize, apply or switch between them.
@@ -15,9 +16,9 @@ Contents:
  * Changelog
  * Credits
 
---------------------------------------------------------------------------------
 
-## Installation
+Installation
+============
  
  General installation steps:
  
@@ -29,16 +30,16 @@ Contents:
  I’d recommend to add the plugin to a convenient spot in LightWave’s menu,
  so all you have to do is press the Render Presets button when you need to
  use it. 
- 
---------------------------------------------------------------------------------
 
-## Usage
+ 
+Usage
+=====
 
  See http://www.artstorm.net/plugins/render-presets/ for usage instructions.
 
---------------------------------------------------------------------------------
 
-## Source Code
+Source Code
+===========
  
  Download the source code:
  
@@ -50,12 +51,12 @@ Contents:
  Note that the default checkout path includes all my available LScripts, you
  might want to browse the repository first to get the path to the specific
  script's trunk or tag to download if you don't want to get them all.
+
  
---------------------------------------------------------------------------------
+Changelog
+=========
 
-## Changelog
-
-- v2.0 - xx XXX 2012
+- v2.0 - 24 Apr 2012
   - Rewrote the plugin in Python and deprecated the LScript version.
   - Added new settings introduced with LightWave 3D 11.0: Shading Samples, Light
     Samples, Camera Min/Max Samples.
@@ -75,9 +76,8 @@ Contents:
 - v1.0 - 7 Mar 2010:
   - Release of version 1.0, first public release.
 
---------------------------------------------------------------------------------
-
-## Credits
+Credits
+=======
 
 * Johan Steen, http://www.artstorm.net/
   * Original author
