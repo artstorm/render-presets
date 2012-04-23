@@ -358,8 +358,15 @@ class RenderPresetsMaster(lwsdk.IMaster):
                             y = ctl['ctl'].y()
                             x = ctl['ctl'].x()
                             ctl['ctl'].move(x - 80, y)
-
                 offset = 1
+
+            if tab in ['Render', 'Global Illum']:
+                offset_y = 0
+                for ctl in left_column:
+                    y = ctl.y()
+                    x = ctl.x()
+                    ctl.move(x, y - offset_y)
+                    offset_y += 5
 
             offset_y = 0
             for ctl in right_column:
