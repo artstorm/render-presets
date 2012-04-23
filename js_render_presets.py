@@ -127,6 +127,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
     def tabs_callback(self, id, user_data):
         """ Handles tab switching in the preset setup. """
+        # Before switching tab, store and save the current tab.
+        self.store_preset()
+
         # Reference part of the definitions dictionary
         tabs = Presets.definitions['tabs']
         sel_tab = Presets.get_tab_name(self._controls[1].get_int())
