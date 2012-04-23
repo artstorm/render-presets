@@ -78,6 +78,6 @@ ServerTagInfo = [
 ]
 
 ServerRecord = {
-    lwsdk.GenericFactory('js_Render_Presets_Btn', RenderPresetsButton)
-    : ServerTagInfo
+    lwsdk.GenericFactory('js_Render_Presets_Btn', RenderPresetsButton):
+    ServerTagInfo
 }
