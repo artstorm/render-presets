@@ -633,7 +633,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
         # Reference part of the definitions dictionary
         tabs = Presets.definitions['tabs']
-
         # Get the selected presets dict to read settings from
         settings = Presets.user['presets'][name]
 
@@ -649,7 +648,24 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         # Create and set command line
                         val = settings[ctl['command']]
                         cmd = ctl['command'] + ' ' + str(val)
-                        lwsdk.command(cmd)
+
+                        try:
+                            mode = ctl['mode']
+                        except:
+                            mode = False
+
+                        if mode == 'toggle':
+                            scene = lwsdk.LWSceneInfo()
+                            render_flag = getattr(lwsdk, ctl['flag'])
+                            if render_flag & scene.renderOpts > 0:
+                                button_state = True
+                            else:
+                                button_state = False
+
+                            if val != button_state:
+                                lwsdk.command(ctl['command'])
+                        else:
+                            lwsdk.command(cmd)
 
 
 # ------------------------------------------------------------------------------
