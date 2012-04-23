@@ -81,7 +81,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
             # Define the Panel
             self._panel = self._ui.create('Render Presets v' + __version__)
-            self._panel.setw(510)
+            self._panel.setw(500)
             self._panel.seth(420)
             self._panel.setmaxh(420)
             # TMP height override, until control positions are in place
@@ -243,18 +243,22 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._panel.align_controls_vertical(left_column)
         self._panel.align_controls_vertical(right_column)
 
+        bordertop_ctl = self._panel.area_ctl('', 310, 0)
+        bordertop_ctl.move(180, 20)
+
         # Create the tab controller
         # Reference part of the definitions dictionary
         tabs = Presets.definitions['tabs']
         tab_names = []
         for key in tabs:
             tab_names.append(key.encode('utf-8'))
-        self._controls[1] = self._panel.tabchoice_ctl('Tabs', tab_names)
+        self._controls[1] = self._panel.tabchoice_ctl('', tab_names)
         self._controls[1].set_event(self.tabs_callback)
-        self._controls[1].move(200, 0)
+        self._controls[1].move(180, 0)
+
 
         self._controls[11]['ctl'] = self._panel.str_ctl('Comment', 50)
-        self._controls[11]['ctl'].move(200, 500)
+        self._controls[11]['ctl'].move(180, 500)
 
         # Setup the controllers for preset definitions
         enable = 0
@@ -269,7 +273,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
             for k, v in tabs[tab].iteritems():
                 v['ctl'] = self._panel.bool_ctl('Enable in Preset')
                 v['ctl'].set_w(150)
-                v['ctl'].move(200, y)
+                v['ctl'].move(180, y)
                 v['ctl'].set_event(self.enable_in_preset_callback, enable)
                 y += 40
 
@@ -317,11 +321,11 @@ class RenderPresetsMaster(lwsdk.IMaster):
 
                     if ctl['column'] == 'right':
                         right_column.append(ctl['ctl'])
-                        ctl['ctl'].move(380, y)
+                        ctl['ctl'].move(360, y)
                         if ctl['type'] == 'minirgb':
-                            ctl['ctl'].move(280, y)
+                            ctl['ctl'].move(260, y)
                     else:
-                        ctl['ctl'].move(200, y)
+                        ctl['ctl'].move(180, y)
                         left_column.append(ctl['ctl'])
 
                     if ctl['column'] == prev_col:
