@@ -254,7 +254,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._controls[1].move(200, 0)
 
         self._controls[11]['ctl'] = self._panel.str_ctl('Comment', 60)
-        self._controls[11]['ctl'].move(200, 400)
+        self._controls[11]['ctl'].move(200, 500)
 
         # Setup the controllers for preset definitions
         enable = 0
@@ -293,7 +293,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     if ctl['type'] in ['wpopup']:
                         # Get rid of Unicode character (u')
                         items = [s.encode('utf-8') for s in ctl['items']]
-                        ctl['ctl'] = ctl2(ctl['label'], items, 200)
+                        ctl['ctl'] = ctl2(ctl['label'], items, 150)
 
                     if ctl['type'] in ['minirgb']:
                         ctl['ctl'] = ctl2(ctl['label'])
