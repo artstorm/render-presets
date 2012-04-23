@@ -45,13 +45,9 @@ Download the source code:
  
 https://github.com/artstorm/render-presets
 
-You can check out the latest trunk or any previous tagged version via svn
-or explore the repository directly in your browser.
+You can get the latest development branch or any previous tagged version via git
+clone or by exploring the repository directly in your browser.
  
-Note that the default checkout path includes all my available LScripts, you
-might want to browse the repository first to get the path to the specific
-script's trunk or tag to download if you don't want to get them all.
-
  
 Changelog
 =========
