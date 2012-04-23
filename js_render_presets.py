@@ -240,11 +240,10 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._panel.align_controls_vertical(left_column)
         self._panel.align_controls_vertical(right_column)
 
-        tabline_ctl = self._panel.area_ctl('', 310, 0)
-        tabline_ctl.move(180, 20)
-
         # Create the tab controller
         # Reference part of the definitions dictionary
+        tabline_ctl = self._panel.area_ctl('', 310, 0)
+        tabline_ctl.move(180, 20)
         tabs = Presets.definitions['tabs']
         tab_names = []
         for key in tabs:
@@ -253,6 +252,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._controls[1].set_event(self.tabs_callback)
         self._controls[1].move(180, 0)
 
+        # Create the comments controller
         border_bottom_ctl = self._panel.border_ctl('', 310, 0)
         border_bottom_ctl.move(180, 380)
         self._controls[11]['ctl'] = self._panel.str_ctl('Comment', 50)
@@ -265,10 +265,11 @@ class RenderPresetsMaster(lwsdk.IMaster):
             prev_col = ''
             del left_column[:]
             del right_column[:]
-            # left_column = []
-            # right_column = []
 
+            # loop the sections
             for k, v in tabs[tab].iteritems():
+                # Hard code the offsets for the sections. I'll probably remove
+                # sections in a future update, so I take the quick way out now
                 if tab == "Camera" and y > 30:
                     y = 240
                 if tab == "Effects" and y > 30:
@@ -285,6 +286,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 else:
                     v['ctl'].erase()
 
+                # Loop controls in the sections
                 for ctl in v['controls']:
 
                     ctl['enable'] = enable
@@ -350,6 +352,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 self._panel.align_controls_vertical(left_column)
             self._panel.align_controls_vertical(right_column)
 
+            # Move the controls back in X for a tighter layout
             if tab == 'Render':
                 offset = 24
             elif tab == 'Global Illum':
@@ -365,6 +368,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                             ctl['ctl'].move(x - 80, y)
                 offset = 1
 
+            # Tighten up the Y distances
             if tab in ['Render', 'Global Illum']:
                 offset_y = 0
                 for ctl in left_column:
@@ -372,13 +376,14 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     x = ctl.x()
                     ctl.move(x, y - offset_y)
                     offset_y += 5
-
             offset_y = 0
             for ctl in right_column:
                 y = ctl.y()
                 x = ctl.x()
                 ctl.move(x - offset, y - offset_y)
                 offset_y += 5
+                # Hard code the offsets for the sections. I'll probably remove
+                # sections in a future update, so I take the quick way out now
                 if tab == 'Render' and offset_y == 15:
                     offset_y -= 25
                 if tab == 'Camera' and offset_y == 35:
