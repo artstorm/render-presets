@@ -253,7 +253,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._controls[1].set_event(self.tabs_callback)
         self._controls[1].move(200, 0)
 
-        self._controls[11]['ctl'] = self._panel.str_ctl('Comment', 60)
+        self._controls[11]['ctl'] = self._panel.str_ctl('Comment', 50)
         self._controls[11]['ctl'].move(200, 500)
 
         # Setup the controllers for preset definitions

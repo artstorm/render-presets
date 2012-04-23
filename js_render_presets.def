@@ -123,6 +123,7 @@
 					"mode": "toggle",
 					"flag": "LWROPT_RADIOSITY",
 					"column": "left",
+					"width": 120,
 					"default": 0
 				},
 				{
