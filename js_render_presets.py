@@ -636,6 +636,14 @@ class RenderPresetsMaster(lwsdk.IMaster):
         # Get the selected presets dict to read settings from
         settings = Presets.user['presets'][name]
 
+        bd = lwsdk.LWBackdropInfo()
+        print str(bd.type)
+
+        mupp = [10, 20, 30]
+        test = 'BackdropColor %(0)s %(1)s %(2)s' % {'0': mupp[0] / 255.0, '1': mupp[1] / 255.0, '2': mupp[2] / 255.0}
+        lwsdk.command(test)
+        print test
+
         # Loop tabs
         for tab in tabs:
             # Loop sections in tab
@@ -659,6 +667,12 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         if ctl['type'] == 'percent':
                             val = val / 100
 
+                        if ctl['type'] == 'minirgb':
+                            val = '%(r)s %(g)s %(b)s' % \
+                            {'r': val[0] / 255.0, \
+                             'g': val[1] / 255.0, \
+                             'b': val[2] / 255.0}
+
                         # Handle buttons that just toggles their state which can
                         # not by command be set to a specific state.
                         if mode == 'toggle':
@@ -673,6 +687,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                                 lwsdk.command(ctl['command'])
                         else:
                             lwsdk.command(ctl['command'] + ' ' + str(val))
+                            # print ctl['command'] + ' ' + (val)
 
 
 # ------------------------------------------------------------------------------
