@@ -11,7 +11,7 @@ __license__    = 'New BSD License'
 __version__    = '2.0'
 __maintainer__ = 'Johan Steen'
 __email__      = 'http://www.artstorm.net/contact/'
-__status__     = 'Development'
+__status__     = 'Production'
 __lwver__      = '11'
 
 # ------------------------------------------------------------------------------
