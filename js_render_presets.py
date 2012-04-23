@@ -656,6 +656,9 @@ class RenderPresetsMaster(lwsdk.IMaster):
                         except:
                             mode = False
 
+                        if ctl['type'] == 'percent':
+                            val = val / 100
+
                         # Handle buttons that just toggles their state which can
                         # not by command be set to a specific state.
                         if mode == 'toggle':
