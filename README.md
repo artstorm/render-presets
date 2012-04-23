@@ -1,15 +1,13 @@
---------------------------------------------------------------------------------
- Render Presets - README
+# Render Presets - README
 
- Render Presets lets you manage a library of different common
- rendering related settings to quickly organize, apply or switch
- between them.
+Render Presets lets you manage a library of different common rendering related
+settings to quickly organize, apply or switch between them.
 
- Website:      http://www.artstorm.net/plugins/render-presets/
- Project:      http://code.google.com/p/js-lscripts/
- Feeds:        http://code.google.com/p/js-lscripts/feeds
+Website:      http://www.artstorm.net/plugins/render-presets/
+Project:      http://code.google.com/p/js-lscripts/
+Feeds:        http://code.google.com/p/js-lscripts/feeds
  
- Contents:
+Contents:
  
  * Installation
  * Usage
@@ -18,7 +16,8 @@
  * Credits
 
 --------------------------------------------------------------------------------
- Installation
+
+## Installation
  
  General installation steps:
  
@@ -32,12 +31,14 @@
  use it. 
  
 --------------------------------------------------------------------------------
- Usage
+
+## Usage
 
  See http://www.artstorm.net/plugins/render-presets/ for usage instructions.
 
 --------------------------------------------------------------------------------
- Source Code
+
+## Source Code
  
  Download the source code:
  
@@ -75,7 +76,8 @@
   - Release of version 1.0, first public release.
 
 --------------------------------------------------------------------------------
- Credits
 
- Johan Steen, http://www.artstorm.net/
- * Original author
+## Credits
+
+* Johan Steen, http://www.artstorm.net/
+  * Original author
