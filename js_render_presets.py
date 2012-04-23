@@ -647,13 +647,17 @@ class RenderPresetsMaster(lwsdk.IMaster):
                     for ctl in v['controls']:
                         # Create and set command line
                         val = settings[ctl['command']]
-                        cmd = ctl['command'] + ' ' + str(val)
+
+                        if ctl['command'] == 'EnableRadiosity' and val == False:
+                            break
 
                         try:
                             mode = ctl['mode']
                         except:
                             mode = False
 
+                        # Handle buttons that just toggles their state which can
+                        # not by command be set to a specific state.
                         if mode == 'toggle':
                             scene = lwsdk.LWSceneInfo()
                             render_flag = getattr(lwsdk, ctl['flag'])
@@ -665,7 +669,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                             if val != button_state:
                                 lwsdk.command(ctl['command'])
                         else:
-                            lwsdk.command(cmd)
+                            lwsdk.command(ctl['command'] + ' ' + str(val))
 
 
 # ------------------------------------------------------------------------------

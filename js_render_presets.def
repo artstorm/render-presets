@@ -11,6 +11,8 @@
 					"label": "Raytrace Shadows",
 					"type": "bool",
 					"command": "RayTraceShadows",
+					"mode": "toggle",
+					"flag": "LWROPT_SHADOWTRACE",
 					"column": "left",
 					"default": 1
 				},
@@ -18,6 +20,8 @@
 					"label": "Raytrace Reflection",
 					"type": "bool",
 					"command": "RayTraceReflection",
+					"mode": "toggle",
+					"flag": "LWROPT_REFLECTTRACE",
 					"column": "right",
 					"default": 1
 				},
@@ -25,6 +29,8 @@
 					"label": "Raytrace Transparency",
 					"type": "bool",
 					"command": "RayTraceTransparency",
+					"mode": "toggle",
+					"flag": "LWROPT_RTTRANSPARENCIES",
 					"column": "left",
 					"default": 1
 				},
@@ -32,6 +38,8 @@
 					"label": "Raytrace Refraction",
 					"type": "bool",
 					"command": "RayTraceRefraction",
+					"mode": "toggle",
+					"flag": "LWROPT_REFRACTTRACE",
 					"column": "right",
 					"default": 1
 				},
@@ -39,6 +47,8 @@
 					"label": "Raytrace Occlusion",
 					"type": "bool",
 					"command": "RayTraceOcclusion",
+					"mode": "toggle",
+					"flag": "LWROPT_OCCLUSION",
 					"column": "left",
 					"default": 0
 				},
@@ -110,6 +120,8 @@
 					"label": "Enable Radiosity",
 					"type": "bool",
 					"command": "EnableRadiosity",
+					"mode": "toggle",
+					"flag": "LWROPT_RADIOSITY",
 					"column": "left",
 					"default": 0
 				},
@@ -125,6 +137,8 @@
 					"label": "Interpolated",
 					"type": "bool",
 					"command": "RadiosityInterpolation",
+					"mode": "toggle",
+					"flag": "LWROPT_INTERPOLATED",
 					"column": "left",
 					"default": 1
 				},
@@ -132,6 +146,8 @@
 					"label": "Blur Background",
 					"type": "bool",
 					"command": "BlurBackgroundRadiosity",
+					"mode": "toggle",
+					"flag": "LWROPT_BLURBACKGROUND",
 					"column": "right",
 					"default": 1
 				},
@@ -139,6 +155,8 @@
 					"label": "Use Transparency",
 					"type": "bool",
 					"command": "RadiosityTransparency",
+					"mode": "toggle",
+					"flag": "LWROPT_USETRANSPARENCY",
 					"column": "left",
 					"default": 0
 				},
@@ -397,6 +415,8 @@
 					"type": "bool",
 					"label": "Limit Dynamic Range",
 					"command": "LimitDynamicRange",
+					"mode": "toggle",
+					"flag": "LWROPT_LIMITDYNAMICRANGE",
 					"column": "right",
 					"default": 0
 				},
