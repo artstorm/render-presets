@@ -84,9 +84,6 @@ class RenderPresetsMaster(lwsdk.IMaster):
             self._panel.setw(500)
             self._panel.seth(420)
             self._panel.setmaxh(420)
-            # TMP height override, until control positions are in place
-            self._panel.seth(520)
-            self._panel.setmaxh(520)
             self._panel.set_close_callback(self.panel_close_callback)
 
             if self.create_controls():
@@ -256,8 +253,10 @@ class RenderPresetsMaster(lwsdk.IMaster):
         self._controls[1].set_event(self.tabs_callback)
         self._controls[1].move(180, 0)
 
+        border_bottom_ctl = self._panel.border_ctl('', 310, 0)
+        border_bottom_ctl.move(180, 380)
         self._controls[11]['ctl'] = self._panel.str_ctl('Comment', 50)
-        self._controls[11]['ctl'].move(180, 500)
+        self._controls[11]['ctl'].move(180, 390)
 
         # Setup the controllers for preset definitions
         enable = 0
@@ -367,7 +366,7 @@ class RenderPresetsMaster(lwsdk.IMaster):
                 y = ctl.y()
                 x = ctl.x()
                 ctl.move(x - offset, y - offset_y)
-                offset_y += 4
+                offset_y += 5
 
         self.refresh_main_buttons()
         return True
