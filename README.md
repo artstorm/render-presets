@@ -4,9 +4,9 @@ Render Presets
 Render Presets lets you manage a library of different common rendering related
 settings to quickly organize, apply or switch between them.
 
-Website:      http://www.artstorm.net/plugins/render-presets/
-Project:      http://code.google.com/p/js-lscripts/
-Feeds:        http://code.google.com/p/js-lscripts/feeds
+Website:      http://www.artstorm.net/plugins/render-presets/  
+Project:      https://github.com/artstorm/render-presets  
+Support:      https://github.com/artstorm/render-presets/issues  
  
 Contents:
  
@@ -43,7 +43,7 @@ Source Code
  
 Download the source code:
  
-http://code.google.com/p/js-lightwave-lscripts/source/checkout
+https://github.com/artstorm/render-presets
 
 You can check out the latest trunk or any previous tagged version via svn
 or explore the repository directly in your browser.
