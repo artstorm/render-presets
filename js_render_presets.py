@@ -991,7 +991,7 @@ class Presets:
             dest_name = src_name + ' - Copy %s' % ctr
 
         # Copy the preset, and add the new name to the list of names
-        Presets.user['presets'][dest_name] = Presets.user['presets'][src_name]
+        Presets.user['presets'][dest_name] = Presets.user['presets'][src_name].copy()
         Presets.names.append(dest_name)
 
     # --------------------------------------------------------------------------
