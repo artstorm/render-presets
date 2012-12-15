@@ -54,6 +54,8 @@ clone or by exploring the repository directly in your browser.
 Changelog
 =========
 
+* v2.0.1 - 15 Dec 2012
+  * Fixed bug with presets being referenced instead of copied when duplicating.
 * v2.0 - 23 Apr 2012
   * Rewrote the plugin in Python and deprecated the LScript version.
   * Added new settings introduced with LightWave 3D 11.0: Shading Samples, Light

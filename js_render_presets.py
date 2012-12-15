@@ -8,7 +8,7 @@ __author__     = 'Johan Steen'
 __copyright__  = 'Copyright (C) 2010-2012, Johan Steen'
 __credits__    = ''
 __license__    = 'New BSD License'
-__version__    = '2.0'
+__version__    = '2.0.1'
 __maintainer__ = 'Johan Steen'
 __email__      = 'http://www.artstorm.net/contact/'
 __status__     = 'Production'
@@ -991,7 +991,7 @@ class Presets:
             dest_name = src_name + ' - Copy %s' % ctr
 
         # Copy the preset, and add the new name to the list of names
-        Presets.user['presets'][dest_name] = Presets.user['presets'][src_name]
+        Presets.user['presets'][dest_name] = Presets.user['presets'][src_name].copy()
         Presets.names.append(dest_name)
 
     # --------------------------------------------------------------------------
